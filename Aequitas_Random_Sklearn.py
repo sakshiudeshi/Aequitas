@@ -28,7 +28,9 @@ sensitive_param = config.sensitive_param
 name = 'sex'
 cov = 0
 
-perturbation_unit = 1
+perturbation_unit = config.perturbation_unit
+
+threshold = config.threshold
 
 global_disc_inputs = set()
 global_disc_inputs_list = []
@@ -101,7 +103,10 @@ def evaluate_global(inp):
         global_disc_inputs.add(tuple(map(tuple, inp0)))
         global_disc_inputs_list.append(inp0.tolist()[0])
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 def evaluate_local(inp):
@@ -127,7 +132,10 @@ def evaluate_local(inp):
         local_disc_inputs.add(tuple(map(tuple, inp0)))
         local_disc_inputs_list.append(inp0.tolist()[0])
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]

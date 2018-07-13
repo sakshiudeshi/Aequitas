@@ -31,7 +31,9 @@ sensitive_param = config.sensitive_param
 name = 'sex'
 cov = 0
 
-perturbation_unit = 1
+perturbation_unit = config.perturbation_unit
+
+threshold = config.threshold
 
 global_disc_inputs = set()
 global_disc_inputs_list = []
@@ -44,7 +46,7 @@ tot_inputs = set()
 global_iteration_limit = 1000
 local_iteration_limit = 1000
 
-input_bounds = config.input_bounds
+input_bounds = config.input_boundscd 
 classifier_name = config.classifier_name
 
 model = joblib.load(classifier_name)
@@ -127,7 +129,10 @@ def evaluate_input(inp):
     out0 = model.predict(inp0)
     out1 = model.predict(inp1)
 
-    return abs(out0 + out1)
+    return (abs(out0 - out1) > threshold)
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 def evaluate_global(inp):
     inp0 = [int(i) for i in inp]
@@ -147,11 +152,14 @@ def evaluate_global(inp):
 
     tot_inputs.add(tuple(map(tuple, inp0)))
 
-    if (abs(out0 + out1) == 0 and tuple(map(tuple, inp0)) not in global_disc_inputs):
+    if (abs(out0 - out1) > threshold and tuple(map(tuple, inp0)) not in global_disc_inputs):
         global_disc_inputs.add(tuple(map(tuple, inp0)))
         global_disc_inputs_list.append(inp0.tolist()[0])
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 def evaluate_local(inp):
@@ -172,12 +180,15 @@ def evaluate_local(inp):
 
     tot_inputs.add(tuple(map(tuple, inp0)))
 
-    if (abs(out0 + out1) == 0 and (tuple(map(tuple, inp0)) not in global_disc_inputs)
+    if (abs(out0 - out1) > threshold and (tuple(map(tuple, inp0)) not in global_disc_inputs)
         and (tuple(map(tuple, inp0)) not in local_disc_inputs)):
         local_disc_inputs.add(tuple(map(tuple, inp0)))
         local_disc_inputs_list.append(inp0.tolist()[0])
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]

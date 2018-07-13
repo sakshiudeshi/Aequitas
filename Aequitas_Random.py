@@ -28,7 +28,9 @@ sensitive_param = config.sensitive_param
 name = 'sex'
 cov = 0
 
-perturbation_unit = 1
+perturbation_unit = config.perturbation_unit
+
+threshold = config.threshold
 
 global_disc_inputs = set()
 global_disc_inputs_list = []
@@ -122,11 +124,14 @@ def evaluate_global(inp):
     out1 = np.sign(np.dot(model, inp1))
     tot_inputs.add(tuple(inp0))
 
-    if (abs(out0 + out1) == 0 and tuple(inp0) not in global_disc_inputs):
+    if (abs(out0 - out1) > threshold and tuple(inp0) not in global_disc_inputs):
         global_disc_inputs.add(tuple(inp0))
         global_disc_inputs_list.append(inp0)
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 def evaluate_local(inp):
@@ -139,11 +144,14 @@ def evaluate_local(inp):
     out1 = np.sign(np.dot(model, inp1))
     tot_inputs.add(tuple(inp0))
 
-    if (abs(out0 + out1) == 0 and (tuple(inp0) not in global_disc_inputs) and (tuple(inp0) not in local_disc_inputs)):
+    if (abs(out0 - out1) > threshold and (tuple(inp0) not in global_disc_inputs) and (tuple(inp0) not in local_disc_inputs)):
         local_disc_inputs.add(tuple(inp0))
         local_disc_inputs_list.append(inp0)
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]

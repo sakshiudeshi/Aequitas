@@ -18,3 +18,7 @@ input_bounds.append([0, 99])
 input_bounds.append([0, 39])
 
 classifier_name = 'Decision_tree_standard_unfair.pkl'
+
+threshold = 0
+
+perturbation_unit = 1

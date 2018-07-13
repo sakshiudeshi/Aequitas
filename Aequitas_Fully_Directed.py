@@ -33,7 +33,9 @@ sensitive_param = config.sensitive_param
 name = 'sex'
 cov = 0
 
-perturbation_unit = 1
+perturbation_unit = config.perturbation_unit
+
+threshold = config.threshold
 
 global_disc_inputs = set()
 global_disc_inputs_list = []
@@ -103,7 +105,8 @@ class Local_Perturbation(object):
         perturbation_options = [-1, 1]
 
         # choice = np.random.choice(perturbation_options)
-        direction_choice = np.random.choice(perturbation_options, p=[direction_probability[param_choice], (1 - direction_probability[param_choice])])
+        direction_choice = np.random.choice(perturbation_options, p=[direction_probability[param_choice],
+                                                                     (1 - direction_probability[param_choice])])
 
         if (x[param_choice] == input_bounds[param_choice][0]) or (x[param_choice] == input_bounds[param_choice][1]):
             direction_choice = np.random.choice(perturbation_options)
@@ -116,10 +119,12 @@ class Local_Perturbation(object):
         ei = evaluate_input(x)
 
         if (ei and direction_choice == -1) or (not ei and direction_choice == 1):
-            direction_probability[param_choice] = min(direction_probability[param_choice] + (direction_probability_change_size * perturbation_unit), 1)
+            direction_probability[param_choice] = min(direction_probability[param_choice] +
+                                                      (direction_probability_change_size * perturbation_unit), 1)
 
         elif (not ei and direction_choice == -1) or (ei and direction_choice == 1):
-            direction_probability[param_choice] = max(direction_probability[param_choice] - (direction_probability_change_size * perturbation_unit), 0)
+            direction_probability[param_choice] = max(direction_probability[param_choice] -
+                                                      (direction_probability_change_size * perturbation_unit), 0)
 
         if(ei):
             param_probability[param_choice] = param_probability[param_choice] + param_probability_change_size
@@ -154,7 +159,10 @@ def evaluate_input(inp):
     inp1[8] = 1
     out0 = np.sign(np.dot(model, inp0))
     out1 = np.sign(np.dot(model, inp1))
-    return (abs(out0 + out1) == 0)
+    return abs(out0 - out1) > threshold
+    #for binary classification, we have found that the
+    #following optimization function gives better results
+    # return abs(out1 + out0) == 0
 
 def evaluate_global(inp):
     inp0 = [int(i) for i in inp]
@@ -166,11 +174,15 @@ def evaluate_global(inp):
     out1 = np.sign(np.dot(model, inp1))
     tot_inputs.add(tuple(inp0))
 
-    if (abs(out0 + out1) == 0 and tuple(inp0) not in global_disc_inputs):
+    if (abs(out0 - out1) > threshold and tuple(inp0) not in global_disc_inputs):
         global_disc_inputs.add(tuple(inp0))
         global_disc_inputs_list.append(inp0)
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    #for binary classification, we have found that the
+    #following optimization function gives better results
+    # return abs(out1 + out0)
+
 
 
 def evaluate_local(inp):
@@ -183,11 +195,14 @@ def evaluate_local(inp):
     out1 = np.sign(np.dot(model, inp1))
     tot_inputs.add(tuple(inp0))
 
-    if (abs(out0 + out1) == 0 and (tuple(inp0) not in global_disc_inputs) and (tuple(inp0) not in local_disc_inputs)):
+    if (abs(out0 - out1) > threshold and (tuple(inp0) not in global_disc_inputs) and (tuple(inp0) not in local_disc_inputs)):
         local_disc_inputs.add(tuple(inp0))
         local_disc_inputs_list.append(inp0)
 
-    return abs(out0 + out1)
+    return not abs(out0 - out1) > threshold
+    #for binary classification, we have found that the
+    #following optimization function gives better results
+    # return abs(out1 + out0)
 
 
 initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
@@ -196,21 +211,25 @@ minimizer = {"method": "L-BFGS-B"}
 global_discovery = Global_Discovery()
 local_perturbation = Local_Perturbation()
 
-basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery, minimizer_kwargs=minimizer, niter=global_iteration_limit)
+basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery,
+             minimizer_kwargs=minimizer, niter=global_iteration_limit)
 
 print "Finished Global Search"
-print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
+print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) +
+                                                        len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
 print ""
 print "Starting Local Search"
 
 for inp in global_disc_inputs_list:
     basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
                  niter=local_iteration_limit)
-    print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
+    print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) +
+                                                            len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
 
 print ""
 print "Local Search Finished"
-print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
+print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) +
+                                                        len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
 
 print ""
 print "Total Inputs are " + str(len(tot_inputs))
