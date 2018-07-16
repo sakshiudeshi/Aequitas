@@ -22,3 +22,5 @@ classifier_name = 'Decision_tree_standard_unfair.pkl'
 threshold = 0
 
 perturbation_unit = 1
+
+retraining_inputs = "Retraigi n_Example_File.txt"

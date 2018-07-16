@@ -126,7 +126,7 @@ class Local_Perturbation(object):
             direction_probability[param_choice] = max(direction_probability[param_choice] -
                                                       (direction_probability_change_size * perturbation_unit), 0)
 
-        if(ei):
+        if ei:
             param_probability[param_choice] = param_probability[param_choice] + param_probability_change_size
             normalise_probability()
         else:
@@ -234,3 +234,5 @@ print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_l
 print ""
 print "Total Inputs are " + str(len(tot_inputs))
 print "Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list))
+
+

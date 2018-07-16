@@ -4,8 +4,8 @@ import time
 import random
 import numpy as np
 
-num_trials = 10000
-samples = 10000
+num_trials = 100
+samples = 100
 
 classifier_name = config.classifier_name
 model = joblib.load(classifier_name)

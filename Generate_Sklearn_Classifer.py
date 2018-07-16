@@ -8,15 +8,12 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 import random
 from sklearn.neural_network import MLPClassifier
+import config
 
 
 X = []
 Y = []
 i = 0
-name = 'sex'
-sens_arg = 0
-sensitive = {}
-sens = []
 neg_count = 0
 pos_count = 0
 with open("cleaned_train", "r") as ins:
@@ -27,7 +24,6 @@ with open("cleaned_train", "r") as ins:
             i += 1
             continue
         L = map(int, line1[:-1])
-        sens.append(L[sens_arg - 1])
         # L[sens_arg-1]=-1
         X.append(L)
 

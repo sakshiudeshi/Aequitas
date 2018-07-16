@@ -43,10 +43,10 @@ local_disc_inputs_list = []
 
 tot_inputs = set()
 
-global_iteration_limit = 1000
+global_iteration_limit = 2000
 local_iteration_limit = 1000
 
-input_bounds = config.input_boundscd 
+input_bounds = config.input_bounds
 classifier_name = config.classifier_name
 
 model = joblib.load(classifier_name)
@@ -88,7 +88,7 @@ class Local_Perturbation(object):
             direction_probability[param_choice] = max(
                 direction_probability[param_choice] - (direction_probability_change_size * perturbation_unit), 0)
 
-        if (ei):
+        if ei:
             param_probability[param_choice] = param_probability[param_choice] + param_probability_change_size
             normalise_probability()
         else:
@@ -129,10 +129,10 @@ def evaluate_input(inp):
     out0 = model.predict(inp0)
     out1 = model.predict(inp1)
 
-    return (abs(out0 - out1) > threshold)
+    # return (abs(out0 - out1) > threshold)
     # for binary classification, we have found that the
     # following optimization function gives better results
-    # return abs(out1 + out0)
+    return abs(out1 + out0)
 
 def evaluate_global(inp):
     inp0 = [int(i) for i in inp]
@@ -156,10 +156,10 @@ def evaluate_global(inp):
         global_disc_inputs.add(tuple(map(tuple, inp0)))
         global_disc_inputs_list.append(inp0.tolist()[0])
 
-    return not abs(out0 - out1) > threshold
+    # return not abs(out0 - out1) > threshold
     # for binary classification, we have found that the
     # following optimization function gives better results
-    # return abs(out1 + out0)
+    return abs(out1 + out0)
 
 
 def evaluate_local(inp):
@@ -185,10 +185,10 @@ def evaluate_local(inp):
         local_disc_inputs.add(tuple(map(tuple, inp0)))
         local_disc_inputs_list.append(inp0.tolist()[0])
 
-    return not abs(out0 - out1) > threshold
+    # return not abs(out0 - out1) > threshold
     # for binary classification, we have found that the
     # following optimization function gives better results
-    # return abs(out1 + out0)
+    return abs(out1 + out0)
 
 
 initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
