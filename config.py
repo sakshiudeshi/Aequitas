@@ -23,4 +23,4 @@ threshold = 0
 
 perturbation_unit = 1
 
-retraining_inputs = "Retraigi n_Example_File.txt"
+retraining_inputs = "Retrain_Example_File.txt"
