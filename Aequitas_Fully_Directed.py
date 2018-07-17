@@ -155,8 +155,8 @@ def evaluate_input(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
     out0 = np.sign(np.dot(model, inp0))
     out1 = np.sign(np.dot(model, inp1))
     return abs(out0 - out1) > threshold
@@ -168,8 +168,8 @@ def evaluate_global(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
     out0 = np.sign(np.dot(model, inp0))
     out1 = np.sign(np.dot(model, inp1))
     tot_inputs.add(tuple(inp0))
@@ -189,8 +189,8 @@ def evaluate_local(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
     out0 = np.sign(np.dot(model, inp0))
     out1 = np.sign(np.dot(model, inp1))
     tot_inputs.add(tuple(inp0))

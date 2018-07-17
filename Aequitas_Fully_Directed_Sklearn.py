@@ -117,8 +117,8 @@ def evaluate_input(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))
@@ -138,8 +138,8 @@ def evaluate_global(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))
@@ -166,8 +166,8 @@ def evaluate_local(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))

@@ -67,8 +67,8 @@ def evaluate_input(inp, model):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[8] = 0
-    inp1[8] = 1
+    inp0[sensitive_param - 1] = 0
+    inp1[sensitive_param - 1] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))
@@ -114,6 +114,9 @@ def retrain_search():
         retraining_input_set = set()
         additive_percentage = random.uniform(pow(2, i), pow(2, i + 1))
         num_inputs_for_retrain = int((additive_percentage * len(X))/100)
+
+        if (num_inputs_for_retrain > retrain_len):
+            raise ValueError('Number of inputs in retraining are not enough. Please add more inputs')
 
         while (len(retraining_input_set) < num_inputs_for_retrain):
             retraining_input_set.add(random.randint(0, retrain_len - 1))

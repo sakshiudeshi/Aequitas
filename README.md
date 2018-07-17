@@ -25,7 +25,7 @@ The [config](config.py) file has the following data:
 * classifier_name: Pickled scikit-learn classifier under test (only applicable to the sklearn files)
 * threshold: Discrimination threshold.
 * perturbation_unit: By what unit would the user like to perturb the input in the local search.
-* retraining_inputs: Inputs to be used for the retraining. Please see [this file](Retrain_Example_File.txt). This functionality is only available for scikit-learn classifiers as of now.
+* retraining_inputs: Inputs to be used for the retraining. Please see [this file](Retrain_Example_File.txt).
 
 ## Demo
 `python <filename>`
