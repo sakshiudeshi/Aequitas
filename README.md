@@ -1,6 +1,6 @@
 # Aequitas
 
-We are releasing the tool Aequitas, a directed fairness testing framework machine learning models. See the paper [Automated Directed Fairness Testing](https://arxiv.org/abs/1807.00468) for more details.
+We present Aequitas, a directed fairness testing framework machine learning models. See the paper [Automated Directed Fairness Testing](https://arxiv.org/abs/1807.00468) for more details.
 
 
 
@@ -20,10 +20,10 @@ There are 3 test generation strategies in our suite, namely Aequitas Random, Aeq
 The [config](config.py) file has the following data:
 
 * params : The number of parameters in the data
-* sensitive_param: The parameter under test. $P_{disc}$ in the context of the paper
+* sensitive_param: The parameter under test.
 * input_bounds: The bounds of each parameter
 * classifier_name: Pickled scikit-learn classifier under test (only applicable to the sklearn files)
-* threshold: Discrimination threshold. $\gamma$ in the context of the paper.
+* threshold: Discrimination threshold.
 * perturbation_unit: By what unit would the user like to perturb the input in the local search.
 * retraining_inputs: Inputs to be used for the retraining. Please see [this file](Retrain_Example_File.txt). This functionality is only available for scikit-learn classifiers as of now.
 
