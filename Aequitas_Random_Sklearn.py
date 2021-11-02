@@ -6,7 +6,7 @@ import os
 from collections import defaultdict
 from sklearn import svm
 import os,sys
-import urllib2
+#import urllib2
 sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 import numpy as np
 import loss_funcs as lf # loss funcs that can be optimized subject to various constraints
@@ -78,8 +78,6 @@ class Global_Discovery(object):
         x[sensitive_param - 1] = 0
         # print(x)
         return x
-
-
 
 def evaluate_global(inp):
     inp0 = [int(i) for i in inp]

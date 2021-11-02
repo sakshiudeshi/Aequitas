@@ -6,11 +6,8 @@ from collections import defaultdict
 import traceback
 from copy import deepcopy
 
-
-
 def _hinge_loss(w, X, y):
 
-    
     yz = y * np.dot(X,w) # y * (x.w)
     yz = np.maximum(np.zeros_like(yz), (1-yz)) # hinge function
     
