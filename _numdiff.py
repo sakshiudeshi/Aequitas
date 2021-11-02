@@ -1,3 +1,10 @@
+"""
+FIXED A BUG ON THE ORIGINAL _NUMDIFF.PY OF THE SCIPY MODULE
+place this file on the following directory after creating an environment:
+<environment_name>/lib/scipy/optimize
+"""
+
+
 """Routines for numerical differentiation."""
 import functools
 import numpy as np
