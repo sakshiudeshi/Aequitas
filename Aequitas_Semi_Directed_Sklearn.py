@@ -86,7 +86,7 @@ class Global_Discovery(object):
 
     def __call__(self, x):
         s = self.stepsize
-        for i in xrange(params):
+        for i in range(params):
             random.seed(time.time())
             x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
 

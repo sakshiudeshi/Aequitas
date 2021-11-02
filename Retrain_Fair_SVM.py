@@ -138,7 +138,7 @@ def retrain(num_additional):
 
 def get_random_input():
     x = []
-    for i in xrange(params):
+    for i in range(params):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
@@ -160,10 +160,10 @@ def evaluate_input(inp, model):
 def get_estimate(model):
     estimate_array = []
     rolling_average = 0.0
-    for i in xrange(num_trials):
+    for i in range(num_trials):
         disc_count = 0
         total_count = 0
-        for j in xrange(samples):
+        for j in range(samples):
             total_count = total_count + 1
             if(evaluate_input(get_random_input(), model)):
                 disc_count = disc_count + 1
@@ -183,7 +183,7 @@ def retrain_search():
     global current_estimate
     global current_model
     X, Y, sens = extractor("cleaned_train")
-    for i in xrange(7):
+    for i in range(7):
         additive_percentage = random.uniform(pow(2, i), pow(2, i + 1))
         num_inputs_for_retrain = int((additive_percentage * len(X))/100)
 

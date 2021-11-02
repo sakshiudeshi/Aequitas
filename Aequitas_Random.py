@@ -57,7 +57,7 @@ with open("cleaned_train", "r") as ins:
         if (i == 0):
             i += 1
             continue
-        L = map(int, line1[:-1])
+        L = list(map(int, line1[:-1]))
         sens.append(L[sensitive_param - 1])
         # L[sens_arg-1]=-1
         X.append(L)
@@ -104,7 +104,7 @@ class Global_Discovery(object):
 
     def __call__(self, x):
         s = self.stepsize
-        for i in xrange(params):
+        for i in range(params):
             random.seed(time.time())
             x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
 

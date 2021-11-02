@@ -66,7 +66,7 @@ class Local_Perturbation(object):
 
     def __call__(self, x):
         s = self.stepsize
-        param_choice = np.random.choice(xrange(params) , p=param_probability)
+        param_choice = np.random.choice(range(params) , p=param_probability)
         act = [-1, 1]
         direction_choice = np.random.choice(act, p=[direction_probability[param_choice], (1 - direction_probability[param_choice])])
 
@@ -104,7 +104,7 @@ class Global_Discovery(object):
 
     def __call__(self, x):
         s = self.stepsize
-        for i in xrange(params):
+        for i in range(params):
             random.seed(time.time())
             x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
 
