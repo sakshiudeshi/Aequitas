@@ -98,7 +98,7 @@ def get_estimate(model):
 
         # print(estimate, rolling_average)
 
-    print(np.average(estimate_array))
+    print("Current biasedness:", np.average(estimate_array))
     return np.average(estimate_array)
 
 current_estimate = get_estimate(current_model)
