@@ -33,7 +33,7 @@ def extractor(filename):
             if (i == 0):
                 i += 1
                 continue
-            L = map(int, line1[:-1])
+            L = list(map(int, line1[:-1]))
             sens.append(L[sensitive_param - 1])
             # L[sens_arg-1]=-1
             X.append(L)
@@ -57,7 +57,7 @@ def extractor_retrain(filename, num_additional):
             if (i == 0):
                 i += 1
                 continue
-            L = map(int, line1[:-1])
+            L = list(map(int, line1[:-1]))
             sens.append(L[sensitive_param - 1])
             # L[sens_arg-1]=-1
             X.append(L)

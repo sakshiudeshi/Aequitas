@@ -31,7 +31,6 @@ def _logistic_loss(w, X, y, return_arr=None):
 
 	"""
 	
-
 	yz = y * np.dot(X,w)
 	# Logistic loss is the negative of the log of the logistic function.
 	if return_arr == True:

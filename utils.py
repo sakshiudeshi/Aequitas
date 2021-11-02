@@ -13,8 +13,6 @@ seed(SEED) # set the random seed so that the random permutations can be reproduc
 np.random.seed(SEED)
 
 
-
-
 def train_model(x, y, x_control, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh, gamma=None):
 
     print(x[0],y[0],x_control, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh)
@@ -291,7 +289,7 @@ def get_one_hot_encoding(in_arr):
     """
 
     for k in in_arr:
-        if str(type(k)) != "<type 'numpy.float64'>" and type(k) != int and type(k) != np.int64:
+        if str(type(k)) != "<class 'numpy.float64'>" and type(k) != int and type(k) != np.int64:
             print(str(type(k)))
             print("************* ERROR: Input arr does not have integer types")
             return None
