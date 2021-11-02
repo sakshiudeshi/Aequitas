@@ -1,4 +1,4 @@
-from sklearn.externals import joblib
+import joblib
 import config
 import time
 import random
@@ -91,11 +91,11 @@ def get_estimate_arrray():
         estimate = float(disc_count)/total_count
         rolling_average = ((rolling_average * i) + estimate)/(i + 1)
         estimate_array.append(estimate)
-        print estimate, rolling_average
+        print(estimate, rolling_average)
     return estimate_array
 
-print "Getting Estimate array"
+print("Getting Estimate array")
 
 arr = get_estimate_arrray()
 
-print "Estimate is " + str(np.mean(arr)* 100) + "%"
+print("Estimate is " + str(np.mean(arr)* 100) + "%")

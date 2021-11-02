@@ -1,4 +1,4 @@
-from sklearn.externals import joblib
+import joblib
 import config
 import time
 import random
@@ -96,9 +96,9 @@ def get_estimate(model):
         rolling_average = ((rolling_average * i) + estimate)/(i + 1)
         estimate_array.append(estimate)
 
-        # print estimate, rolling_average
+        # print(estimate, rolling_average)
 
-    print np.average(estimate_array)
+    print(np.average(estimate_array))
     return np.average(estimate_array)
 
 current_estimate = get_estimate(current_model)
