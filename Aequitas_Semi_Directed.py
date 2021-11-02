@@ -6,7 +6,7 @@ import os
 from collections import defaultdict
 from sklearn import svm
 import os,sys
-import urllib2
+#import urllib2
 sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 import utils as ut
 import numpy as np
@@ -57,7 +57,7 @@ with open("cleaned_train", "r") as ins:
         if (i == 0):
             i += 1
             continue
-        L = map(int, line1[:-1])
+        L = list(map(int, line1[:-1]))
         sens.append(L[sensitive_param - 1])
         # L[sens_arg-1]=-1
         X.append(L)
@@ -118,12 +118,12 @@ class Global_Discovery(object):
 
     def __call__(self, x):
         s = self.stepsize
-        for i in xrange(params):
+        for i in range(params):
             random.seed(time.time())
             x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
 
         x[sensitive_param - 1] = 0
-        # print x
+        # print(x)
         return x
 
 
@@ -189,20 +189,20 @@ local_perturbation = Local_Perturbation()
 
 basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery, minimizer_kwargs=minimizer, niter=global_iteration_limit)
 
-print "Finished Global Search"
-print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
-print ""
-print "Starting Local Search"
+print("Finished Global Search")
+print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100))
+print()
+print("Starting Local Search")
 
 for inp in global_disc_inputs_list:
     basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
                  niter=local_iteration_limit)
-    print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
+    print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100))
 
-print ""
-print "Local Search Finished"
-print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
+print()
+print("Local Search Finished")
+print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100))
 
-print ""
-print "Total Inputs are " + str(len(tot_inputs))
-print "Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list))
+print()
+print("Total Inputs are " + str(len(tot_inputs)))
+print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))

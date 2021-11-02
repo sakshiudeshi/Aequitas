@@ -6,7 +6,7 @@ import os
 from collections import defaultdict
 from sklearn import svm
 import os,sys
-import urllib2
+#import urllib2
 sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 import numpy as np
 import loss_funcs as lf # loss funcs that can be optimized subject to various constraints
@@ -14,7 +14,7 @@ import random
 import time
 from scipy.optimize import basinhopping
 import config
-from sklearn.externals import joblib
+import joblib
 
 random.seed(time.time())
 start_time = time.time()
@@ -66,7 +66,7 @@ class Local_Perturbation(object):
 
     def __call__(self, x):
         s = self.stepsize
-        param_choice = np.random.choice(xrange(params) , p=param_probability)
+        param_choice = np.random.choice(range(params) , p=param_probability)
         act = [-1, 1]
         direction_choice = np.random.choice(act, p=[direction_probability[param_choice], (1 - direction_probability[param_choice])])
 
@@ -104,12 +104,12 @@ class Global_Discovery(object):
 
     def __call__(self, x):
         s = self.stepsize
-        for i in xrange(params):
+        for i in range(params):
             random.seed(time.time())
             x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
 
         x[sensitive_param - 1] = 0
-        # print x
+        # print(x)
         return x
 
 
@@ -200,23 +200,23 @@ local_perturbation = Local_Perturbation()
 basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery, minimizer_kwargs=minimizer,
              niter=global_iteration_limit)
 
-print "Finished Global Search"
-print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list)
-                                                        + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
-print ""
-print "Starting Local Search"
+print("Finished Global Search")
+print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list)
+                                                        + len(local_disc_inputs_list)) / float(len(tot_inputs))*100))
+print()
+print("Starting Local Search")
 
 for inp in global_disc_inputs_list:
     basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
                  niter=local_iteration_limit)
-    print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
-                                                      / float(len(tot_inputs))*100)
+    print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
+                                                      / float(len(tot_inputs))*100))
 
-print ""
-print "Local Search Finished"
-print "Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
-                                                  / float(len(tot_inputs))*100)
+print()
+print("Local Search Finished")
+print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
+                                                  / float(len(tot_inputs))*100))
 
-print ""
-print "Total Inputs are " + str(len(tot_inputs))
-print "Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list))
+print("")
+print("Total Inputs are " + str(len(tot_inputs)))
+print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))

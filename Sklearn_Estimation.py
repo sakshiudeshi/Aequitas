@@ -1,4 +1,4 @@
-from sklearn.externals import joblib
+import joblib
 import config
 import time
 import random
@@ -15,7 +15,7 @@ sensitive_param = config.sensitive_param
 
 def get_random_input():
     x = []
-    for i in xrange(params):
+    for i in range(params):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
@@ -43,10 +43,10 @@ def evaluate_input(inp):
 def get_estimate_arrray():
     estimate_array = []
     rolling_average = 0.0
-    for i in xrange(num_trials):
+    for i in range(num_trials):
         disc_count = 0
         total_count = 0
-        for j in xrange(samples):
+        for j in range(samples):
             total_count = total_count + 1
             if(evaluate_input(get_random_input())):
                 disc_count = disc_count + 1
@@ -54,11 +54,11 @@ def get_estimate_arrray():
         estimate = float(disc_count)/total_count
         rolling_average = ((rolling_average * i) + estimate)/(i + 1)
         estimate_array.append(estimate)
-        print estimate, rolling_average
+        print(estimate, rolling_average)
     return estimate_array
 
-print "Getting Estimate array"
+print("Getting Estimate array")
 
 arr = get_estimate_arrray()
 
-print "Estimate is " + str(np.mean(arr) * 100) + "%"
+print("Estimate is " + str(np.mean(arr) * 100) + "%")

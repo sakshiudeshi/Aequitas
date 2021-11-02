@@ -1,4 +1,4 @@
-from sklearn.externals import joblib
+import joblib
 import config
 import time
 import random
@@ -18,7 +18,7 @@ def extract_inputs(filename):
             if (i == 0):
                 i += 1
                 continue
-            L = map(int, line1[:-1])
+            L = list(map(int, line1[:-1]))
             # L[sens_arg-1]=-1
             X.append(L)
 
@@ -56,7 +56,7 @@ def retrain(X_original, Y_original, X_additional, Y_additional):
 
 def get_random_input():
     x = []
-    for i in xrange(params):
+    for i in range(params):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
@@ -84,10 +84,10 @@ def evaluate_input(inp, model):
 def get_estimate(model):
     estimate_array = []
     rolling_average = 0.0
-    for i in xrange(num_trials):
+    for i in range(num_trials):
         disc_count = 0
         total_count = 0
-        for j in xrange(samples):
+        for j in range(samples):
             total_count = total_count + 1
             if(evaluate_input(get_random_input(), model)):
                 disc_count = disc_count + 1
@@ -96,9 +96,9 @@ def get_estimate(model):
         rolling_average = ((rolling_average * i) + estimate)/(i + 1)
         estimate_array.append(estimate)
 
-        # print estimate, rolling_average
+        # print(estimate, rolling_average)
 
-    print np.average(estimate_array)
+    print("Current biasedness:", np.average(estimate_array))
     return np.average(estimate_array)
 
 current_estimate = get_estimate(current_model)
@@ -108,7 +108,7 @@ def retrain_search():
     global current_model
     X_retrain, Y_retrain = extract_inputs(retraining_inputs)
     retrain_len = len(X_retrain)
-    for i in xrange(7):
+    for i in range(7):
         X_additional = []
         Y_additional = []
         retraining_input_set = set()

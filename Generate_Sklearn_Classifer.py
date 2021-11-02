@@ -1,6 +1,7 @@
+from __future__ import print_function
 import numpy as np
 from sklearn import svm
-from sklearn.externals import joblib
+import joblib
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
@@ -23,7 +24,7 @@ with open("cleaned_train", "r") as ins:
         if (i == 0):
             i += 1
             continue
-        L = map(int, line1[:-1])
+        L = list(map(int, line1[:-1]))
         # L[sens_arg-1]=-1
         X.append(L)
 
@@ -37,13 +38,15 @@ with open("cleaned_train", "r") as ins:
 
 X = np.array(X)
 Y = np.array(Y)
-print neg_count, pos_count
+print(neg_count, pos_count)
 
 # w = svm.SVC(gamma=0.0025)
 
 # model = MLPClassifier(solver='lbfgs', alpha=1e-5,
 #                       hidden_layer_sizes=(7, 5), random_state=1)
 model = DecisionTreeClassifier()
+print("model training started")
 model.fit(X, Y)
-print cross_val_score(model, X, Y, scoring='accuracy')
+print("model training finished")
+print(cross_val_score(model, X, Y, scoring='accuracy'))
 joblib.dump(model, 'Decision_tree_standard_unfair.pkl')
