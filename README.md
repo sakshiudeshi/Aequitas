@@ -4,11 +4,11 @@ We present Aequitas, a directed fairness testing framework machine learning mode
 
 ## Prerequisites
 
-1. Activate the `requiredmodules` environment.
+1. Creat a new virtual environment.
 
-* `python3 -m venv requiredmodules`
+* `python3 -m venv <name of environment>`
 
-* `source requiredmodules/bin/activate`
+* `source <name of environment>/bin/activate`
 
 2. Download all the necessary modules straight from the requirements.txt.
 
