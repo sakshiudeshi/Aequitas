@@ -50,7 +50,8 @@ Y = []
 i = 0
 sensitive = {}
 sens = []
-with open("cleaned_train", "r") as ins:
+dataset = config.original_inputs
+with open(dataset, "r") as ins:
     for line in ins:
         line = line.strip()
         line1 = line.split(',')
