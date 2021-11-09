@@ -22,7 +22,7 @@ with open(dataset, "r") as ins:
     for line in ins:
         line = line.strip()
         line1 = line.split(',')
-        if (i == 0):
+        if (i == 0): # this is a row containing column names
             i += 1
             continue
         L = list(map(int, line1[:-1]))
@@ -35,7 +35,6 @@ with open(dataset, "r") as ins:
         else:
             Y.append(1)
             pos_count = pos_count + 1
-
 
 X = np.array(X)
 Y = np.array(Y)
