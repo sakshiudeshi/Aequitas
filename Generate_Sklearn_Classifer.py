@@ -29,7 +29,7 @@ with open(dataset, "r") as ins:
         # L[sens_arg-1]=-1
         X.append(L)
 
-        if (int(line1[-1]) == 0):
+        if (int(line1[-1]) == 0): # this is the row that we're trying to predict (aka our 'y')
             Y.append(-1)
             neg_count = neg_count + 1
         else:
