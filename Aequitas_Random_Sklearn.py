@@ -170,3 +170,4 @@ print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_l
 print()
 print("Total Inputs are " + str(len(tot_inputs)))
 print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))
+
