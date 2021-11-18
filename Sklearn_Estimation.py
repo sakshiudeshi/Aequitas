@@ -10,24 +10,24 @@ samples = 100
 classifier_name = config.classifier_name
 model = joblib.load(classifier_name)
 input_bounds = config.input_bounds
-params = config.params
-sensitive_param = config.sensitive_param
+num_params = config.num_params
+sensitive_param_idx = config.sensitive_param_idx_idx
 
 def get_random_input():
     x = []
-    for i in range(params):
+    for i in range(num_params):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
-    x[sensitive_param - 1] = 0
+    x[sensitive_param_idx] = 0
     return x
 
 def evaluate_input(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param - 1] = 0
-    inp1[sensitive_param - 1] = 1
+    inp0[sensitive_param_idx] = 0
+    inp1[sensitive_param_idx] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))

@@ -11,7 +11,6 @@ import random
 from sklearn.neural_network import MLPClassifier
 import config
 
-
 X = []
 Y = []
 i = 0

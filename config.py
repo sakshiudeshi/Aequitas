@@ -1,25 +1,22 @@
-import pandas as pd
+import utils
 
 '''
 Employee
 '''
 
-params = 8 # exclude "y" col
+num_params = 8 # exclude "y" col
 
-sensitive_param = 6 # Starts at 0
+sensitive_param_idx = 5 # Starts at O
+
+sensitive_param_name = "Gender"
+
+col_to_be_predicted = "LeaveOrNot"
 
 classifier_name = 'Employee_DecisionTree_Original.pkl'
 
 original_inputs = "Employee.csv"
-input_bounds = []
-df=pd.read_csv(original_inputs)
-for col in df:
-    # not sure if I should exclude 'LeaveOrNot' here or not
-    if col == "LeaveOrNot":
-        continue
-    numUniqueVals = df[col].nunique()
-    input_bounds.append([0, numUniqueVals - 1]) # bound is inclusive
-print(input_bounds)
+
+input_bounds = utils.get_input_bounds(original_inputs, col_to_be_predicted)
 
 threshold = 0
 
@@ -29,16 +26,15 @@ retraining_inputs = "Retrain_Example_File.txt"
 
 
 
-
-
-
 '''
 Original
 '''
 
-# params = 13
+# num_params = 13
 
-# sensitive_param = 9 # Starts at 1.
+# sensitive_param_idx = 8 # Starts at 0.
+
+# sensitive_param_name = "sex"
 
 # input_bounds = []
 # input_bounds.append([1, 9])
