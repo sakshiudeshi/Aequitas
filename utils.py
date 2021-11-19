@@ -638,20 +638,10 @@ def get_input_bounds(input_file, sensitive_col_name):
         input_bounds.append([0, numUniqueVals - 1]) # bound is inclusive
     return input_bounds
 
-def evaluate_input(inp, sensitive_param_idx, model, threshold = 0):
-    inp0 = [int(i) for i in inp]
-    inp1 = [int(i) for i in inp]
+def get_column_names(input_file):
+    df=pd.read_csv(input_file)
+    return list(df.columns)
 
-    inp0[sensitive_param_idx] = 0
-    inp1[sensitive_param_idx] = 1
-
-    inp0 = np.asarray(inp0)
-    inp0 = np.reshape(inp0, (1, -1))
-
-    inp1 = np.asarray(inp1)
-    inp1 = np.reshape(inp1, (1, -1))
-
-    out0 = model.predict(inp0)
-    out1 = model.predict(inp1)
-
-    return (abs(out0 + out1) > threshold), inp0, inp1, out0, out1
+def get_idx_of_col_to_be_predicted(original_inputs, col_to_be_predicted):
+    df=pd.read_csv(original_inputs)
+    return list(df.columns).index(col_to_be_predicted)

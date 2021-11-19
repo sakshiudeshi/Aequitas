@@ -22,8 +22,10 @@ for col in cat_feature:
 
 sensitive_param_name = config.sensitive_param_name
 df[sensitive_param_name].replace({0: -1}, inplace=True) # make all 0s to -1s (critical for evaluating fairness)
-X=df.drop([sensitive_param_name],axis=1)
-y=df[sensitive_param_name]
+
+col_to_be_predicted = config.col_to_be_predicted
+X=df.drop([col_to_be_predicted],axis=1)
+y=df[col_to_be_predicted]
 df.to_csv(path_or_buf=infile, index=False)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=12)

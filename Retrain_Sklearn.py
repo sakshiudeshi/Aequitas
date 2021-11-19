@@ -4,34 +4,68 @@ import time
 import random
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
+# too specific to original input, deprecated
+# def extract_inputs_old(filename):
+#     X = []
+#     Y = []
+#     i = 0
+#     neg_count = 0
+#     pos_count = 0
+#     with open(filename, "r") as ins:
+#         for line in ins:
+#             line = line.strip()
+#             line1 = line.split(',')
+#             if (i == 0):
+#                 i += 1
+#                 continue
+#             L = list(map(int, line1[:-1]))
+#             # L[sens_arg-1]=-1
+#             X.append(L)
+
+#             if (int(line1[-1]) == 0):
+#                 Y.append(-1)
+#                 neg_count = neg_count + 1
+#             else:
+#                 Y.append(1)
+#                 pos_count = pos_count + 1
+
+#     return X, Y
 
 def extract_inputs(filename):
+    df = open(filename).readlines()
+    
     X = []
     Y = []
     i = 0
     neg_count = 0
     pos_count = 0
-    with open(filename, "r") as ins:
-        for line in ins:
-            line = line.strip()
-            line1 = line.split(',')
-            if (i == 0):
-                i += 1
-                continue
-            L = list(map(int, line1[:-1]))
-            # L[sens_arg-1]=-1
-            X.append(L)
-
-            if (int(line1[-1]) == 0):
-                Y.append(-1)
-                neg_count = neg_count + 1
-            else:
-                Y.append(1)
-                pos_count = pos_count + 1
+    col_to_be_predicted_idx = config.col_to_be_predicted_idx
+    
+    for line in df:
+        if (i == 0): # first row, col name, skip
+            i += 1
+            continue
+        line = line.strip().split(",")
+        L = list(map(int, line[:col_to_be_predicted_idx] + line[col_to_be_predicted_idx + 1:])) # exclude col to be predicted 
+        X.append(L)
+        if (int(line[-1]) == -1):
+            Y.append(-1)
+            neg_count = neg_count + 1
+        else:
+            Y.append(1)
+            pos_count = pos_count + 1
 
     return X, Y
 
-X, Y = extract_inputs("cleaned_train")
+X, Y = extract_inputs(config.original_inputs)
 X_original = np.array(X)
 Y_original = np.array(Y)
 
@@ -42,7 +76,7 @@ classifier_name = config.classifier_name
 current_model = joblib.load(classifier_name)
 input_bounds = config.input_bounds
 num_params = config.num_params
-sensitive_param_idx = config.sensitive_param_idx_idx
+sensitive_param_idx = config.sensitive_param_idx
 
 retraining_inputs = config.retraining_inputs
 
@@ -135,5 +169,7 @@ def retrain_search():
             del retrained_model
     return current_model
 
-
-retrain_search()
+if __name__ == "__main__":
+    improved_model = retrain_search()
+    file_to_save_model = config.classifier_name.split(".")[0] + "_Improved.pkl"
+    joblib.dump(improved_model, file_to_save_model)

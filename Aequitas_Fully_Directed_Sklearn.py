@@ -225,3 +225,11 @@ print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_l
 print("")
 print("Total Inputs are " + str(len(tot_inputs)))
 print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))
+
+# save the discriminatory inputs to file
+original_dataset_name = config.original_inputs.split(".")[0]
+retraining_example_filename = original_dataset_name + "_Retraining_Dataset.csv"
+with open(retraining_example_filename, 'w') as f:
+    f.write(",".join(config.column_names) + "\n") # write the column names on top first
+    for input in global_disc_inputs_list + local_disc_inputs_list:
+        f.write(",".join([str(num) for num in input] + [str(-1)]) + "\n")

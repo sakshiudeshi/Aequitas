@@ -16,13 +16,17 @@ classifier_name = 'Employee_DecisionTree_Original.pkl'
 
 original_inputs = "Employee.csv"
 
+column_names = utils.get_column_names(original_inputs)
+
 input_bounds = utils.get_input_bounds(original_inputs, col_to_be_predicted)
+
+col_to_be_predicted_idx = utils.get_idx_of_col_to_be_predicted(original_inputs, col_to_be_predicted)
 
 threshold = 0
 
 perturbation_unit = 1
 
-retraining_inputs = "Retrain_Example_File.txt"
+retraining_inputs = "Employee_Retraining_Dataset.csv" # need to be modified after running Aequitas
 
 
 
@@ -35,6 +39,8 @@ Original
 # sensitive_param_idx = 8 # Starts at 0.
 
 # sensitive_param_name = "sex"
+
+# col_to_be_predicted_idx = -1
 
 # input_bounds = []
 # input_bounds.append([1, 9])
