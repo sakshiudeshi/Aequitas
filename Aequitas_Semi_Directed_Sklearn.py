@@ -207,3 +207,9 @@ print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_l
 print()
 print("Total Inputs are " + str(len(tot_inputs)))
 print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))
+
+with open('Example_Retraining_Dataset.csv', 'w') as f:
+    lines = []
+    for input in global_disc_inputs_list  + local_disc_inputs_list:
+        lines.append(",".join([str(num) for num in input]))
+    f.writelines(lines)
