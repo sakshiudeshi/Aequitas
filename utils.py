@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from random import seed, shuffle
 import loss_funcs as lf # our implementation of loss funcs
 from scipy.optimize import minimize # for loss func minimization
@@ -11,7 +12,6 @@ import sys
 SEED = 1122334455
 seed(SEED) # set the random seed so that the random permutations can be reproduced again
 np.random.seed(SEED)
-
 
 def train_model(x, y, x_control, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh, gamma=None):
 
@@ -139,7 +139,6 @@ def train_model(x, y, x_control, loss_function, apply_fairness_constraints, appl
 
 def compute_cross_validation_error(x_all, y_all, x_control_all, num_folds, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh_arr, gamma=None):
 
-
     """
     Computes the cross validation error for the classifier subject to various fairness constraints
     This function is just a wrapper of "train_model(...)", all inputs (except for num_folds) are the same. See the specifications of train_model(...) for more info.
@@ -226,8 +225,6 @@ def compute_cross_validation_error(x_all, y_all, x_control_all, num_folds, loss_
 
     
     return test_acc_arr, train_acc_arr, correlation_dict_test_arr, correlation_dict_train_arr, cov_dict_test_arr, cov_dict_train_arr
-
-
 
 def print_classifier_fairness_stats(acc_arr, correlation_dict_arr, cov_dict_arr, s_attr_name):
     
@@ -345,7 +342,6 @@ def check_accuracy(model, x_train, y_train, x_test, y_test, y_train_predicted, y
 
 def test_sensitive_attr_constraint_cov(model, x_arr, y_arr_dist_boundary, x_control, thresh, verbose):
 
-    
     """
     The covariance is computed b/w the sensitive attr val and the distance from the boundary
     If the model is None, we assume that the y_arr_dist_boundary contains the distace from the decision boundary
@@ -357,10 +353,6 @@ def test_sensitive_attr_constraint_cov(model, x_arr, y_arr_dist_boundary, x_cont
     otherwise it will reutrn +1
     if the return value is >=0, then the constraint is satisfied
     """
-
-    
-
-
     assert(x_arr.shape[0] == x_control.shape[0])
     if len(x_control.shape) > 1: # make sure we just have one column in the array
         assert(x_control.shape[1] == 1)
@@ -387,11 +379,9 @@ def test_sensitive_attr_constraint_cov(model, x_arr, y_arr_dist_boundary, x_cont
 
 def print_covariance_sensitive_attrs(model, x_arr, y_arr_dist_boundary, x_control, sensitive_attrs):
 
-
     """
     reutrns the covariance between sensitive features and distance from decision boundary
     """
-
     arr = []
     if model is None:
         arr = y_arr_dist_boundary # simplt the output labels
@@ -430,12 +420,10 @@ def print_covariance_sensitive_attrs(model, x_arr, y_arr_dist_boundary, x_contro
 
 
 def get_correlations(model, x_test, y_predicted, x_control_test, sensitive_attrs):
-    
 
     """
     returns the fraction in positive class for sensitive feature values
     """
-
     if model is not None:
         y_predicted = np.sign(np.dot(x_test, model))
         
@@ -486,9 +474,7 @@ def get_constraint_list_cov(x_train, y_train, x_control_train, sensitive_attrs, 
     """
     get the list of constraints to be fed to the minimizer
     """
-
     constraints = []
-
 
     for attr in sensitive_attrs:
 
@@ -514,8 +500,6 @@ def get_constraint_list_cov(x_train, y_train, x_control_train, sensitive_attrs, 
 
 
     return constraints
-
-
 
 def split_into_train_test(x_all, y_all, x_control_all, train_fold_size):
 
@@ -562,8 +546,6 @@ def get_avg_correlation_dict(correlation_dict_arr):
 
 
 def plot_cov_thresh_vs_acc_pos_ratio(x_all, y_all, x_control_all, num_folds, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs):
-
-
     # very the covariance threshold using a range of decreasing multiplicative factors and see the tradeoffs between accuracy and fairness
     it = 0.05
     cov_range = np.arange(1.0, 0.0-it, -it).tolist()
@@ -644,3 +626,22 @@ def get_line_coordinates(w, x1, x2):
     y1 = (-w[0] - (w[1] * x1)) / w[2]
     y2 = (-w[0] - (w[1] * x2)) / w[2]    
     return y1,y2
+
+def get_input_bounds(input_file, sensitive_col_name):
+    input_bounds = []
+    df=pd.read_csv(input_file)
+    for col in df:
+        # exclude the column you're trying to predict
+        if col == sensitive_col_name:
+            continue
+        numUniqueVals = df[col].nunique()
+        input_bounds.append([0, numUniqueVals - 1]) # bound is inclusive
+    return input_bounds
+
+def get_column_names(input_file):
+    df=pd.read_csv(input_file)
+    return list(df.columns)
+
+def get_idx_of_col_to_be_predicted(original_inputs, col_to_be_predicted):
+    df=pd.read_csv(original_inputs)
+    return list(df.columns).index(col_to_be_predicted)

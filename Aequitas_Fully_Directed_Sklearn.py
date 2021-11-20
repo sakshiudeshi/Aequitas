@@ -15,20 +15,24 @@ import time
 from scipy.optimize import basinhopping
 import config
 import joblib
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
 
 random.seed(time.time())
 start_time = time.time()
 
 init_prob = 0.5
-params = config.params
-direction_probability = [init_prob] * params
+num_params = config.num_params
+direction_probability = [init_prob] * num_params
 direction_probability_change_size = 0.001
 
-param_probability = [1.0/params] * params
+param_probability = [1.0/num_params] * num_params
 param_probability_change_size = 0.001
 
-sensitive_param = config.sensitive_param
-name = 'sex'
+sensitive_param_idx = config.sensitive_param_idx
+sensitive_param_name = config.sensitive_param_name
 cov = 0
 
 perturbation_unit = config.perturbation_unit
@@ -56,7 +60,7 @@ def normalise_probability():
     for prob in param_probability:
         probability_sum = probability_sum + prob
 
-    for i in range(params):
+    for i in range(num_params):
         param_probability[i] = float(param_probability[i])/float(probability_sum)
 
 class Local_Perturbation(object):
@@ -66,7 +70,7 @@ class Local_Perturbation(object):
 
     def __call__(self, x):
         s = self.stepsize
-        param_choice = np.random.choice(range(params) , p=param_probability)
+        param_choice = np.random.choice(range(num_params) , p=param_probability)
         act = [-1, 1]
         direction_choice = np.random.choice(act, p=[direction_probability[param_choice], (1 - direction_probability[param_choice])])
 
@@ -104,11 +108,11 @@ class Global_Discovery(object):
 
     def __call__(self, x):
         s = self.stepsize
-        for i in range(params):
+        for i in range(num_params):
             random.seed(time.time())
             x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
 
-        x[sensitive_param - 1] = 0
+        x[sensitive_param_idx] = 0
         # print(x)
         return x
 
@@ -117,8 +121,8 @@ def evaluate_input(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param - 1] = 0
-    inp1[sensitive_param - 1] = 1
+    inp0[sensitive_param_idx] = 0
+    inp1[sensitive_param_idx] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))
@@ -138,8 +142,8 @@ def evaluate_global(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param - 1] = 0
-    inp1[sensitive_param - 1] = 1
+    inp0[sensitive_param_idx] = 0
+    inp1[sensitive_param_idx] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))
@@ -166,8 +170,8 @@ def evaluate_local(inp):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param - 1] = 0
-    inp1[sensitive_param - 1] = 1
+    inp0[sensitive_param_idx] = 0
+    inp1[sensitive_param_idx] = 1
 
     inp0 = np.asarray(inp0)
     inp0 = np.reshape(inp0, (1, -1))
@@ -191,7 +195,8 @@ def evaluate_local(inp):
     return abs(out1 + out0)
 
 
-initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+# initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+initial_input = [random.randint(low,high) for [low, high] in input_bounds]
 minimizer = {"method": "L-BFGS-B"}
 
 global_discovery = Global_Discovery()
@@ -220,3 +225,11 @@ print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_l
 print("")
 print("Total Inputs are " + str(len(tot_inputs)))
 print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))
+
+# save the discriminatory inputs to file
+original_dataset_name = config.original_inputs.split(".")[0]
+retraining_example_filename = original_dataset_name + "_Retraining_Dataset.csv"
+with open(retraining_example_filename, 'w') as f:
+    f.write(",".join(config.column_names) + "\n") # write the column names on top first
+    for input in global_disc_inputs_list + local_disc_inputs_list:
+        f.write(",".join([str(num) for num in input] + [str(-1)]) + "\n")

@@ -11,7 +11,6 @@ import random
 from sklearn.neural_network import MLPClassifier
 import config
 
-
 X = []
 Y = []
 i = 0
@@ -22,20 +21,19 @@ with open(dataset, "r") as ins:
     for line in ins:
         line = line.strip()
         line1 = line.split(',')
-        if (i == 0):
+        if (i == 0): # this is a row containing column names
             i += 1
             continue
         L = list(map(int, line1[:-1]))
         # L[sens_arg-1]=-1
         X.append(L)
 
-        if (int(line1[-1]) == 0):
+        if (int(line1[-1]) == 0): # this is the row that we're trying to predict (aka our 'y')
             Y.append(-1)
             neg_count = neg_count + 1
         else:
             Y.append(1)
             pos_count = pos_count + 1
-
 
 X = np.array(X)
 Y = np.array(Y)

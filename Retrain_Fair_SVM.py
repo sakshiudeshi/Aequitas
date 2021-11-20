@@ -10,12 +10,12 @@ import loss_funcs as lf
 
 sensitive = {}
 sens = []
-name = 'sex'
+sensitive_param_name = config.sensitive_param_idx_name
 cov = 0
 
 input_bounds = config.input_bounds
-params = config.params
-sensitive_param = config.sensitive_param
+num_params = config.num_params
+sensitive_param_idx = config.sensitive_param_idx_idx
 
 num_trials = 100
 samples = 100
@@ -34,7 +34,7 @@ def extractor(filename):
                 i += 1
                 continue
             L = list(map(int, line1[:-1]))
-            sens.append(L[sensitive_param - 1])
+            sens.append(L[sensitive_param_idx])
             # L[sens_arg-1]=-1
             X.append(L)
 
@@ -58,7 +58,7 @@ def extractor_retrain(filename, num_additional):
                 i += 1
                 continue
             L = list(map(int, line1[:-1]))
-            sens.append(L[sensitive_param - 1])
+            sens.append(L[sensitive_param_idx])
             # L[sens_arg-1]=-1
             X.append(L)
 
@@ -93,11 +93,11 @@ def train():
 
     X = np.array(X, dtype=float)
     Y = np.array(Y, dtype=float)
-    sensitive[name] = np.array(sens, dtype=float)
+    sensitive[sensitive_param_name] = np.array(sens, dtype=float)
     loss_function = lf._logistic_loss
     sep_constraint = 0
-    sensitive_attrs = [name]
-    sensitive_attrs_to_cov_thresh = {name: cov}
+    sensitive_attrs = [sensitive_param_name]
+    sensitive_attrs_to_cov_thresh = {sensitive_param_name: cov}
 
     gamma = None
 
@@ -123,11 +123,11 @@ def retrain(num_additional):
 
     X = np.array(X, dtype=float)
     Y = np.array(Y, dtype=float)
-    sensitive[name] = np.array(sens, dtype=float)
+    sensitive[sensitive_param_name] = np.array(sens, dtype=float)
     loss_function = lf._logistic_loss
     sep_constraint = 0
-    sensitive_attrs = [name]
-    sensitive_attrs_to_cov_thresh = {name: cov}
+    sensitive_attrs = [sensitive_param_name]
+    sensitive_attrs_to_cov_thresh = {sensitive_param_name: cov}
 
     gamma = None
 
@@ -138,19 +138,19 @@ def retrain(num_additional):
 
 def get_random_input():
     x = []
-    for i in range(params):
+    for i in range(num_params):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
-    x[sensitive_param - 1] = 0
+    x[sensitive_param_idx] = 0
     return x
 
 def evaluate_input(inp, model):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param - 1] = 0
-    inp1[sensitive_param - 1] = 1
+    inp0[sensitive_param_idx] = 0
+    inp1[sensitive_param_idx] = 1
     out0 = np.sign(np.dot(model, inp0))
     out1 = np.sign(np.dot(model, inp1))
 

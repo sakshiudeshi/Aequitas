@@ -24,7 +24,7 @@ params = config.params
 direction_probability = [init_prob] * params
 direction_probability_change_size = 0.001
 
-sensitive_param = config.sensitive_param
+sensitive_param_idx = config.sensitive_param_idx
 name = 'sex'
 cov = 0
 
