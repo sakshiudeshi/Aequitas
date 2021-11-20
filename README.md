@@ -14,6 +14,8 @@ We present Aequitas, a directed fairness testing framework machine learning mode
 
 * `pip install -r requirements.txt`
 
+* replace the file `_numdiff.py` in the directory `<environment_name>/lib/scipy/optimize` with the file `_numdiff.py` that is in this root directory
+
 ## Background
 There are 3 test generation strategies in our suite, namely Aequitas Random, Aequitas Semi-Directed and Aequitas Fully Directed. There are files to evaluate [Fair SVM](https://github.com/mbilalzafar/fair-classification) and Scikit-Learn classifiers trained on the same [dataset](http://archive.ics.uci.edu/ml/datasets/Adult).
 
