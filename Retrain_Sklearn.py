@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 le=LabelEncoder()
 def warn(*args, **kwargs):
@@ -180,7 +181,10 @@ if __name__ == "__main__":
     joblib.dump(improved_model, file_to_save_model)
 
     # display fairness improvement 
-    df = pd.DataFrame(fairness)
     joblib.dump(fairness, "fairness.txt")
-    print(df)
-    df.plot()
+    # x = [i for i in range(len(fairness))]
+    plt.plot(fairness)
+    plt.xlabel("Number of Iterations")
+    plt.ylabel("Percentage of Biased Outputs")
+    plotName = config.original_inputs.split(".")[0].lower() + "_fairness_improvement.png"
+    plt.savefig(plotName)
