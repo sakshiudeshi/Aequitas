@@ -3,6 +3,7 @@ import config
 import time
 import random
 import numpy as np
+import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
@@ -80,6 +81,8 @@ sensitive_param_idx = config.sensitive_param_idx
 
 retraining_inputs = config.retraining_inputs
 
+fairness = []
+
 def retrain(X_original, Y_original, X_additional, Y_additional):
 
     X = np.concatenate((X_original, X_additional), axis = 0)
@@ -136,6 +139,7 @@ def get_estimate(model):
     return np.average(estimate_array)
 
 current_estimate = get_estimate(current_model)
+fairness.append(current_estimate)
 
 def retrain_search():
     global current_estimate
@@ -160,6 +164,7 @@ def retrain_search():
             Y_additional.append(Y_retrain[i])
         retrained_model = retrain(X_original, Y_original, np.array(X_additional), np.array(Y_additional))
         retrained_estimate = get_estimate(retrained_model)
+        fairness.append(retrained_estimate)
         if (retrained_estimate > current_estimate):
             return current_model
         else:
@@ -173,3 +178,9 @@ if __name__ == "__main__":
     improved_model = retrain_search()
     file_to_save_model = config.classifier_name.split(".")[0] + "_Improved.pkl"
     joblib.dump(improved_model, file_to_save_model)
+
+    # display fairness improvement 
+    df = pd.DataFrame(fairness)
+    joblib.dump(fairness, "fairness.txt")
+    print(df)
+    df.plot()
