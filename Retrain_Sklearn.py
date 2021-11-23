@@ -82,7 +82,7 @@ sensitive_param_idx = config.sensitive_param_idx
 
 retraining_inputs = config.retraining_inputs
 
-fairness = []
+fairness = [] # array containing fairness estimates per iteration
 
 def retrain(X_original, Y_original, X_additional, Y_additional):
 
@@ -181,9 +181,8 @@ if __name__ == "__main__":
     joblib.dump(improved_model, file_to_save_model)
 
     # display fairness improvement 
-    joblib.dump(fairness, "fairness.txt")
-    # x = [i for i in range(len(fairness))]
     plt.plot(fairness)
+    plt.xticks(np.arange(0, len(fairness), 1.0))
     plt.xlabel("Number of Iterations")
     plt.ylabel("Percentage of Biased Outputs")
     plotName = config.original_inputs.split(".")[0].lower() + "_fairness_improvement.png"
