@@ -65,7 +65,7 @@ def extract_inputs(filename):
 
     return X, Y
 
-X, Y = extract_inputs(config.original_inputs)
+X, Y = extract_inputs(f'TrainingInputs/{config.original_inputs}')
 X_original = np.array(X)
 Y_original = np.array(Y)
 
@@ -73,7 +73,7 @@ num_trials = 100
 samples = 100
 
 classifier_name = config.classifier_name
-current_model = joblib.load(classifier_name)
+current_model = joblib.load(f'TrainedModels/{classifier_name}')
 input_bounds = config.input_bounds
 num_params = config.num_params
 sensitive_param_idx = config.sensitive_param_idx
@@ -140,7 +140,7 @@ current_estimate = get_estimate(current_model)
 def retrain_search():
     global current_estimate
     global current_model
-    X_retrain, Y_retrain = extract_inputs(retraining_inputs)
+    X_retrain, Y_retrain = extract_inputs(f'RetrainingInputs/{retraining_inputs}')
     retrain_len = len(X_retrain)
     for i in range(7):
         X_additional = []
@@ -172,4 +172,4 @@ def retrain_search():
 if __name__ == "__main__":
     improved_model = retrain_search()
     file_to_save_model = config.classifier_name.split(".")[0] + "_Improved.pkl"
-    joblib.dump(improved_model, file_to_save_model)
+    joblib.dump(improved_model, f'RetrainedModels/{file_to_save_model}')

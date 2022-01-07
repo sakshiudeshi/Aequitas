@@ -599,7 +599,6 @@ def plot_cov_thresh_vs_acc_pos_ratio(x_all, y_all, x_control_all, num_folds, los
     positive_per_category = dict(positive_per_category)
     
     p_rule_arr = (np.array(positive_per_category[0]) / np.array(positive_per_category[1])) * 100.0
-    
 
     ax = plt.subplot(2,1,1)
     plt.plot(cov_range, positive_per_category[0], "-o" , color="green", label = "Protected")
@@ -629,7 +628,7 @@ def get_line_coordinates(w, x1, x2):
 
 def get_input_bounds(input_file, sensitive_col_name):
     input_bounds = []
-    df=pd.read_csv(input_file)
+    df=pd.read_csv(f'TrainingInputs/{input_file}')
     for col in df:
         # exclude the column you're trying to predict
         if col == sensitive_col_name:
@@ -639,9 +638,9 @@ def get_input_bounds(input_file, sensitive_col_name):
     return input_bounds
 
 def get_column_names(input_file):
-    df=pd.read_csv(input_file)
+    df=pd.read_csv(f'TrainingInputs/{input_file}')
     return list(df.columns)
 
-def get_idx_of_col_to_be_predicted(original_inputs, col_to_be_predicted):
-    df=pd.read_csv(original_inputs)
+def get_idx_of_col_to_be_predicted(input_file, col_to_be_predicted):
+    df=pd.read_csv(f'TrainingInputs/{input_file}')
     return list(df.columns).index(col_to_be_predicted)
