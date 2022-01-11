@@ -5,6 +5,7 @@ import random
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 le=LabelEncoder()
 def warn(*args, **kwargs):
@@ -79,6 +80,7 @@ num_params = config.num_params
 sensitive_param_idx = config.sensitive_param_idx
 
 retraining_inputs = config.retraining_inputs
+fairness = [] # array containing fairness estimates per iteration
 
 def retrain(X_original, Y_original, X_additional, Y_additional):
 
@@ -136,6 +138,7 @@ def get_estimate(model):
     return np.average(estimate_array)
 
 current_estimate = get_estimate(current_model)
+fairness.append(current_estimate)
 
 def retrain_search():
     global current_estimate
@@ -160,6 +163,7 @@ def retrain_search():
             Y_additional.append(Y_retrain[i])
         retrained_model = retrain(X_original, Y_original, np.array(X_additional), np.array(Y_additional))
         retrained_estimate = get_estimate(retrained_model)
+        fairness.append(retrained_estimate)
         if (retrained_estimate > current_estimate):
             return current_model
         else:
@@ -173,3 +177,11 @@ if __name__ == "__main__":
     improved_model = retrain_search()
     file_to_save_model = config.classifier_name.split(".")[0] + "_Improved.pkl"
     joblib.dump(improved_model, f'RetrainedModels/{file_to_save_model}')
+
+    # display fairness improvement 
+    plt.plot(fairness)
+    plt.xticks(np.arange(0, len(fairness), 1.0))
+    plt.xlabel("Number of Iterations")
+    plt.ylabel("Percentage of Biased Outputs")
+    plotName = config.original_inputs.split(".")[0].lower() + "_fairness_improvement.png"
+    plt.savefig(f"ImprovementGraphs/{plotName}")
