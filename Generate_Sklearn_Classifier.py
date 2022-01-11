@@ -4,14 +4,20 @@ from sklearn.preprocessing import LabelEncoder
 le=LabelEncoder()
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn import tree
+import random
 import joblib
 import config
+import os
 
 # did exactly as the original authors had processed the data
 infile = config.original_inputs
 
-df=pd.read_csv(infile)
+df=pd.read_csv(f"TrainingInputs/{infile}")
 
 cat_feature = list(df.columns)
 # cat_feature=['Education', 'JoiningYear', 'City', 'PaymentTier', 'Gender',
@@ -26,11 +32,16 @@ df[sensitive_param_name].replace({0: -1}, inplace=True) # make all 0s to -1s (cr
 col_to_be_predicted = config.col_to_be_predicted
 X=df.drop([col_to_be_predicted],axis=1)
 y=df[col_to_be_predicted]
-df.to_csv(path_or_buf=infile, index=False)
+df.to_csv(path_or_buf=f"TrainingInputs/{os.path.splitext(infile)[0]}_cleaned.csv", index=False)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=12)
 
-model= DecisionTreeClassifier(random_state=42,criterion='entropy',splitter='random')
+model= DecisionTreeClassifier(random_state=42,criterion='entropy',splitter='random') # should be modifiable
+# w = svm.SVC(gamma=0.0025)
+
+# model = MLPClassifier(solver='lbfgs', alpha=1e-5,
+#                       hidden_layer_sizes=(7, 5), random_state=1)
+
 model.fit(X_train,y_train)
 
 pred=model.predict(X_test)
@@ -45,4 +56,4 @@ scores.append({
 model.score(X_test, y_test)
 
 file_to_save_model = config.classifier_name
-joblib.dump(model, file_to_save_model)
+joblib.dump(model, f'TrainedModels/{file_to_save_model}')
