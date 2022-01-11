@@ -176,6 +176,7 @@ def retrain_search():
 if __name__ == "__main__":
     improved_model = retrain_search()
     file_to_save_model = config.classifier_name.split(".")[0] + "_Improved.pkl"
+
     joblib.dump(improved_model, f'RetrainedModels/{file_to_save_model}')
 
     # display fairness improvement 
@@ -185,3 +186,4 @@ if __name__ == "__main__":
     plt.ylabel("Percentage of Biased Outputs")
     plotName = config.original_inputs.split(".")[0].lower() + "_fairness_improvement.png"
     plt.savefig(f"ImprovementGraphs/{plotName}")
+
