@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;;
+}
+
+.main {
+  display: grid;
+  justify-items: center;
+  padding: 15rem 0;
+}
+
+#heading {
+  justify-content: center;
+  display: flex;
+}
+
+button.primary {
+  padding: 1rem 0;
+  margin-top: 1rem;
+  width: 60%;
+}
