@@ -36,4 +36,18 @@ eg. `python Aequitas_Fully_Directed.py`
 * Please contact sakshi_udeshi@mymail.sutd.edu.sg for any comments/questions
 
 
+## Citation 
+* Please use the following citation if you use any part of this code
+
+```
+@inproceedings{aequitas,
+  title={Automated directed fairness testing},
+  author={Udeshi, Sakshi and Arora, Pryanshu and Chattopadhyay, Sudipta},
+  booktitle={Proceedings of the 33rd ACM/IEEE International Conference on Automated Software Engineering},
+  pages={98--108},
+  year={2018}
+}
+```
+
+
 
