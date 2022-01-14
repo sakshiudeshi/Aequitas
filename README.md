@@ -37,7 +37,7 @@ eg. `python Aequitas_Fully_Directed.py`
 
 
 ## Citation 
-* Please use the following citation if you use any part of this code
+If you use any part of this code, please cite the following paper
 
 ```
 @inproceedings{aequitas,
