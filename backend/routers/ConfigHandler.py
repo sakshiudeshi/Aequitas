@@ -6,15 +6,12 @@ import json
 import csv
 
 # secure file input!!
-class RunHandler(Resource):
-  def post(self):
-    # TODO: Once config form is complete and populated, run Aequitas
-    return 
-
+class ConfigHandler(Resource):
   def get(self):
     datasetName = request.args.get('filename')
+    # configure Aequitas 
 
-    # TODO: Run Aequitas
+    # TODO: Implement configuration 
 
     # return the results
     return {
