@@ -12,16 +12,15 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function OurNavbar() {
   return (
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
-      <a class="navbar-brand" href="/">
+    <nav className="navbar navbar-expand-sm navbar-light bg-light">
+      <a className="navbar-brand" href="/">
         Aequitas Web
       </a>
       <button
-        class="navbar-toggler"
+        className="navbar-toggler"
         type="button"
         data-toggle="collapse"
         data-target="#navbarSupportedContent"
@@ -29,23 +28,39 @@ export default function OurNavbar() {
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/aboutaequitas">
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav mr-auto">
+          <li className="nav-item">
+            <a className="nav-link" href="/aboutaequitas">
               About Aequitas
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/aequitasdocs">
-              Aequitas Documentation
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Using Aequitas
             </a>
+            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a className="dropdown-item" href="/aequitasdocs">
+                Aequitas Documentation
+              </a>
+              <div className="dropdown-divider"></div>
+              <a className="dropdown-item" href="#">
+                Something else here
+              </a>
+            </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/aboutus">
+          <li className="nav-item">
+            <a className="nav-link" href="/aboutus">
               About Us
             </a>
           </li>

@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import ResultScreen from "./screens/ResultScreen";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import AboutAequitasScreen from "./screens/AboutAequitasScreen";
 import AequitasDocumentationScreen from "./screens/AequitasDocumentationScreen";
 import AboutUsScreen from "./screens/AboutUsScreen";

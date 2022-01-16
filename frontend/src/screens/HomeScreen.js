@@ -50,11 +50,11 @@ export default function HomeScreen() {
   return (
     <div className="main">
       <OurNavbar></OurNavbar>
-      <div class="container">
-        <div class="row">
-          <div class="jumbotron">
-            <h1 class="display-4">Aequitas Web</h1>
-            <p class="lead">
+      <div className="container">
+        <div className="row">
+          <div className="jumbotron">
+            <h1 className="display-4">Aequitas Web</h1>
+            <p className="lead">
               Upload your training data to find out about its fairness!
             </p>
             <div>
