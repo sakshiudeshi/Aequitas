@@ -6,7 +6,6 @@ import json
 import csv
 
 # secure file input!!
-
 class UploadHandler(Resource):
   def get(self):
     return {
