@@ -17,7 +17,7 @@ class UploadHandler(Resource):
   def post(self):
     dataset = request.files['dataset'] # key point!!! https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
     
-    filename = f"{datetime.now()}_{dataset.filename}"
+    filename = f"{dataset.filename}"
     dataset.save(os.path.join('aequitas/TrainingInputs', filename)) # somehow this searches from the backend folder..okay
     
     final_ret = {"status": "Success", "message": filename}
