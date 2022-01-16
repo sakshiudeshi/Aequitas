@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import OurNavbar from "../components/OurNavbar";
 
 export default function HomeScreen() {
   const [uploadStatus, setUploadStatus] = useState("");
@@ -25,7 +26,7 @@ export default function HomeScreen() {
   };
 
   const submitHandler = async (e) => {
-    //Todo
+    // Todo
     // Actually run Aequitas
     if (uploadStatus) {
       const filename = uploadStatus.data.message;
@@ -48,30 +49,43 @@ export default function HomeScreen() {
 
   return (
     <div className="main">
-      <h1 id="heading">Aequitas Web</h1>
-      <h3>Upload your training data to find out about its fairness!</h3>
-      <div>
-        <label htmlFor="modelFile">Model Training Dataset </label>
-        <input
-          type="file"
-          id="modelFile"
-          label="Choose File"
-          onChange={uploadFileHandler}
-        ></input>
+      <OurNavbar></OurNavbar>
+      <div class="container">
+        <div class="row">
+          <div class="jumbotron">
+            <h1 class="display-4">Aequitas Web</h1>
+            <p class="lead">
+              Upload your training data to find out about its fairness!
+            </p>
+            <div>
+              <label htmlFor="modelFile">Model Training Dataset </label>
+              <input
+                type="file"
+                id="modelFile"
+                label="Choose File"
+                onChange={uploadFileHandler}
+              ></input>
+            </div>
+            {uploadStatus.status === 200 ? (
+              <div>{uploadStatus.data.message} uploaded successfully. </div>
+            ) : (
+              <div></div>
+            )}
+            {uploadStatus ? (
+              <button
+                className="btn btn-primary btn-lg"
+                type="button"
+                disabled={uploadStatus === ""}
+                onClick={submitHandler}
+              >
+                Get Started
+              </button>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
       </div>
-      {uploadStatus.status === 200 ? (
-        <div>{uploadStatus.data.message} uploaded successfully. </div>
-      ) : (
-        <div></div>
-      )}
-      <button
-        className="primary"
-        type="button"
-        disabled={uploadStatus === ''}
-        onClick={submitHandler}
-      >
-        Submit
-      </button>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
+import OurNavbar from "../components/OurNavbar";
 
 export default function ResultScreen() {
 
@@ -7,7 +8,7 @@ export default function ResultScreen() {
 
   return (
     <div>
-      <Link to="/">Back</Link>
+      <OurNavbar></OurNavbar>
       <h1>Aequitas Results for {filename}</h1>
     </div>
   );
