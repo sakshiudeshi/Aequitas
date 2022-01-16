@@ -2,8 +2,6 @@
 
 We present Aequitas, a directed fairness testing framework machine learning models. See the paper [Automated Directed Fairness Testing](https://arxiv.org/abs/1807.00468) for more details.
 
-Updated aequitas
-
 ## Prerequisites
 
 1. Creat a new virtual environment.
