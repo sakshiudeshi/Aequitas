@@ -9,11 +9,11 @@ import os,sys
 #import urllib2
 sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 import numpy as np
-import backend.aequitas.loss_funcs as lf # loss funcs that can be optimized subject to various constraints
+import loss_funcs as lf # loss funcs that can be optimized subject to various constraints
 import random
 import time
 from scipy.optimize import basinhopping
-import backend.aequitas.config as config
+import config as config
 import joblib
 def warn(*args, **kwargs):
     pass

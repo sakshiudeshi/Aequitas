@@ -1,5 +1,5 @@
 import joblib
-import backend.aequitas.config as config
+import config as config
 import time
 import random
 import numpy as np
@@ -61,8 +61,8 @@ def get_estimate_arrray():
         print(estimate, rolling_average)
     return estimate_array
 
-print("Getting Estimate array")
-
-arr = get_estimate_arrray()
-
-print("Estimate is " + str(np.mean(arr) * 100) + "%")
+def run():
+    print("Getting Estimate array")
+    arr = get_estimate_arrray()
+    print("Estimate is " + str(np.mean(arr) * 100) + "%")
+    return str(np.mean(arr) * 100)

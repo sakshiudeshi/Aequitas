@@ -1,5 +1,5 @@
 import joblib
-import backend.aequitas.config as config
+import config as config
 import time
 import random
 import numpy as np

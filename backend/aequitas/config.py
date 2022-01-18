@@ -1,4 +1,4 @@
-import backend.aequitas.utils as utils
+import utils as utils
 
 '''
 Employee

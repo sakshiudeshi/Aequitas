@@ -11,7 +11,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn import tree
 import random
 import joblib
-import backend.aequitas.config as config
+import config as config
 import os
 
 # did exactly as the original authors had processed the data

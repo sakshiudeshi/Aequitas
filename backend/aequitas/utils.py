@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from random import seed, shuffle
-import backend.aequitas.loss_funcs as lf # our implementation of loss funcs
+import loss_funcs as lf # our implementation of loss funcs
 from scipy.optimize import minimize # for loss func minimization
 from multiprocessing import Pool, Process, Queue
 from collections import defaultdict

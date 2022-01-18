@@ -9,11 +9,11 @@ import os,sys
 #import urllib2
 sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 import numpy as np
-import backend.aequitas.loss_funcs as lf # loss funcs that can be optimized subject to various constraints
+import loss_funcs as lf # loss funcs that can be optimized subject to various constraints
 import random
 import time
 from scipy.optimize import basinhopping
-import backend.aequitas.config as config
+import config as config
 import joblib
 def warn(*args, **kwargs):
     pass
@@ -73,7 +73,6 @@ class Local_Perturbation(object):
         x[val] = min(input_bounds[val][1], x[val])
 
         return x
-
 
 class Global_Discovery(object):
     def __init__(self, stepsize=1):
@@ -147,34 +146,37 @@ def evaluate_local(inp):
     # following optimization function gives better results
     # return abs(out1 + out0)
 
+def run():
+    # initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+    initial_input = [random.randint(low,high) for [low, high] in input_bounds]
+    minimizer = {"method": "L-BFGS-B"}
 
-# initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
-initial_input = [random.randint(low,high) for [low, high] in input_bounds]
-minimizer = {"method": "L-BFGS-B"}
+    global_discovery = Global_Discovery()
+    local_perturbation = Local_Perturbation()
 
-global_discovery = Global_Discovery()
-local_perturbation = Local_Perturbation()
+    basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery, minimizer_kwargs=minimizer,
+                niter=global_iteration_limit)
 
-basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery, minimizer_kwargs=minimizer,
-             niter=global_iteration_limit)
+    print("Finished Global Search")
+    print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list)
+                                                            + len(local_disc_inputs_list)) / float(len(tot_inputs))*100))
+    print()
+    print("Starting Local Search")
 
-print("Finished Global Search")
-print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list)
-                                                        + len(local_disc_inputs_list)) / float(len(tot_inputs))*100))
-print()
-print("Starting Local Search")
+    for inp in global_disc_inputs_list:
+        basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
+                    niter=local_iteration_limit)
+        print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
+                                                        / float(len(tot_inputs))*100))
 
-for inp in global_disc_inputs_list:
-    basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
-                 niter=local_iteration_limit)
+    print()
+    print("Local Search Finished")
     print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
-                                                      / float(len(tot_inputs))*100))
+                                                    / float(len(tot_inputs))*100))
 
-print()
-print("Local Search Finished")
-print("Percentage discriminatory inputs - " + str(float(len(global_disc_inputs_list) + len(local_disc_inputs_list))
-                                                  / float(len(tot_inputs))*100))
+    print()
+    print("Total Inputs are " + str(len(tot_inputs)))
+    print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))
 
-print()
-print("Total Inputs are " + str(len(tot_inputs)))
-print("Number of discriminatory inputs are " + str(len(global_disc_inputs_list)+len(local_disc_inputs_list)))
+if __name__ == "__main__":
+    run()
