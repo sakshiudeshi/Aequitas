@@ -16,5 +16,5 @@ class ConfigHandler(Resource):
     # return the results
     return {
       'status': 'Success',
-      'message': datasetName
+      'submittedFile': str(datasetName)
     }
