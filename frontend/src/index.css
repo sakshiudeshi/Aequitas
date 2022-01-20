@@ -20,3 +20,8 @@ button.primary {
   margin-top: 1rem;
   width: 100%;
 }
+
+.row {
+  display: inherit !important;
+  padding-top: 2rem;
+}
