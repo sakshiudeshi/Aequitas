@@ -10,7 +10,7 @@ export const runAequitas = (datasetName) => async (dispatch, getState) => {
   });
   try {
     const { data } = await Axios.get(
-      `http://localhost:5000/api/run?filename=${datasetName}`
+      `http://localhost:8000/api/run?filename=${datasetName}`
     );
     dispatch({ type: RUN_AEQUITAS_SUCCESS, payload: data });
   } catch (error) {

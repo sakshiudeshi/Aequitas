@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import OurNavbar from "../components/OurNavbar";
 import { runAequitas } from "../actions/runActions";
 import LoadingBox from "../components/LoadingBox";
+import { RUN_AEQUITAS_RESET } from "../constants/runConstants";
 
 export default function ConfigScreen() {
   const { filename } = useParams();
@@ -19,6 +20,7 @@ export default function ConfigScreen() {
 
   useEffect(() => {
     if (aequitasRunResult) {
+      //dispatch({type: RUN_AEQUITAS_RESET});
       navigate(`/result/${filename}`);
     }
   }, [aequitasRunResult, navigate]);

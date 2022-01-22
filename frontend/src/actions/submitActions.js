@@ -14,7 +14,7 @@ export const submitFile = (datasetName) => async (dispatch, getState) => {
   });
   try {
     const { data } = await Axios.get(
-      `http://localhost:5000/api/config?filename=${datasetName}`
+      `http://localhost:8000/api/config?filename=${datasetName}`
     );
     dispatch({ type: SUBMIT_DATASET_SUCCESS, payload: data });
   } catch (error) {
