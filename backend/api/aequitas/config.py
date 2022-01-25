@@ -34,9 +34,12 @@ global_iteration_limit = 100 # needs to be at least 1000 to be effective
 
 local_iteration_limit = 100
 
+improvement_graph = 'employee_fairness_improvement_fully_directed.png'
+
 # for backend purposes, not for running Aequitas
 RETRAINING_DATASET_DIRECTORY = "RetrainingInputs"
 RETRAINED_MODEL_DIRECTORY = "RetrainedModels"
+IMPROVEMENT_GRAPH_DIRECTORY = "ImprovementGraphs"
 
 
 

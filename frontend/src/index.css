@@ -23,9 +23,7 @@ button.primary {
 }
 
 .btn-primary {
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-  width: 80%;
+  width: 50%;
 }
 
 .row {
@@ -35,5 +33,11 @@ button.primary {
 
 label {
   padding-right: 1rem;
+}
+
+img {
+  width: 80%;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 

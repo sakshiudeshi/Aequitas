@@ -1,4 +1,4 @@
-import { RUN_AEQUITAS_FAIL, RUN_AEQUITAS_REQUEST, RUN_AEQUITAS_RESET, RUN_AEQUITAS_SUCCESS } from "../constants/runConstants";
+import { GET_IMPROVEMENT_GRAPH_FAIL, GET_IMPROVEMENT_GRAPH_REQUEST, GET_IMPROVEMENT_GRAPH_SUCCESS, RUN_AEQUITAS_FAIL, RUN_AEQUITAS_REQUEST, RUN_AEQUITAS_RESET, RUN_AEQUITAS_SUCCESS } from "../constants/runConstants";
 
 export const aequitasRunReducer = (state = {}, action) => {
   switch (action.type) {

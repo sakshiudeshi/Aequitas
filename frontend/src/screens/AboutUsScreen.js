@@ -1,11 +1,12 @@
 import React from 'react';
+import Header from '../components/Header';
 import OurNavbar from '../components/OurNavbar';
 
 export default function AboutUsScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <h1>About Us</h1>
+      <Header child={<h1>About Us</h1>}></Header>
     </div>
   )
 }

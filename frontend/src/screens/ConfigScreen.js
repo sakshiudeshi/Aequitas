@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import OurNavbar from "../components/OurNavbar";
 import { runAequitas } from "../actions/runActions";
 import LoadingBox from "../components/LoadingBox";
-import { RUN_AEQUITAS_RESET } from "../constants/runConstants";
+import Header from "../components/Header";
 
 export default function ConfigScreen() {
   const { filename } = useParams();
@@ -20,7 +20,6 @@ export default function ConfigScreen() {
 
   useEffect(() => {
     if (aequitasRunResult) {
-      //dispatch({type: RUN_AEQUITAS_RESET});
       navigate(`/result/${filename}`);
     }
   }, [aequitasRunResult, navigate]);
@@ -28,14 +27,18 @@ export default function ConfigScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <h1>Aequitas Configuration for {filename}</h1>
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={() => clickHandler(filename)}
-      >
-        Run Aequitas
-      </button>
+      <Header child={
+        <h1>Aequitas Configuration for {filename}</h1>
+      }></Header>
+      <div className="col-md-12 text-center">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => clickHandler(filename)}
+        >
+          Run Aequitas
+        </button>
+      </div>
       {runAequitasLoading && <LoadingBox></LoadingBox>}
     </div>
   );

@@ -26,7 +26,7 @@ export default function HomeScreen() {
       });
   };
 
-  const fileSubmitResult = useSelector(state => state.fileSubmit);
+  const fileSubmitResult = useSelector((state) => state.fileSubmit);
   const { submitResult, loading, error } = fileSubmitResult;
   const submitHandler = async (e) => {
     if (uploadSuccess) {
@@ -45,12 +45,17 @@ export default function HomeScreen() {
   return (
     <div className="main">
       <OurNavbar></OurNavbar>
-      <div className="container">
-        <div className="row">
-          <div className="jumbotron">
+      <div className="jumbotron">
+        <div className="container">
+          <div className="row">
             <h1 className="display-4">Aequitas Web</h1>
             <p className="lead">
               Upload your training data to find out about its fairness!
+              <img
+                src="https://i.ibb.co/GdbKx6V/employee-fairness-improvement-fully-directed.png"
+                alt="employee-fairness-improvement-fully-directed"
+                border="0"
+              />
             </p>
             <div>
               <label htmlFor="modelFile">Model Training Dataset</label>

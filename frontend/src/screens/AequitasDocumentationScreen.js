@@ -1,10 +1,11 @@
-import React from 'react';
-import OurNavbar from '../components/OurNavbar';
+import React from "react";
+import Header from "../components/Header";
+import OurNavbar from "../components/OurNavbar";
 export default function AequitasDocumentationScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <h1>Aequitas Documentations</h1>
+      <Header child={<h1>Aequitas Documentations</h1>}></Header>
     </div>
-  )
+  );
 }

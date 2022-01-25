@@ -1,11 +1,19 @@
 import Axios from "axios";
-import { RUN_AEQUITAS_FAIL, RUN_AEQUITAS_REQUEST, RUN_AEQUITAS_SUCCESS } from "../constants/runConstants";
+import {
+  GET_IMPROVEMENT_GRAPH_FAIL,
+  GET_IMPROVEMENT_GRAPH_REQUEST,
+  GET_IMPROVEMENT_GRAPH_SUCCESS,
+  RUN_AEQUITAS_FAIL,
+  RUN_AEQUITAS_REQUEST,
+  RUN_AEQUITAS_SUCCESS,
+} from "../constants/runConstants";
+import path from "path";
 
 export const runAequitas = (datasetName) => async (dispatch, getState) => {
   dispatch({
     type: RUN_AEQUITAS_REQUEST,
     payload: {
-      datasetName: datasetName
+      datasetName: datasetName,
     },
   });
   try {
@@ -18,6 +26,6 @@ export const runAequitas = (datasetName) => async (dispatch, getState) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: RUN_AEQUITAS_FAIL, payload: message});
+    dispatch({ type: RUN_AEQUITAS_FAIL, payload: message });
   }
 };

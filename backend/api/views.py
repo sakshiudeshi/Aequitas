@@ -1,22 +1,30 @@
 
-from django.views.decorators.csrf import csrf_exempt
+from django.core.files import File
+from django.http import HttpResponse, FileResponse, JsonResponse
+from django.shortcuts import render
 import os
 import sys
 os.chdir('api/aequitas')
 sys.path.append(os.getcwd())
-import Retrain_Sklearn
-import Sklearn_Estimation
-import config
-import Aequitas_Random_Sklearn
-import Aequitas_Semi_Directed_Sklearn
 import Aequitas_Fully_Directed_Sklearn
-from django.shortcuts import render
-from django.http import HttpResponse, FileResponse, JsonResponse
-from django.core.files import File
+import Aequitas_Semi_Directed_Sklearn
+import Aequitas_Random_Sklearn
+import config
+import Sklearn_Estimation
+import Retrain_Sklearn
+from django.views.decorators.csrf import csrf_exempt
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
+
+# If modifying these scopes, delete the file token.json.
+SCOPES = ['https://www.googleapis.com/auth/drive']
 
 # Create your views here.
-
-
 def index(request):
   return HttpResponse("Hello, world")
 
@@ -124,6 +132,14 @@ def runAequitas(request):
 
       retrainFileName = config.retraining_inputs
       retrainModelName = config.improved_classfier_name
+      improvementGraph = config.improvement_graph
+      
+      
+      filepath = os.path.join(
+      os.getcwd(), config.IMPROVEMENT_GRAPH_DIRECTORY, improvementGraph)
+      imageId = uploadImage(improvementGraph, filepath)
+      # https://dev.to/imamcu07/embed-or-display-image-to-html-page-from-google-drive-3ign
+      sharingLink = f'https://drive.google.com/uc?id={imageId}'
 
       response = JsonResponse({
                               'status': 'Success',
@@ -131,9 +147,11 @@ def runAequitas(request):
                               'aequitasMode': aequitasMode,
                               'fairnessEstimation': fairnessEstimation,
                               'retrainFilename': retrainFileName,
-                              'retrainModelName': retrainModelName
+                              'retrainModelName': retrainModelName,
+                              'improvementGraph': sharingLink
                               })
       return response
+
 
 def downloadFile(request):
     #https://farhanghazi17.medium.com/django-react-link-to-download-pdf-a4c8da48802a
@@ -157,3 +175,74 @@ def downloadFile(request):
         response = HttpResponse(file.read())
         response['Content-Disposition'] = "attachment; filename=%s" % filename
         return response
+
+def uploadImage(filename, filepath):
+  os.chdir('../')
+  sys.path.append(os.getcwd())
+  creds = None
+  
+  if os.path.exists('token.json'):
+      creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+      
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+      if creds and creds.expired and creds.refresh_token:
+          creds.refresh(Request())
+      else:
+          flow = InstalledAppFlow.from_client_secrets_file(
+              'credentials.json', SCOPES)
+          creds = flow.run_local_server(port=5000)
+      # Save the credentials for the next run
+      with open('token.json', 'w') as token:
+          token.write(creds.to_json())
+          
+  try:
+    service = build('drive', 'v3', credentials=creds)
+    # get the Aequitas Folder 
+    folder_id = None
+    page_token = None
+    while True:
+      response = service.files().list(q="name = 'Aequitas' and mimeType = 'application/vnd.google-apps.folder'",
+                                            spaces='drive',
+                                            fields='nextPageToken, files(id, name)',
+                                            pageToken=page_token).execute()
+      for file in response.get('files', []):
+        folder_id = file.get('id')
+
+      page_token = response.get('nextPageToken', None)
+      if page_token is None:
+        break
+        
+    # give permission to folder first
+    folder_permission = {
+      'type': 'anyone',
+      'role': 'reader'
+    }
+    
+    service.permissions().create(
+      fileId=folder_id,
+      body=folder_permission,
+      fields='id',
+    ).execute()
+      
+    file_metadata = {'name': filename, 'parents': [folder_id]}
+    media = MediaFileUpload(filepath, mimetype='image/png')
+    file = service.files().create(body=file_metadata,
+                                        media_body=media,
+                                        fields='id').execute()
+    fileId = file.get('id')
+    
+    print('File ID: %s' % fileId)
+    if 'aequitas' not in os.getcwd():
+      os.chdir('aequitas')
+      sys.path.append(os.getcwd())
+    return file.get('id')
+
+  except HttpError as error:
+    if 'aequitas' not in os.getcwd():
+      os.chdir('aequitas')
+      sys.path.append(os.getcwd())
+    # TODO(developer) - Handle errors from drive API.
+    print(f'An error occurred: {error}')
+
+  
