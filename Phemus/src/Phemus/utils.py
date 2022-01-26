@@ -3,11 +3,12 @@ import pandas as pd
 from random import seed, shuffle
 # import util.loss_funcs as lf # our implementation of loss funcs
 from scipy.optimize import minimize # for loss func minimization
-from multiprocessing import Pool, Process, Queue
+from multiprocessing import Process, Queue
+# from multiprocessing import Pool
 from collections import defaultdict
 from copy import deepcopy
 import matplotlib.pyplot as plt # for plotting stuff
-import sys
+# import sys
 
 SEED = 1122334455
 seed(SEED) # set the random seed so that the random permutations can be reproduced again

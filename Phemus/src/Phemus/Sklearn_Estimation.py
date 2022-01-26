@@ -2,6 +2,7 @@ import joblib
 import time
 import random
 import numpy as np
+from .Dataset import Dataset
 def warn(*args, **kwargs):
     pass
 import warnings
@@ -16,7 +17,11 @@ warnings.warn = warn
 # num_params = config.num_params
 # sensitive_param_idx = config.sensitive_param_idx
 
-def get_random_input(num_params, sensitive_param_idx, input_bounds):
+def get_random_input(dataset: Dataset):
+
+    num_params = dataset.num_param
+    sensitive_param_idx = dataset.sensitive_param_idx
+    input_bounds = dataset.input_bounds
     x = []
     for i in range(num_params):
         random.seed(time.time())
@@ -25,7 +30,8 @@ def get_random_input(num_params, sensitive_param_idx, input_bounds):
     x[sensitive_param_idx] = 0
     return x
 
-def evaluate_input(inp, input_pkl_name, sensitive_param_idx):
+def evaluate_input(inp, input_pkl_name, dataset: Dataset):
+    sensitive_param_idx = dataset.sensitive_param_idx
     model = joblib.load(input_pkl_name)
 
     inp0 = [int(i) for i in inp]
@@ -45,7 +51,7 @@ def evaluate_input(inp, input_pkl_name, sensitive_param_idx):
 
     return (abs(out0 + out1) == 0)
 
-def get_estimate_arrray(num_params, input_pkl_name, input_bounds,sensitive_param_idx, num_trials, samples):
+def get_estimate_arrray(dataset: Dataset, input_pkl_name, num_trials, samples):
     estimate_array = []
     rolling_average = 0.0
     for i in range(num_trials):
@@ -53,8 +59,7 @@ def get_estimate_arrray(num_params, input_pkl_name, input_bounds,sensitive_param
         total_count = 0
         for j in range(samples):
             total_count = total_count + 1
-            if(evaluate_input(get_random_input(num_params, sensitive_param_idx, input_bounds), \
-                                                input_pkl_name, sensitive_param_idx)):
+            if(evaluate_input(get_random_input(dataset), input_pkl_name, dataset)):
                 disc_count = disc_count + 1
 
         estimate = float(disc_count)/total_count
@@ -63,8 +68,6 @@ def get_estimate_arrray(num_params, input_pkl_name, input_bounds,sensitive_param
         print(estimate, rolling_average)
     return estimate_array
 
-def get_fairness_estimation(num_params, input_pkl_name, input_bounds, sensitive_param_idx, num_trials, samples):
-    # print("Getting Estimate array")
-    arr = get_estimate_arrray(num_params, input_pkl_name, input_bounds,sensitive_param_idx, num_trials, samples)
-    # print("Estimate is " + str(np.mean(arr) * 100) + "%")
+def get_fairness_estimation(dataset: Dataset, input_pkl_name, num_trials, samples):
+    arr = get_estimate_arrray(dataset, input_pkl_name, num_trials, samples)
     return str(np.mean(arr) * 100)

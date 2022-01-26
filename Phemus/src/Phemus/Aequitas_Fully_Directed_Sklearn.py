@@ -1,13 +1,5 @@
 from __future__ import division
-from random import seed, shuffle
 import random
-import math
-import os
-from collections import defaultdict
-from sklearn import svm
-import os,sys
-#import urllib2
-sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 import numpy as np
 import random
 import time
@@ -16,20 +8,34 @@ import joblib
 def warn(*args, **kwargs):
     pass
 import warnings
+
+# import math
+# import os
+# from collections import defaultdict
+# from sklearn import svm
+# import os,sys
+# import urllib2
+# sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
+# from random import seed, shuffle
+
+from .Dataset import Dataset
 warnings.warn = warn
 
 
 class Fully_Direct:
-    def __init__(self, num_params, sensitive_param_idx, sensitive_param_name, perturbation_unit, threshold, \
-                  global_iteration_limit, local_iteration_limit, input_bounds, input_pkl_dir, input_csv_dir, column_names):
+    def __init__(self, dataset: Dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir):
         random.seed(time.time())
         self.start_time = time.time()
 
-        self.num_params = num_params
-        self.input_bounds = input_bounds
+        input_csv_dir = dataset.dataset_dir
+        column_names = dataset.column_names
+
+        self.num_params = dataset.num_param
+        self.input_bounds = dataset.input_bounds
+        self.sensitive_param_idx = dataset.sensitive_param_idx
+        self.sensitive_param_name = dataset.sensitive_param_name
+
         self.input_pkl_dir = input_pkl_dir
-        self.sensitive_param_idx = sensitive_param_idx
-        self.sensitive_param_name = sensitive_param_name
         self.perturbation_unit = perturbation_unit
         self.threshold = threshold
         self.global_iteration_limit = global_iteration_limit
@@ -191,14 +197,12 @@ class Fully_Direct:
 
         return x
 
-def aequitas_fully_directed_sklearn(num_params, sensitive_param_idx, sensitive_param_name, perturbation_unit, threshold, \
-                  global_iteration_limit, local_iteration_limit, input_bounds, input_pkl_dir, input_csv_dir, column_names):
+def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir):
     # initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
-    initial_input = [random.randint(low,high) for [low, high] in input_bounds]
+    initial_input = [random.randint(low,high) for [low, high] in dataset.input_bounds]
     minimizer = {"method": "L-BFGS-B"}
 
-    fully_direct = Fully_Direct(num_params, sensitive_param_idx, sensitive_param_name, perturbation_unit, threshold, \
-                  global_iteration_limit, local_iteration_limit, input_bounds, input_pkl_dir, input_csv_dir, column_names)
+    fully_direct = Fully_Direct(dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir)
 
 
     basinhopping(fully_direct.evaluate_global, initial_input, stepsize=1.0, take_step=fully_direct.global_discovery, minimizer_kwargs=minimizer,

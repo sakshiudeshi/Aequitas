@@ -4,18 +4,22 @@ from sklearn.preprocessing import LabelEncoder
 le=LabelEncoder()
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn import tree
-import random
+# from sklearn.neural_network import MLPClassifier
+# from sklearn import tree
+# import random
 import joblib
 import os
+from .Dataset import Dataset
 
-def generate_sklearn_classifier(input_csv_dir, output_pkl_dir, sensitive_param_name, col_to_be_predicted):
+def generate_sklearn_classifier(dataset: Dataset, output_pkl_dir):
     # did exactly as the original authors had processed the data
-
+    input_csv_dir = dataset.dataset_dir
+    sensitive_param_name = dataset.sensitive_param_name
+    col_to_be_predicted = dataset.col_to_be_predicted
+    
     df=pd.read_csv(input_csv_dir)
 
     cat_feature = list(df.columns)
