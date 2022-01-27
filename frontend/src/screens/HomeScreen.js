@@ -51,11 +51,6 @@ export default function HomeScreen() {
             <h1 className="display-4">Aequitas Web</h1>
             <p className="lead">
               Upload your training data to find out about its fairness!
-              <img
-                src="https://i.ibb.co/GdbKx6V/employee-fairness-improvement-fully-directed.png"
-                alt="employee-fairness-improvement-fully-directed"
-                border="0"
-              />
             </p>
             <div>
               <label htmlFor="modelFile">Model Training Dataset</label>
