@@ -80,7 +80,6 @@ export default function DragAndDrop({ handleDrop, children }) {
               </div>
             )}
           </div>
-          <label className="info dragText">Drag &amp; Drop to upload</label>
         </div>
       }
     </div>

@@ -4,7 +4,8 @@ import { downloadDatasetReducer, downloadModelReducer } from "./reducers/downloa
 import { aequitasRunReducer, improvementGraphReducer } from "./reducers/runReducers";
 import { fileSubmitReducer } from "./reducers/submitReducer";
 
-const initialState = {};
+const initialState = {
+};
 
 const reducer = combineReducers({
   fileSubmit: fileSubmitReducer,

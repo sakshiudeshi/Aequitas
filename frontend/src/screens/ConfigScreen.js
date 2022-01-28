@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import OurNavbar from "../components/OurNavbar";
@@ -21,6 +21,8 @@ export default function ConfigScreen() {
   useEffect(() => {
     if (aequitasRunResult) {
       navigate(`/result/${filename}`);
+    } else {
+      navigate(`/config/${filename}`);
     }
   }, [aequitasRunResult, navigate]);
 
@@ -28,7 +30,7 @@ export default function ConfigScreen() {
     <div>
       <OurNavbar></OurNavbar>
       <Header child={
-        <h1>Aequitas Configuration for {filename}</h1>
+        <h1 className="display-4">Aequitas Configuration for {filename}</h1>
       }></Header>
       <div className="col-md-12 text-center">
         <button

@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   downloadRetrainDataset,
   downloadRetrainModel,
@@ -15,7 +15,7 @@ export default function ResultScreen() {
   const { aequitasRunResult, loading, error } = result;
 
   const dispatch = useDispatch();
-
+  
   const downloadDatasetHandler = () => {
     dispatch(downloadRetrainDataset(aequitasRunResult.retrainFilename));
   };
@@ -27,10 +27,9 @@ export default function ResultScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header child={
-        <h1>Aequitas Results for {filename}</h1>
-      }></Header>
-        
+      <Header
+        child={<h1 className="display-4">Aequitas Results for {filename}</h1>}
+      ></Header>
       <div className="container">
         <div className="row">
           Aequitas Mode: {aequitasRunResult.aequitasMode}
@@ -39,30 +38,35 @@ export default function ResultScreen() {
           Fairness Estimation is: {aequitasRunResult.fairnessEstimation}
         </div>
         <div className="row">
-          <img
-            src={aequitasRunResult.improvementGraph}
-            alt="improvementGraph"
-          />
-          {aequitasRunResult.improvementGraph}
+          <figure className="figure justify-center">
+            <img
+            className="figure-img img-fluid rounded"
+              src={aequitasRunResult.improvementGraph}
+              alt="improvementGraph"
+            />
+            <figcaption className="figure-caption">Fairness Improvement Graph</figcaption>
+          </figure>
         </div>
-        <div className="row">
-          <div className="col-lg-6">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => downloadDatasetHandler()}
-            >
-              Download Retraining Dataset{" "}
-            </button>
-          </div>
-          <div className="col-lg-6">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => downloadRetrainedModelHandler()}
-            >
-              Download Retrained Model{" "}
-            </button>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => downloadDatasetHandler()}
+              >
+                Download Retraining Dataset{" "}
+              </button>
+            </div>
+            <div className="col-md-6">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => downloadRetrainedModelHandler()}
+              >
+                Download Retrained Model{" "}
+              </button>
+            </div>
           </div>
         </div>
       </div>

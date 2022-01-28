@@ -26,8 +26,6 @@ export default function HomeScreen() {
       });
   };
 
-  const fileSubmitResult = useSelector((state) => state.fileSubmit);
-  const { submitResult, loading, error } = fileSubmitResult;
   const submitHandler = async (e) => {
     if (uploadSuccess) {
       const filename = uploadSuccess.data.message;
@@ -35,6 +33,15 @@ export default function HomeScreen() {
       setUploadSuccess(false);
     }
   };
+
+  const exampleDatasetSubmitHandler = async (e) => {
+    const filename = 'Employee.csv';
+    dispatch(submitFile(filename));
+    setUploadSuccess(false);
+  };
+
+  const fileSubmitResult = useSelector((state) => state.fileSubmit);
+  const { submitResult, loading, error } = fileSubmitResult;
 
   useEffect(() => {
     if (submitResult) {
@@ -46,42 +53,52 @@ export default function HomeScreen() {
     <div className="main">
       <OurNavbar></OurNavbar>
       <DragAndDrop handleDrop={uploadFileHandler}>
-        <div className="jumbotron" style={{ zIndex: 999 }}>
+        <div className="jumbotron">
           <div className="container">
             <div className="row">
-              <h1 className="display-4">Aequitas Web</h1>
-              <p className="lead">
-                Upload your training data to find out about its fairness!
-              </p>
-              <div>
-                <label htmlFor="modelFile">Model Training Dataset</label>
-                <input
-                  type="file"
-                  id="modelFile"
-                  label="Choose File"
-                  onChange={(e) => uploadFileHandler(e.target.files[0])}
-                ></input>
-              </div>
-              <div></div>
-              {uploadSuccess.status === 200 ? (
-                <div className="alert alert-success" role="alert">
-                  {uploadSuccess.data.message} uploaded successfully.{" "}
+              <div className="col-md-8">
+                <h1 className="display-4">Aequitas Web</h1>
+                <p className="lead">
+                  Upload your training data to find out about its fairness!
+                </p>
+                <div>
+                  <label htmlFor="modelFile">Model Training Dataset</label>
+                  <input
+                    type="file"
+                    id="modelFile"
+                    label="Choose File"
+                    onChange={(e) => uploadFileHandler(e.target.files[0])}
+                  ></input>
                 </div>
-              ) : (
-                <div></div>
-              )}
-              {uploadSuccess ? (
+                {uploadSuccess.status === 200 ? (
+                  <div className="alert alert-success" role="alert">
+                    {uploadSuccess.data.message} uploaded successfully.{" "}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                {uploadSuccess ? (
+                  <button
+                    className="btn btn-primary btn-lg"
+                    type="button"
+                    disabled={!uploadSuccess}
+                    onClick={submitHandler}
+                  >
+                    Continue
+                  </button>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="col-md-4" style={{marginTop: '1rem'}}>
                 <button
-                  className="btn btn-primary btn-lg"
+                  className="btn btn-lg btn-link"
                   type="button"
-                  disabled={!uploadSuccess}
-                  onClick={submitHandler}
+                  onClick={exampleDatasetSubmitHandler}
                 >
-                  Continue
+                  Or..try this example!
                 </button>
-              ) : (
-                ""
-              )}
+              </div>
             </div>
           </div>
         </div>
