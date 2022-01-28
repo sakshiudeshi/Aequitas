@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function DragAndDrop({ handleDrop }) {
-  const [files, setFiles] = useState([]);
+export default function DragAndDrop({ handleDrop, children }) {
   const [dragging, setDragging] = useState(false);
   var dragCounter = 0;
 
@@ -51,6 +50,7 @@ export default function DragAndDrop({ handleDrop }) {
             onDragLeave={removeDragAndDropOverlay}
             onDragOver={overrideEventDefaults}
           >
+            {children}
             {dragging && (
               <div
                 style={{

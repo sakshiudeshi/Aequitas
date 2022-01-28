@@ -43,11 +43,10 @@ export default function HomeScreen() {
   }, [submitResult, navigate]);
 
   return (
-      <div className="main">
-        <OurNavbar></OurNavbar>
-        
-        <div className="jumbotron" style={{zIndex:999}}>
-        
+    <div className="main">
+      <OurNavbar></OurNavbar>
+      <DragAndDrop handleDrop={uploadFileHandler}>
+        <div className="jumbotron" style={{ zIndex: 999 }}>
           <div className="container">
             <div className="row">
               <h1 className="display-4">Aequitas Web</h1>
@@ -63,9 +62,7 @@ export default function HomeScreen() {
                   onChange={(e) => uploadFileHandler(e.target.files[0])}
                 ></input>
               </div>
-              <div>
-              <DragAndDrop handleDrop={uploadFileHandler}></DragAndDrop>
-              </div>
+              <div></div>
               {uploadSuccess.status === 200 ? (
                 <div className="alert alert-success" role="alert">
                   {uploadSuccess.data.message} uploaded successfully.{" "}
@@ -88,6 +85,7 @@ export default function HomeScreen() {
             </div>
           </div>
         </div>
-      </div>
+      </DragAndDrop>
+    </div>
   );
 }
