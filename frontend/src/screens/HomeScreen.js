@@ -96,8 +96,12 @@ export default function HomeScreen() {
                   type="button"
                   onClick={exampleDatasetSubmitHandler}
                 >
-                  Or..try this example!
+                  Or..try this example! <br/>
                 </button>
+                <label className="text-center">
+                  <strong>Employee.csv</strong> <br/>
+                  Dataset to determine the retention factor of employees within two years
+                </label>
               </div>
             </div>
           </div>

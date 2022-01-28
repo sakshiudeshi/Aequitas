@@ -22,6 +22,7 @@ export default function DragAndDrop({ handleDrop, children }) {
   };
 
   //https://www.c-sharpcorner.com/article/file-drag-and-drop-feature-in-reactjs/
+  //https://medium.com/@650egor/simple-drag-and-drop-file-upload-in-react-2cb409d88929
   const handleDragAndDropFiles = (e) => {
     overrideEventDefaults(e);
     dragCounter = 0;
