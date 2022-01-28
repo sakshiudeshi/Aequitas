@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import OurNavbar from "../components/OurNavbar";
 import { useDispatch, useSelector } from "react-redux";
 import { submitFile } from "../actions/submitActions";
+import DragAndDrop from "../components/DragAndDrop";
 
 export default function HomeScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const uploadFileHandler = async (e) => {
+  const uploadFileHandler = async (file) => {
     // Upload the model training data
-    const file = e.target.files[0];
     const bodyFormData = new FormData();
     bodyFormData.append("dataset", file);
     bodyFormData.append("filename", file.name);
@@ -43,46 +43,51 @@ export default function HomeScreen() {
   }, [submitResult, navigate]);
 
   return (
-    <div className="main">
-      <OurNavbar></OurNavbar>
-      <div className="jumbotron">
-        <div className="container">
-          <div className="row">
-            <h1 className="display-4">Aequitas Web</h1>
-            <p className="lead">
-              Upload your training data to find out about its fairness!
-            </p>
-            <div>
-              <label htmlFor="modelFile">Model Training Dataset</label>
-              <input
-                type="file"
-                id="modelFile"
-                label="Choose File"
-                onChange={uploadFileHandler}
-              ></input>
-            </div>
-            {uploadSuccess.status === 200 ? (
-              <div className="alert alert-success" role="alert">
-                {uploadSuccess.data.message} uploaded successfully.{" "}
+      <div className="main">
+        <OurNavbar></OurNavbar>
+        
+        <div className="jumbotron" style={{zIndex:999}}>
+        
+          <div className="container">
+            <div className="row">
+              <h1 className="display-4">Aequitas Web</h1>
+              <p className="lead">
+                Upload your training data to find out about its fairness!
+              </p>
+              <div>
+                <label htmlFor="modelFile">Model Training Dataset</label>
+                <input
+                  type="file"
+                  id="modelFile"
+                  label="Choose File"
+                  onChange={(e) => uploadFileHandler(e.target.files[0])}
+                ></input>
               </div>
-            ) : (
-              <div></div>
-            )}
-            {uploadSuccess ? (
-              <button
-                className="btn btn-primary btn-lg"
-                type="button"
-                disabled={!uploadSuccess}
-                onClick={submitHandler}
-              >
-                Continue
-              </button>
-            ) : (
-              ""
-            )}
+              <div>
+              <DragAndDrop handleDrop={uploadFileHandler}></DragAndDrop>
+              </div>
+              {uploadSuccess.status === 200 ? (
+                <div className="alert alert-success" role="alert">
+                  {uploadSuccess.data.message} uploaded successfully.{" "}
+                </div>
+              ) : (
+                <div></div>
+              )}
+              {uploadSuccess ? (
+                <button
+                  className="btn btn-primary btn-lg"
+                  type="button"
+                  disabled={!uploadSuccess}
+                  onClick={submitHandler}
+                >
+                  Continue
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }

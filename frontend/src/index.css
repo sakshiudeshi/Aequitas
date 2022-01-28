@@ -41,3 +41,19 @@ img {
   margin-bottom: auto;
 }
 
+/* #dragAndDropContainer {
+  height: 7rem;
+  width: 100%;
+  background-color: aquamarine;
+} */
+
+#dragAndDropArea {
+  background-color: beige;
+  border-color: black;
+  height: 5rem;
+  position: absolute;
+  right: 0;
+  left: 0;
+  /*top: 50%;*/
+}
+

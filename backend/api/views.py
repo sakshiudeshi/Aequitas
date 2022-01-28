@@ -28,6 +28,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 def index(request):
   return HttpResponse("Hello, world")
 
+
 @csrf_exempt
 def uploadDataset(request):
     if request.method == 'POST':
@@ -42,6 +43,7 @@ def uploadDataset(request):
       # response['status'] = 'Success'
       # response['message'] = filename
       return response
+
 
 def configureAequitas(request):
     if request.method == 'GET':
@@ -174,6 +176,7 @@ def downloadFile(request):
         response = HttpResponse(file.read())
         response['Content-Disposition'] = "attachment; filename=%s" % filename
         return response
+
 
 def uploadImage(filename, filepath):
   os.chdir('../')
