@@ -1,7 +1,10 @@
 body {
-  margin: 0;
+  margin-left: 1rem;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;;
+}
+
+p {
+  font: var(--font-family-sans-serif);
 }
 
 #content {
@@ -15,8 +18,27 @@ body {
   display: flex;
 }
 
-button.primary {
-  padding: 1rem 0;
+button {
+  padding: 1rem 1rem;
   margin-top: 1rem;
+  margin-right: 1rem;
   width: 100%;
 }
+
+label {
+  padding-right: 1rem;
+}
+
+img {
+  width: 80%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#dragAndDropArea {
+  height: 100%;
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+

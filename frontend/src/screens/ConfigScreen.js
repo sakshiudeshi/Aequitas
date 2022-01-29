@@ -1,36 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import OurNavbar from "../components/OurNavbar";
-import Axios from 'axios';
+import { runAequitas } from "../actions/runActions";
+import LoadingBox from "../components/LoadingBox";
+import Header from "../components/Header";
 
 export default function ConfigScreen() {
-
   const { filename } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [runStatus, setRunStatus] = useState("");
 
-  const clickHandler = async () => {
-    Axios.get(`http://localhost:5000/api/run?filename=${filename}`) // need to change it to post eventually, once we have the form
-      .then((response) => {
-        console.log("Success", response);
-        setRunStatus(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  const clickHandler = (filename) => {
+    dispatch(runAequitas(filename));
+  };
+
+  const result = useSelector((state) => state.aequitasRunResult);
+  const { aequitasRunResult, loading: runAequitasLoading, error } = result;
 
   useEffect(() => {
-    if (runStatus.status === 200) {
-      navigate(`/result/${runStatus.data.message}`);
+    if (aequitasRunResult) {
+      navigate(`/result/${filename}`);
+    } else {
+      navigate(`/config/${filename}`);
     }
-  }, [runStatus, navigate]);
+  }, [aequitasRunResult, navigate]);
 
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <h1>Aequitas Configuration for {filename}</h1>
-      <button type="button" className="btn btn-primary" onClick={clickHandler}>Run Aequitas</button>
+      <Header child={
+        <h1 className="display-4">Aequitas Configuration for {filename}</h1>
+      }></Header>
+      <div className="col-md-12 text-center">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => clickHandler(filename)}
+        >
+          Run Aequitas
+        </button>
+      </div>
+      {runAequitasLoading && <LoadingBox></LoadingBox>}
     </div>
   );
 }
