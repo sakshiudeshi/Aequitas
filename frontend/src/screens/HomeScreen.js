@@ -34,10 +34,19 @@ export default function HomeScreen() {
       // Axios.get(`http://localhost:5000/api/run?filename=${filename}`)
       Axios.get(`http://localhost:5000/api/config?filename=${filename}`) // for flask: /api/config is the api address, after ? is the arguments <argument_name>=<argument_value>
         .then((response) => {
+          console.log("Success", response);
+          setConfigStatus(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
   const exampleDatasetSubmitHandler = async (e) => {
-    const filename = 'Employee.csv';
+    const filename = "Employee.csv";
     dispatch(submitFile(filename));
     setUploadSuccess(false);
+  };
 
   const fileSubmitResult = useSelector((state) => state.fileSubmit);
   const { submitResult, loading, error } = fileSubmitResult;
@@ -89,17 +98,18 @@ export default function HomeScreen() {
                   ""
                 )}
               </div>
-              <div className="col-md-4" style={{marginTop: '1rem'}}>
+              <div className="col-md-4" style={{ marginTop: "1rem" }}>
                 <button
                   className="btn btn-lg btn-link"
                   type="button"
                   onClick={exampleDatasetSubmitHandler}
                 >
-                  Or..try this example! <br/>
+                  Or..try this example! <br />
                 </button>
                 <label className="text-center">
-                  <strong>Employee.csv</strong> <br/>
-                  Dataset to determine the retention factor of employees within two years
+                  <strong>Employee.csv</strong> <br />
+                  Dataset to determine the retention factor of employees within
+                  two years
                 </label>
               </div>
             </div>
