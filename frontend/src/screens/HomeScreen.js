@@ -27,20 +27,13 @@ export default function HomeScreen() {
   };
 
   const submitHandler = async (e) => {
-    // Todo
-    // Actually run Aequitas
     if (uploadSuccess) {
       const filename = uploadSuccess.data.message;
-      // Axios.get(`http://localhost:5000/api/run?filename=${filename}`)
-      Axios.get(`http://localhost:5000/api/config?filename=${filename}`) // for flask: /api/config is the api address, after ? is the arguments <argument_name>=<argument_value>
-        .then((response) => {
-          console.log("Success", response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      dispatch(submitFile(filename));
+      setUploadSuccess(false);
     }
   };
+
   const exampleDatasetSubmitHandler = async (e) => {
     const filename = "Employee.csv";
     dispatch(submitFile(filename));
