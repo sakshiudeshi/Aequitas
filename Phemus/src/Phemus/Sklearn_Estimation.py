@@ -33,23 +33,33 @@ def get_random_input(dataset: Dataset):
 def evaluate_input(inp, input_pkl_name, dataset: Dataset):
     sensitive_param_idx = dataset.sensitive_param_idx
     model = joblib.load(input_pkl_name)
-
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param_idx] = 0
-    inp1[sensitive_param_idx] = 1
+    for i in dataset.input_bounds[sensitive_param_idx]:
+        for j in dataset.input_bounds[sensitive_param_idx]:
+            if i != j: 
+                inp0 = [int(k) for k in inp]
+                inp1 = [int(k) for k in inp]
 
-    inp0 = np.asarray(inp0)
-    inp0 = np.reshape(inp0, (1, -1))
+                inp0[sensitive_param_idx] = i
+                inp1[sensitive_param_idx] = j
 
-    inp1 = np.asarray(inp1)
-    inp1 = np.reshape(inp1, (1, -1))
+                inp0 = np.asarray(inp0)
+                inp0 = np.reshape(inp0, (1, -1))
 
-    out0 = model.predict(inp0)
-    out1 = model.predict(inp1)
+                inp1 = np.asarray(inp1)
+                inp1 = np.reshape(inp1, (1, -1))
 
-    return (abs(out0 + out1) == 0)
+                out0 = model.predict(inp0)
+                out1 = model.predict(inp1)
+            
+                if abs(out1 + out0) == 0:
+                    return abs(out1 + out0) == 0
+    # return (abs(out0 - out1) > threshold)
+    # for binary classification, we have found that the
+    # following optimization function gives better results
+    return False
 
 def get_estimate_arrray(dataset: Dataset, input_pkl_name, num_trials, samples):
     estimate_array = []

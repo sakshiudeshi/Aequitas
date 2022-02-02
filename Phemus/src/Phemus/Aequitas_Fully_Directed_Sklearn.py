@@ -73,83 +73,112 @@ class Fully_Direct:
         for i in range(self.num_params):
             self.param_probability[i] = float(self.param_probability[i])/float(probability_sum) 
 
+
+    def evaluate_input(self, inp):
+
+        for i in self.input_bounds[self.sensitive_param_idx]:
+            for j in self.input_bounds[self.sensitive_param_idx]:
+                if i != j: 
+                    inp0 = [int(k) for k in inp]
+                    inp1 = [int(k) for k in inp]
+
+                    inp0[self.sensitive_param_idx] = i
+                    inp1[self.sensitive_param_idx] = j
+
+                    inp0 = np.asarray(inp0)
+                    inp0 = np.reshape(inp0, (1, -1))
+
+                    inp1 = np.asarray(inp1)
+                    inp1 = np.reshape(inp1, (1, -1))
+
+                    out0 = self.model.predict(inp0)
+                    out1 = self.model.predict(inp1)
+                
+                    if abs(out1 + out0):
+                        return abs(out1 + out0)
+        # return (abs(out0 - out1) > threshold)
+        # for binary classification, we have found that the
+        # following optimization function gives better results
+        return 0
+
     def evaluate_global(self, inp):
         inp0 = [int(i) for i in inp]
         inp1 = [int(i) for i in inp]
-
+        
         inp0[self.sensitive_param_idx] = 0
-        inp1[self.sensitive_param_idx] = 1
+        
+        inp0np = np.asarray(inp0)
+        inp0np = np.reshape(inp0, (1, -1))
+        self.tot_inputs.add(tuple(map(tuple, inp0np)))
 
-        inp0 = np.asarray(inp0)
-        inp0 = np.reshape(inp0, (1, -1))
+        for i in self.input_bounds[self.sensitive_param_idx]:
+            for j in self.input_bounds[self.sensitive_param_idx]:
+                if i != j: 
+                    inp0 = [int(k) for k in inp]
+                    inp1 = [int(k) for k in inp]
 
-        inp1 = np.asarray(inp1)
-        inp1 = np.reshape(inp1, (1, -1))
+                    inp0[self.sensitive_param_idx] = i
+                    inp1[self.sensitive_param_idx] = j
 
-        out0 = self.model.predict(inp0)
-        out1 = self.model.predict(inp1)
+                    inp0 = np.asarray(inp0)
+                    inp0 = np.reshape(inp0, (1, -1))
 
-        self.tot_inputs.add(tuple(map(tuple, inp0)))
+                    inp1 = np.asarray(inp1)
+                    inp1 = np.reshape(inp1, (1, -1))
 
-        if (abs(out0 - out1) > self.threshold and tuple(map(tuple, inp0)) not in self.global_disc_inputs):
-            self.global_disc_inputs.add(tuple(map(tuple, inp0)))
-            self.global_disc_inputs_list.append(inp0.tolist()[0])
-            self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") # write inputs as they are generated
+                    out0 = self.model.predict(inp0)
+                    out1 = self.model.predict(inp1)
+
+                    if (abs(out0 - out1) > self.threshold and tuple(map(tuple, inp0)) not in self.global_disc_inputs):
+                        self.global_disc_inputs.add(tuple(map(tuple, inp0)))
+                        self.global_disc_inputs_list.append(inp0.tolist()[0])
+                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n")
+                        return abs(out1 + out0)
 
         # return not abs(out0 - out1) > threshold
         # for binary classification, we have found that the
         # following optimization function gives better results
-        return abs(out1 + out0)
-
-    def evaluate_input(self, inp):
-        inp0 = [int(i) for i in inp]
-        inp1 = [int(i) for i in inp]
-
-        inp0[self.sensitive_param_idx] = 0
-        inp1[self.sensitive_param_idx] = 1
-
-        inp0 = np.asarray(inp0)
-        inp0 = np.reshape(inp0, (1, -1))
-
-        inp1 = np.asarray(inp1)
-        inp1 = np.reshape(inp1, (1, -1))
-
-        out0 = self.model.predict(inp0)
-        out1 = self.model.predict(inp1)
-
-        # return (abs(out0 - out1) > threshold)
-        # for binary classification, we have found that the
-        # following optimization function gives better results
-        return abs(out1 + out0)
-
+        return 0
+        
     def evaluate_local(self,  inp):
         inp0 = [int(i) for i in inp]
         inp1 = [int(i) for i in inp]
 
         inp0[self.sensitive_param_idx] = 0
-        inp1[self.sensitive_param_idx] = 1
+        
+        inp0np = np.asarray(inp0)
+        inp0np = np.reshape(inp0, (1, -1))
+        self.tot_inputs.add(tuple(map(tuple, inp0np)))
+        
+        for i in self.input_bounds[self.sensitive_param_idx]:
+            for j in self.input_bounds[self.sensitive_param_idx]:
+                if i != j: 
+                    inp0 = [int(k) for k in inp]
+                    inp1 = [int(k) for k in inp]
 
-        inp0 = np.asarray(inp0)
-        inp0 = np.reshape(inp0, (1, -1))
+                    inp0[self.sensitive_param_idx] = i
+                    inp1[self.sensitive_param_idx] = j
 
-        inp1 = np.asarray(inp1)
-        inp1 = np.reshape(inp1, (1, -1))
+                    inp0 = np.asarray(inp0)
+                    inp0 = np.reshape(inp0, (1, -1))
 
-        out0 = self.model.predict(inp0)
-        out1 = self.model.predict(inp1)
+                    inp1 = np.asarray(inp1)
+                    inp1 = np.reshape(inp1, (1, -1))
 
-        self.tot_inputs.add(tuple(map(tuple, inp0)))
-
-        if (abs(out0 - out1) > self.threshold and (tuple(map(tuple, inp0)) not in self.global_disc_inputs)
-            and (tuple(map(tuple, inp0)) not in self.local_disc_inputs)):
-            self.local_disc_inputs.add(tuple(map(tuple, inp0)))
-            self.local_disc_inputs_list.append(inp0.tolist()[0])
-            self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") # write inputs as they are generated
-
-        # return not abs(out0 - out1) > threshold
+                    out0 = self.model.predict(inp0)
+                    out1 = self.model.predict(inp1)
+                
+                    if (abs(out0 - out1) > self.threshold and (tuple(map(tuple, inp0)) not in self.global_disc_inputs)
+                        and (tuple(map(tuple, inp0)) not in self.local_disc_inputs)):
+                        self.local_disc_inputs.add(tuple(map(tuple, inp0)))
+                        self.local_disc_inputs_list.append(inp0.tolist()[0])
+                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n")
+                        
+                        return abs(out0 + out1)
+        # return (abs(out0 - out1) > threshold)
         # for binary classification, we have found that the
         # following optimization function gives better results
-        return abs(out1 + out0)
+        return 0
 
     def global_discovery(self, x, stepsize = 1):
         s = stepsize
@@ -163,7 +192,7 @@ class Fully_Direct:
 
     def local_perturbation(self, x, stepsize = 1):
         s = stepsize
-        param_choice = np.random.choice(range(self.num_params) , p=self.param_probability)
+        param_choice = np.random.choice(range(self.num_params) , p = self.param_probability)
         act = [-1, 1]
         direction_choice = np.random.choice(act, p=[self.direction_probability[param_choice],  
                                                 (1 - self.direction_probability[param_choice])])
