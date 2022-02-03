@@ -113,7 +113,7 @@ class Fully_Direct:
 
         for i in self.input_bounds[self.sensitive_param_idx]:
             for j in self.input_bounds[self.sensitive_param_idx]:
-                if i != j: 
+                if i < j: 
                     inp0 = [int(k) for k in inp]
                     inp1 = [int(k) for k in inp]
 
@@ -152,7 +152,7 @@ class Fully_Direct:
         
         for i in self.input_bounds[self.sensitive_param_idx]:
             for j in self.input_bounds[self.sensitive_param_idx]:
-                if i != j: 
+                if i < j: 
                     inp0 = [int(k) for k in inp]
                     inp1 = [int(k) for k in inp]
 

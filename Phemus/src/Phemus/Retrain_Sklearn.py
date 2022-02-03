@@ -79,7 +79,7 @@ def evaluate_input(inp, model, dataset: Dataset):
 
     for i in dataset.input_bounds[sensitive_param_idx]:
         for j in dataset.input_bounds[sensitive_param_idx]:
-            if i != j: 
+            if i < j: 
                 inp0 = [int(k) for k in inp]
                 inp1 = [int(k) for k in inp]
 
