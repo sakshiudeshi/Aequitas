@@ -13,6 +13,7 @@ def index(request):
 def uploadDataset(request):
   return uploadDatasetRouter.uploadDataset(request)
 
+@csrf_exempt
 def configureAequitas(request):
   return configureAequitasRouter.configureAequitas(request)
 

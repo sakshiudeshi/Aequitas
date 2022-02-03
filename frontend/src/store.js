@@ -2,7 +2,7 @@ import { createStore, compose, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { downloadDatasetReducer, downloadModelReducer } from "./reducers/downloadReducers";
 import { aequitasRunReducer, improvementGraphReducer } from "./reducers/runReducers";
-import { fileSubmitReducer } from "./reducers/submitReducer";
+import { configUpdateReducer, fileSubmitReducer } from "./reducers/submitReducers";
 
 const initialState = {
 };
@@ -11,7 +11,8 @@ const reducer = combineReducers({
   fileSubmit: fileSubmitReducer,
   aequitasRunResult: aequitasRunReducer,
   downloadDataset: downloadDatasetReducer,
-  downloadModel: downloadModelReducer
+  downloadModel: downloadModelReducer,
+  configUpdate: configUpdateReducer,
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

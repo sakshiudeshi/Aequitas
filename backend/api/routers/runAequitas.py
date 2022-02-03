@@ -43,18 +43,18 @@ def runAequitas(request):
       samples = metaData['sample']
 
       fairnessEstimation = None  # can we make this its own function
-      aequitasMode = 'random'
+      aequitasMode = metaData['aequitasMode']
 
       improvement_graph = metaData['improvement_graph']
       improvement_graph_name = improvement_graph.split('/')[-1]
 
-      # if aequitasMode == "random":
+      # if aequitasMode == "Random":
       #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
       #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
-      # # elif aequitasMode == "semiDirected":
+      # # elif aequitasMode == "SemiDirected":
       # #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
       # #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
-      # # elif aequitasMode == "fullyDirected":
+      # # elif aequitasMode == "FullyDirected":
       # #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
       # #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
 

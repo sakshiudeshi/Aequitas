@@ -6,10 +6,73 @@ import sys
 import json
 from api.aequitas.utils import *
 
+
+def sendColumnNames(request):
+  datasetName = request.GET['filename']
+  # figure out column names
+  columnNames = get_column_names(f'api/aequitas/result/{datasetName}')
+
+  response = JsonResponse({'status': 'Success',
+                           'submittedFile': datasetName,
+                           'columnNames': columnNames})
+  return response
+
+
 def configureAequitas(request):
     if request.method == 'GET':
-      datasetName = request.GET['filename']
-      # TODO: Implement configuration
+      return sendColumnNames(request)
+
+    if request.method == 'POST':
+      dataset_name = request.POST['filename']
+      sensitive_param = request.POST['sensitiveParam']
+      col_to_be_predicted = request.POST['predictedCol']
+      get_model = request.POST['getModel']
+      model_type = request.POST['modelType']
+      aequitasMode = request.POST['aequitasMode']
+      result_directory = 'api/aequitas/result'
+      dataset_dir = f"{result_directory}/{dataset_name}"
+      num_params = len(get_column_names(dataset_dir)) - 1 # exclude 'y' col
+      sensitive_param_idx = get_idx_of_column(dataset_dir, sensitive_param)
+      pkl_dir = f"{result_directory}/{dataset_name.split('.')[0]}_{model_type}_Original.pkl"
+      improved_pkl_dir = f"{result_directory}/{dataset_name.split('.')[0]}_{model_type}_Improved.pkl"
+      retraining_inputs = f"{result_directory}/{dataset_name.split('.')[0]}_Retraining_Dataset.csv"
+      #improvement_graph = f"{result_directory}/{dataset_name.split('.')[0]}_Fairness_Improvement.png"
+      improvement_graph = 'api/aequitas/result/employee_fairness_improvement.png'
+      threshhold = 0
+      perturbation_unit = 1
+      sample = 100
+      num_trials = 100
+      
+      data = {
+          'num_params': num_params,  # exclude "y" col
+          'sensitive_param_idx': sensitive_param_idx,  # starts at O
+          'sensitive_param_name': sensitive_param,
+          'col_to_be_predicted': col_to_be_predicted,
+          'result_directory': 'api/aequitas/result',
+          'pkl_dir': pkl_dir,
+          'dataset_dir': dataset_dir,
+          'retraining_inputs': retraining_inputs,
+          'improved_pkl_dir': improved_pkl_dir,
+          'improvement_graph': improvement_graph,
+          'aequitasMode': aequitasMode,
+          'threshold': 0,
+          'perturbation_unit': 1,
+          # need to be modified after running Aequitas
+          'global_iteration_limit': 100,  # needs to be at least 1000 to be effective
+          'local_iteration_limit': 100,
+          'sample': 100,
+          'num_trials': 100,
+      }
+
+      with open('api/aequitas/config.json', 'w') as outfile:
+        json.dump(data, outfile)
+
+      response = JsonResponse({'status': 'Success',
+                               'submittedFile': dataset_name})
+      return response
+
+
+# TODO: Implement configuration
       """
       This section is, at the moment, a combination of the UploadHandler and
       ConfigHandler APIs. Will sort out after getting thoughts in order, 
@@ -64,33 +127,3 @@ def configureAequitas(request):
       #   -- Check no identically named config file exists
       #   -- Save / Create config file
       #   -- Send name of config file to RunHandler
-      
-      original_inputs = "Employee.csv"
-      col_to_be_predicted = "LeaveOrNot"
-
-      data = {
-          'num_params': 8,  # exclude "y" col
-          'sensitive_param_idx': 5,  # starts at O
-          'sensitive_param_name': "Gender",
-          'col_to_be_predicted': "LeaveOrNot",
-          'pkl_dir': 'api/aequitas/result/Employee_DecisionTree_Original.pkl',
-          'improved_pkl_dir': 'api/aequitas/result/Employee_DecisionTree_Original_Improved.pkl',
-          'dataset_dir': "api/aequitas/result/Employee.csv",
-          'threshold': 0,
-          'perturbation_unit': 1,
-          # need to be modified after running Aequitas
-          'retraining_inputs': "api/aequitas/result/Employee_Retraining_Dataset.csv",
-          'global_iteration_limit': 100,  # needs to be at least 1000 to be effective
-          'local_iteration_limit': 100,
-          'improvement_graph': 'api/aequitas/result/employee_fairness_improvement.png',
-          'sample': 100,
-          'num_trials': 100,
-          'result_directory': 'api/aequitas/result'
-      }
-      
-      with open('api/aequitas/config.json', 'w') as outfile:
-        json.dump(data, outfile)
-
-      response = JsonResponse({'status': 'Success',
-                               'submittedFile': datasetName})
-      return response

@@ -4,7 +4,7 @@ print("inside utils.py", os.getcwd())
 
 def get_input_bounds(input_file, sensitive_col_name):
     input_bounds = []
-    df=pd.read_csv(f'api/aequitas/TrainingInputs/{input_file}')
+    df=pd.read_csv(f'{input_file}')
     for col in df:
         # exclude the column you're trying to predict
         if col == sensitive_col_name:
@@ -14,9 +14,9 @@ def get_input_bounds(input_file, sensitive_col_name):
     return input_bounds
 
 def get_column_names(input_file):
-    df=pd.read_csv(f'api/aequitas/TrainingInputs/{input_file}')
+    df=pd.read_csv(f'{input_file}')
     return list(df.columns)
 
-def get_idx_of_col_to_be_predicted(input_file, col_to_be_predicted):
-    df=pd.read_csv(f'api/aequitas/TrainingInputs/{input_file}')
-    return list(df.columns).index(col_to_be_predicted)
+def get_idx_of_column(input_file, column):
+    df=pd.read_csv(f'{input_file}')
+    return list(df.columns).index(column)
