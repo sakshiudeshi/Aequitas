@@ -21,7 +21,6 @@ import warnings
 from .Dataset import Dataset
 warnings.warn = warn
 
-
 class Fully_Direct:
     def __init__(self, dataset: Dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir):
         random.seed(time.time())
