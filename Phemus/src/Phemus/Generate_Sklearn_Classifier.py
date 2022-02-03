@@ -29,7 +29,7 @@ def generate_sklearn_classifier(dataset: Dataset, output_pkl_dir):
     for col in cat_feature:
         df[col]=le.fit_transform(df[col])
 
-    df[sensitive_param_name].replace({0: -1}, inplace=True) # make all 0s to -1s (critical for evaluating fairness)
+    # df[sensitive_param_name].replace({0: -1}, inplace=True) # make all 0s to -1s (critical for evaluating fairness)
 
     X=df.drop([col_to_be_predicted],axis=1)
     y=df[col_to_be_predicted]

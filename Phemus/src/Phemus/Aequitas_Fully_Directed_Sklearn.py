@@ -74,7 +74,6 @@ class Fully_Direct:
 
 
     def evaluate_input(self, inp):
-
         for i in self.input_bounds[self.sensitive_param_idx]:
             for j in self.input_bounds[self.sensitive_param_idx]:
                 if i != j: 
