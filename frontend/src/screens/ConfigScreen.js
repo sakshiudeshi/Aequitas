@@ -7,6 +7,7 @@ import LoadingBox from "../components/LoadingBox";
 import Header from "../components/Header";
 import { updateUserConfig } from "../actions/submitActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Footer from "../components/Footer";
 
 export default function ConfigScreen() {
   const { filename } = useParams();
@@ -35,6 +36,7 @@ export default function ConfigScreen() {
   const [getModel, setGetModel] = useState(true);
   const [modelType, setModelType] = useState("DecisionTree");
   const [aequitasMode, setAequitasMode] = useState("FullyDirected");
+  const [threshold, setThreshold] = useState(0);
 
   const result = useSelector((state) => state.aequitasRunResult);
   const {
@@ -50,6 +52,7 @@ export default function ConfigScreen() {
     setGetModel(document.getElementById("getModelCheck").checked);
     setModelType(document.getElementById("modelTypeSelect").value);
     setAequitasMode(document.getElementById("aequitasModeSelect").value);
+    setThreshold(document.getElementById("inputThreshold").value);
 
     if (aequitasRunResult) {
       navigate(`/result/${filename}`);
@@ -67,6 +70,7 @@ export default function ConfigScreen() {
     bodyFormData.append("getModel", getModel);
     bodyFormData.append("modelType", modelType);
     bodyFormData.append("aequitasMode", aequitasMode);
+    bodyFormData.append("threshold", threshold);
     dispatch(updateUserConfig(bodyFormData));
   };
 
@@ -125,6 +129,19 @@ export default function ConfigScreen() {
                   </select>
                 </div>
               </div>
+            </div>
+            <div className="form-group">
+              <label for="inputThreshold" className="form-label">
+                What is the threshold for 'bias' (How different is 'different')? <br/>
+                (ex. for a binary classifier, threshold is 0 - any difference is difference)
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="inputThreshold"
+                defaultValue={0}
+                onChange={(e) => setThreshold(e.target.value)}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="aequitasModeSelect">
@@ -247,6 +264,7 @@ export default function ConfigScreen() {
           </div>
         )}
       </div>
+      <Footer></Footer>
     </div>
   );
 }

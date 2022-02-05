@@ -29,6 +29,7 @@ def configureAequitas(request):
       get_model = request.POST['getModel']
       model_type = request.POST['modelType']
       aequitasMode = request.POST['aequitasMode']
+      threshold = request.POST['threshold']
       result_directory = 'api/aequitas/result'
       dataset_dir = f"{result_directory}/{dataset_name}"
       num_params = len(get_column_names(dataset_dir)) - 1 # exclude 'y' col
@@ -38,7 +39,6 @@ def configureAequitas(request):
       retraining_inputs = f"{result_directory}/{dataset_name.split('.')[0]}_Retraining_Dataset.csv"
       #improvement_graph = f"{result_directory}/{dataset_name.split('.')[0]}_Fairness_Improvement.png"
       improvement_graph = 'api/aequitas/result/employee_fairness_improvement.png'
-      threshhold = 0
       perturbation_unit = 1
       sample = 100
       num_trials = 100
@@ -55,13 +55,13 @@ def configureAequitas(request):
           'improved_pkl_dir': improved_pkl_dir,
           'improvement_graph': improvement_graph,
           'aequitasMode': aequitasMode,
-          'threshold': 0,
+          'threshold': threshold,
           'perturbation_unit': 1,
           # need to be modified after running Aequitas
           'global_iteration_limit': 100,  # needs to be at least 1000 to be effective
           'local_iteration_limit': 100,
-          'sample': 100,
-          'num_trials': 100,
+          'sample': sample,
+          'num_trials': num_trials,
       }
 
       with open('api/aequitas/config.json', 'w') as outfile:

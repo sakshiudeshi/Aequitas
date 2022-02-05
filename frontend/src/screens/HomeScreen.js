@@ -5,6 +5,7 @@ import OurNavbar from "../components/OurNavbar";
 import { useDispatch, useSelector } from "react-redux";
 import { submitFile } from "../actions/submitActions";
 import DragAndDrop from "../components/DragAndDrop";
+import Footer from "../components/Footer";
 
 export default function HomeScreen() {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export default function HomeScreen() {
               <div className="col-md-8">
                 <h1 className="display-4">Aequitas Web</h1>
                 <p className="lead">
-                  Upload your training data to find out about its fairness!
+                Upload your training data to find out about its fairness!
                 </p>
                 <div>
                   <label htmlFor="modelFile">Model Training Dataset</label>
@@ -108,6 +109,7 @@ export default function HomeScreen() {
           </div>
         </div>
       </DragAndDrop>
+      <Footer style="fixed"></Footer>
     </div>
   );
 }

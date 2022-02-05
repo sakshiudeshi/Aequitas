@@ -1,5 +1,31 @@
-body {
-  margin-left: 1rem;
+:root {
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #343a40;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
+body { 
   padding: 0;
 }
 
@@ -36,7 +62,6 @@ img {
 }
 
 #dragAndDropArea {
-  height: 100%;
   position: absolute;
   right: 0;
   left: 0;
@@ -46,3 +71,28 @@ img {
   color: var(--bs-primary);
 }
 
+.footer {
+  position:relative;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #e9ecef;
+  color: rgba(0,0,0,.5);
+  text-align: center;
+}
+
+.jumbotron {
+  position: relative;
+  margin-top: 3rem;
+  padding-top: 5rem;
+  height:max-content;
+}
+
+@media screen and (max-width: 575px) {
+  .jumbotron {
+    margin-top: 5rem;
+  }
+}

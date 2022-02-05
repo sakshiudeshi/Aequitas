@@ -6,8 +6,7 @@ import {
   downloadRetrainDataset,
   downloadRetrainModel,
 } from "../actions/downloadActions";
-import ExplainRetrainedModel from "../components/ExplainRetrainedModel";
-import ExplainRetrainingDataset from "../components/ExplainRetrainingDataset";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import OurNavbar from "../components/OurNavbar";
 
@@ -111,6 +110,7 @@ export default function ResultScreen() {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </div>
   );
 }
