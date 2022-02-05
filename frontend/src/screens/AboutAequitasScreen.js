@@ -7,7 +7,7 @@ export default function AboutAequitasScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header child={<h1 className="display-4">About Aequitas</h1>}></Header>
+      <Header>About Aequitas</Header>
       <Footer></Footer>
     </div>
   );

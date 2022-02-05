@@ -28,9 +28,7 @@ export default function ResultScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header
-        child={<h1 className="display-4">Aequitas Results for {filename}</h1>}
-      ></Header>
+      <Header>Aequitas Results for {filename}</Header>
       <div className="container-md">
         <div className="row">
           <div className="col">

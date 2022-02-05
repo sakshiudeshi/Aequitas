@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Header({child}) {
+export default function Header({children}) {
   return (
     <div className="jumbotron">
-      {child}
+      <h1 className="display-4">{children}</h1>
     </div>
   );
 }

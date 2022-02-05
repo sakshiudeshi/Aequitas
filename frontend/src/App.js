@@ -7,6 +7,7 @@ import AboutAequitasScreen from "./screens/AboutAequitasScreen";
 import AequitasDocumentationScreen from "./screens/AequitasDocumentationScreen";
 import AboutUsScreen from "./screens/AboutUsScreen";
 import ConfigScreen from "./screens/ConfigScreen";
+import EmailScreen from "./screens/EmailScreen";
 
 function App() {
   return (
@@ -31,6 +32,10 @@ function App() {
           <Route
             path="/config/:filename"
             element={<ConfigScreen></ConfigScreen>}
+          ></Route>
+          <Route
+            path="/email/:filename"
+            element={<EmailScreen></EmailScreen>}
           ></Route>
           <Route
             path="/result/:filename"

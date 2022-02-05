@@ -14,10 +14,6 @@ export default function ConfigScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const clickHandler = (filename) => {
-    dispatch(runAequitas(filename));
-  };
-
   const fileSubmitResult = useSelector((state) => state.fileSubmit);
   const { submitResult, loading, error } = fileSubmitResult;
   const columnNames = submitResult.columnNames;
@@ -28,6 +24,12 @@ export default function ConfigScreen() {
     error: configUpdateError,
   } = useSelector((state) => state.configUpdate);
 
+  const {
+    aequitasRunResult,
+    loading: runAequitasLoading,
+    error: runAequitasError,
+  } = useSelector((state) => state.aequitasRunResult);
+
   const modelTypes = ["DecisionTree", "RandomForest", "SVM"];
   const aequitasModes = ["Random", "SemiDirected", "FullyDirected"];
 
@@ -37,13 +39,6 @@ export default function ConfigScreen() {
   const [modelType, setModelType] = useState("DecisionTree");
   const [aequitasMode, setAequitasMode] = useState("FullyDirected");
   const [threshold, setThreshold] = useState(0);
-
-  const result = useSelector((state) => state.aequitasRunResult);
-  const {
-    aequitasRunResult,
-    loading: runAequitasLoading,
-    error: runAequitasError,
-  } = result;
 
   useEffect(() => {
     // make sure the dropdowns are set to default values
@@ -74,14 +69,17 @@ export default function ConfigScreen() {
     dispatch(updateUserConfig(bodyFormData));
   };
 
+  const clickHandler = (filename) => {
+    // dispatch(runAequitas(filename));
+    navigate(`/email/${filename}`);
+  };
+
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header
-        child={
-          <h1 className="display-4">Aequitas Configuration for {filename}</h1>
-        }
-      ></Header>
+      <Header>
+          Aequitas Configuration for {filename}
+      </Header>
       <div className="container">
         <div>
           <form onSubmit={submitHandler}>

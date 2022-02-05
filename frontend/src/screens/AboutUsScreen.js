@@ -7,7 +7,7 @@ export default function AboutUsScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header child={<h1 className="display-4">About Us</h1>}></Header>
+      <Header>About Us</Header>
       <Footer></Footer>
     </div>
     
