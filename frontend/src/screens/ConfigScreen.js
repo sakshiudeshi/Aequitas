@@ -24,12 +24,6 @@ export default function ConfigScreen() {
     error: configUpdateError,
   } = useSelector((state) => state.configUpdate);
 
-  const {
-    aequitasRunResult,
-    loading: runAequitasLoading,
-    error: runAequitasError,
-  } = useSelector((state) => state.aequitasRunResult);
-
   const modelTypes = ["DecisionTree", "RandomForest", "SVM"];
   const aequitasModes = ["Random", "SemiDirected", "FullyDirected"];
 
@@ -41,20 +35,13 @@ export default function ConfigScreen() {
   const [threshold, setThreshold] = useState(0);
 
   useEffect(() => {
-    // make sure the dropdowns are set to default values
     setSensitiveParam(document.getElementById("sensitiveParamSelect").value);
     setPredictedCol(document.getElementById("predictedColSelect").value);
     setGetModel(document.getElementById("getModelCheck").checked);
     setModelType(document.getElementById("modelTypeSelect").value);
     setAequitasMode(document.getElementById("aequitasModeSelect").value);
     setThreshold(document.getElementById("inputThreshold").value);
-
-    if (aequitasRunResult) {
-      navigate(`/result/${filename}`);
-    } else {
-      navigate(`/config/${filename}`);
-    }
-  }, [aequitasRunResult, navigate]);
+  }, [document]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -70,7 +57,7 @@ export default function ConfigScreen() {
   };
 
   const clickHandler = (filename) => {
-    // dispatch(runAequitas(filename));
+    dispatch(runAequitas(filename));
     navigate(`/email/${filename}`);
   };
 
@@ -258,7 +245,7 @@ export default function ConfigScreen() {
             >
               Run Aequitas
             </button>
-            {runAequitasLoading && <LoadingBox></LoadingBox>}
+            {/* {runAequitasLoading && <LoadingBox></LoadingBox>} */}
           </div>
         )}
       </div>
