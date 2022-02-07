@@ -18,11 +18,11 @@ export default function ResultScreen() {
   const dispatch = useDispatch();
 
   const downloadDatasetHandler = () => {
-    dispatch(downloadRetrainDataset(aequitasRunResult.retrainFilename));
+    dispatch(downloadRetrainDataset(aequitasRunResult.retrainFilename, jobId));
   };
 
   const downloadRetrainedModelHandler = () => {
-    dispatch(downloadRetrainModel(aequitasRunResult.retrainModelName));
+    dispatch(downloadRetrainModel(aequitasRunResult.retrainModelName, jobId));
   };
 
   return (

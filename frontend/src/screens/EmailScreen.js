@@ -23,6 +23,13 @@ export default function EmailScreen() {
     error: configUpdateError,
   } = useSelector((state) => state.configUpdate);
 
+  const sendEmailResult = useSelector((state) => state.sendEmail);
+  const {
+    loading: sendEmailLoading,
+    success: sendEmailSuccess,
+    error: sendEmailError,
+  } = sendEmailResult;
+
   useEffect(() => {
     // if (aequitasRunResult) {
     //   e.preventDefault();
@@ -32,7 +39,7 @@ export default function EmailScreen() {
     //   sendEmail(form);
     //   navigate(`/result/${filename}`);
     // }
-    setEmail(document.getElementById("inputEmail").value);
+    // setEmail(document.getElementById("inputEmail").value);
   }, [aequitasRunResult]);
 
   const [email, setEmail] = useState("");
@@ -46,11 +53,11 @@ export default function EmailScreen() {
     bodyFormData.append("email", email);
     dispatch(updateUserConfig(bodyFormData));
     if (aequitasRunResult) {
-      const form = document.getElementById('emailForm')
+      const form = document.getElementById("emailForm");
       form.message.value = `Aequitas successfully run! This is the jobId ${jobId}`;
       form.to_name.value = "User";
-      //sendEmail(form);
-      navigate(`/result/${jobId}`);
+      dispatch(sendEmail(form));
+      //navigate(`/result/${jobId}`);
     }
   };
 
@@ -59,30 +66,37 @@ export default function EmailScreen() {
       <OurNavbar></OurNavbar>
       <Header>Email</Header>
       <div className="container">
-        <form id="emailForm" onSubmit={(e) => submitHandler(e)}>
-          <div class="mb-3">
-            <input type="hidden" name="message"></input>
-            <input type="hidden" name="to_name"></input>
-            <label htmlFor="inputEmail" className="form-label">
-              Please enter the email address you would like to receive the
-              improved dataset to.
-            </label>
-            <input
-              name="user_email"
-              type="email"
-              className="form-control"
-              id="inputEmail"
-              aria-describedby="emailHelp"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <div id="emailHelp" className="form-text">
-              We'll never share your email with anyone else.
+        {!sendEmailSuccess ? (
+          <form id="emailForm" onSubmit={(e) => submitHandler(e)}>
+            <div className="mb-3">
+              <input type="hidden" name="message"></input>
+              <input type="hidden" name="to_name"></input>
+              <label htmlFor="inputEmail" className="form-label">
+                Please enter the email address you would like to receive the
+                improved dataset to.
+              </label>
+              <input
+                name="user_email"
+                type="email"
+                className="form-control"
+                id="inputEmail"
+                aria-describedby="emailHelp"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <div id="emailHelp" className="form-text">
+                We'll never share your email with anyone else.
+              </div>
             </div>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
+        ) : (
+          <div className="alert alert-success" role="alert">
+            Email will be sent to you shortly (~appx 15 minutes) with the summary
+            and improved dataset. Thank you!
           </div>
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-        </form>
+        )}
       </div>
     </div>
   );

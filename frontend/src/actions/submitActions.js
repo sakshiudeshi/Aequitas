@@ -14,16 +14,16 @@ import {
   UPDATE_USER_EMAIL_SUCCESS,
 } from "../constants/submitConstants";
 
-export const submitFile = (datasetName) => async (dispatch, getState) => {
+export const submitFile = (jobId) => async (dispatch, getState) => {
   dispatch({
     type: SUBMIT_DATASET_REQUEST,
     payload: {
-      datasetName: datasetName,
+      jobId: jobId,
     },
   });
   try {
     const { data } = await Axios.get(
-      `http://localhost:8000/api/config?filename=${datasetName}`
+      `http://localhost:8000/api/config?jobId=${jobId}&example=True`
     );
     dispatch({ type: SUBMIT_DATASET_SUCCESS, payload: data });
   } catch (error) {
@@ -39,7 +39,7 @@ export const createUserConfig = (config) => async (dispatch, getState) => {
   dispatch({ type: CREATE_CONFIG_REQUEST, payload: config });
   try {
     const { data } = await Axios.post(
-      `http://localhost:8000/api/config?filename=${config.get("filename")}`,
+      `http://localhost:8000/api/config?jobId=${config.get("jobId")}`,
       config
     );
     dispatch({ type: CREATE_CONFIG_SUCCESS, payload: data });

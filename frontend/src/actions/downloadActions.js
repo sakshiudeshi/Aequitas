@@ -9,17 +9,18 @@ import {
 } from "../constants/downloadConstants";
 
 export const downloadRetrainDataset =
-  (filename) => async (dispatch, getState) => {
+  (filename, jobId) => async (dispatch, getState) => {
     dispatch({
       type: DOWNLOAD_DATASET_REQUEST,
       payload: {
         filename: filename,
+        jobId: jobId,
       },
     });
     try {
       var fileDownload = require("js-file-download");
       Axios.get(
-        `http://localhost:8000/api/download?target=dataset&filename=${filename}`,
+        `http://localhost:8000/api/download?target=dataset&jobId=${jobId}`,
         {
           responseType: "blob",
         }
@@ -43,17 +44,18 @@ export const downloadRetrainDataset =
   };
 
 export const downloadRetrainModel =
-  (filename) => async (dispatch, getState) => {
+  (filename, jobId) => async (dispatch, getState) => {
     dispatch({
       type: DOWNLOAD_MODEL_REQUEST,
       payload: {
         filename: filename,
+        jobId: jobId,
       },
     });
     try {
       var fileDownload = require("js-file-download");
       Axios.get(
-        `http://localhost:8000/api/download?target=model&filename=${filename}`,
+        `http://localhost:8000/api/download?target=model&jobId=${jobId}`,
         {
           responseType: "blob",
         }

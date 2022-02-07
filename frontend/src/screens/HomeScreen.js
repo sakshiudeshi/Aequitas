@@ -12,11 +12,13 @@ export default function HomeScreen() {
   const dispatch = useDispatch();
 
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const uploadFileHandler = async (file) => {
+  const uploadFileHandler = async (file=null, example=false) => {
     // Upload the model training data
     const bodyFormData = new FormData();
-    bodyFormData.append("dataset", file);
-    bodyFormData.append("filename", file.name);
+    if (file && !example) {
+      bodyFormData.append("dataset", file);
+      bodyFormData.append("filename", file.name);
+    }
     Axios.post("http://localhost:8000/api/upload", bodyFormData)
       .then((response) => {
         console.log("Success", response);
@@ -29,16 +31,19 @@ export default function HomeScreen() {
 
   const submitHandler = async (e) => {
     if (uploadSuccess) {
-      const filename = uploadSuccess.data.message;
-      dispatch(submitFile(filename));
+      const jobId = uploadSuccess.data.jobId;
+      dispatch(submitFile(jobId));
       setUploadSuccess(false);
     }
   };
 
   const exampleDatasetSubmitHandler = async (e) => {
-    const filename = "Employee.csv";
-    dispatch(submitFile(filename));
-    setUploadSuccess(false);
+    uploadFileHandler(null, true);
+    if (uploadSuccess) {
+      const jobId = uploadSuccess.data.jobId;
+      dispatch(submitFile(jobId));
+      setUploadSuccess(false);
+    }
   };
 
   const fileSubmitResult = useSelector((state) => state.fileSubmit);
@@ -46,7 +51,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (submitResult) {
-      navigate(`/config/${submitResult.submittedFile}`);
+      navigate(`/config/${submitResult.jobId}`);
     }
   }, [submitResult, navigate]);
 

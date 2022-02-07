@@ -10,12 +10,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from "../components/Footer";
 
 export default function ConfigScreen() {
-  const { filename } = useParams();
+  const { jobId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const fileSubmitResult = useSelector((state) => state.fileSubmit);
   const { submitResult, loading, error } = fileSubmitResult;
+  const filename = submitResult.submittedFile;
   const columnNames = submitResult.columnNames;
 
   const {
@@ -23,8 +24,6 @@ export default function ConfigScreen() {
     loading: configUpdateLoading,
     error: configUpdateError,
   } = useSelector((state) => state.configCreate);
-
-  var jobId = configCreateResult ? configCreateResult.id : null;
 
   const modelTypes = ["DecisionTree", "RandomForest", "SVM"];
   const aequitasModes = ["Random", "SemiDirected", "FullyDirected"];
@@ -43,14 +42,12 @@ export default function ConfigScreen() {
     setModelType(document.getElementById("modelTypeSelect").value);
     setAequitasMode(document.getElementById("aequitasModeSelect").value);
     setThreshold(document.getElementById("inputThreshold").value);
-    if (configCreateResult) {
-      jobId = configCreateResult.id;
-    }
   }, [document]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     const bodyFormData = new FormData();
+    bodyFormData.append("jobId", jobId);
     bodyFormData.append("filename", filename);
     bodyFormData.append("sensitiveParam", sensitiveParam);
     bodyFormData.append("predictedCol", predictedCol);
@@ -69,9 +66,7 @@ export default function ConfigScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header>
-          Aequitas Configuration for {filename}
-      </Header>
+      <Header>Aequitas Configuration for {filename}</Header>
       <div className="container">
         <div>
           <form onSubmit={submitHandler}>
@@ -122,8 +117,10 @@ export default function ConfigScreen() {
             </div>
             <div className="form-group">
               <label htmlFor="inputThreshold" className="form-label">
-                What is the threshold for 'bias' (How different is 'different')? <br/>
-                (ex. for a binary classifier, threshold is 0 - any difference is difference)
+                What is the threshold for 'bias' (How different is 'different')?{" "}
+                <br />
+                (ex. for a binary classifier, threshold is 0 - any difference is
+                difference)
               </label>
               <input
                 type="text"
@@ -143,7 +140,18 @@ export default function ConfigScreen() {
                     data-target="#exampleModal"
                     className="primary"
                   >
-                    info
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-info-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                    </svg>
+                    {" "} info
                   </a>
                 </div>
               </label>

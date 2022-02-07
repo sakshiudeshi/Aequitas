@@ -1,4 +1,5 @@
 from turtle import update
+from unittest import result
 from django.core.files import File
 from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import render
@@ -9,12 +10,22 @@ from api.aequitas.utils import *
 from api.models import AequitasJob
 
 def sendColumnNames(request):
-  datasetName = request.GET['filename']
-  # figure out column names
-  columnNames = get_column_names(f'api/aequitas/result/{datasetName}')
+  jobId = request.GET['jobId']
+  example = True if request.GET['example'] == "True" else False
+  if example:
+    job = AequitasJob.objects.get(id=jobId)
+    result_directory = "api/aequitas/result"
+    datasetName = "Employee.csv"
+  else:
+    job = AequitasJob.objects.get(id=jobId)
+    result_directory = job.result_directory
+    datasetName = job.dataset_name
+  
+  columnNames = get_column_names(f'{result_directory}/{datasetName}')
 
   response = JsonResponse({'status': 'Success',
                            'submittedFile': datasetName,
+                           'jobId': jobId,
                            'columnNames': columnNames})
   return response
 
@@ -35,42 +46,42 @@ def configureAequitas(request):
     if request.method == 'POST':
       if 'email' in request.POST: # if it's an update request
         return updateConfig(request)
+      
+      jobId = request.POST['jobId']
+      if jobId != 1: 
+        job = AequitasJob.objects.get(id=jobId)
+        dataset_name = request.POST['filename']
+        job.dataset_name = dataset_name
+        sensitive_param = request.POST['sensitiveParam']
+        job.sensitive_param = sensitive_param
+        job.col_to_be_predicted = request.POST['predictedCol']
+        job.get_model = True if request.POST['getModel'] == "true" else False
+        model_type = request.POST['modelType']
+        job.model_type = model_type
+        job.aequitas_mode = request.POST['aequitasMode']
+        job.threshold = request.POST['threshold']
+        job.perturbation_unit = 1
+        job.sample = 100
+        job.num_trials = 100
+        job.global_iteration_limit = 100
+        job.local_iteration_limit = 100
         
-      dataset_name = request.POST['filename']
-      sensitive_param = request.POST['sensitiveParam']
-      col_to_be_predicted = request.POST['predictedCol']
-      get_model = True if request.POST['getModel'] == "true" else False
-      model_type = request.POST['modelType']
-      aequitas_mode = request.POST['aequitasMode']
-      threshold = request.POST['threshold']
-      result_directory = 'api/aequitas/result'
-      dataset_dir = f"{result_directory}/{dataset_name}"
-      num_params = len(get_column_names(dataset_dir)) - 1 # exclude 'y' col
-      sensitive_param_idx = get_idx_of_column(dataset_dir, sensitive_param)
-      pkl_dir = f"{result_directory}/{dataset_name.split('.')[0]}_{model_type}_Original.pkl"
-      improved_pkl_dir = f"{result_directory}/{dataset_name.split('.')[0]}_{model_type}_Improved.pkl"
-      retraining_inputs = f"{result_directory}/{dataset_name.split('.')[0]}_Retraining_Dataset.csv"
-      #improvement_graph = f"{result_directory}/{dataset_name.split('.')[0]}_Fairness_Improvement.png"
-      improvement_graph = 'api/aequitas/result/employee_fairness_improvement.png'
-      perturbation_unit = 1
-      sample = 100
-      num_trials = 100
-      global_iteration_limit = 100
-      local_iteration_limit = 100
-      
-      # save the dataset in Django model
-      j = AequitasJob(dataset_name=dataset_name, sensitive_param=sensitive_param, col_to_be_predicted=col_to_be_predicted,
-                  get_model=get_model, model_type=model_type, aequitas_mode = aequitas_mode, threshold=threshold,
-                  result_directory=result_directory, dataset_dir=dataset_dir, num_params=num_params, sensitive_param_idx=sensitive_param_idx, 
-                  pkl_dir=pkl_dir, improved_pkl_dir = improved_pkl_dir, retraining_inputs=retraining_inputs,
-                  improvement_graph=improvement_graph, perturbation_unit=perturbation_unit, sample=sample, num_trials=num_trials,
-                  global_iteration_limit=global_iteration_limit, local_iteration_limit=local_iteration_limit)
-      
-      j.save() 
+        result_directory = f'api/aequitas/result_{jobId}'
+        dataset_dir = f"{result_directory}/{dataset_name}"
+        job.dataset_dir = dataset_dir
+        job.num_params = len(get_column_names(dataset_dir)) - 1 # exclude 'y' col
+        job.sensitive_param_idx = get_idx_of_column(dataset_dir, sensitive_param)
+        job.pkl_dir = f"{result_directory}/{dataset_name.split('.')[0]}_{model_type}_Original.pkl"
+        job.improved_pkl_dir = f"{result_directory}/{dataset_name.split('.')[0]}_{model_type}_Improved.pkl"
+        job.retraining_inputs = f"{result_directory}/{dataset_name.split('.')[0]}_Retraining_Dataset.csv"
+        #job.improvement_graph = f"{result_directory}/{dataset_name.split('.')[0]}_Fairness_Improvement.png"
+        job.improvement_graph = 'api/aequitas/result/employee_fairness_improvement.png'
+        
+        job.save()
 
       response = JsonResponse({'status': 'Success',
                                'submittedFile': dataset_name,
-                               'id': j.id})
+                               'id': job.id})
       return response
 
 

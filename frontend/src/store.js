@@ -1,6 +1,7 @@
 import { createStore, compose, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { downloadDatasetReducer, downloadModelReducer } from "./reducers/downloadReducers";
+import { sendEmailReducer } from "./reducers/emailReducers";
 import { aequitasRunReducer } from "./reducers/runReducers";
 import { configCreateReducer, configUpdateReducer, fileSubmitReducer } from "./reducers/submitReducers";
 
@@ -14,6 +15,7 @@ const reducer = combineReducers({
   downloadModel: downloadModelReducer,
   configCreate: configCreateReducer,
   configUpdate: configUpdateReducer,
+  sendEmail: sendEmailReducer,
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -30,7 +30,7 @@ function App() {
             element={<AboutUsScreen></AboutUsScreen>}
           ></Route>
           <Route
-            path="/config/:filename"
+            path="/config/:jobId"
             element={<ConfigScreen></ConfigScreen>}
           ></Route>
           <Route

@@ -45,6 +45,8 @@ def runAequitas(request):
 
       improvement_graph = job.improvement_graph
       improvement_graph_name = improvement_graph.split('/')[-1]
+      retrainFilename = retraining_inputs.split('/')[-1]
+      retrainModelName = improved_pkl_dir.split('/')[-1]
 
       # if aequitasMode == "Random":
       #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
@@ -56,17 +58,18 @@ def runAequitas(request):
       # #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
       # #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
 
-      imageId = uploadImage(improvement_graph_name, improvement_graph)
+      imageId = uploadImage(improvement_graph_name, improvement_graph, jobId)
       # https://dev.to/imamcu07/embed-or-display-image-to-html-page-from-google-drive-3ign
       sharingLink = f'https://drive.google.com/uc?id={imageId}'
 
       response = JsonResponse({
                               'status': 'Success',
+                              'jobId': jobId,
                               'datasetName': dataset_name,
                               'aequitasMode': aequitasMode,
                               'fairnessEstimation': fairnessEstimation,
-                              'retrainFilename': retraining_inputs,
-                              'retrainModelName': improved_pkl_dir,
+                              'retrainFilename': retrainFilename,
+                              'retrainModelName': retrainModelName,
                               'improvementGraph': sharingLink
                               })
       return response
@@ -74,7 +77,7 @@ def runAequitas(request):
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-def uploadImage(filename, filepath):
+def uploadImage(filename, filepath, jobId):
   print(os.getcwd())
   os.chdir('api')
   sys.path.append(os.getcwd())
@@ -127,8 +130,7 @@ def uploadImage(filename, filepath):
         fields='id',
     ).execute()
 
-    print(os.getcwd())
-    file_metadata = {'name': filename, 'parents': [folder_id]}
+    file_metadata = {'name': jobId, 'parents': [folder_id]}
     media = MediaFileUpload(filepath, mimetype='image/png')
     file = service.files().create(body=file_metadata,
                                   media_body=media,
