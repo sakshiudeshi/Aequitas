@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from api.models import AequitasJob 
 import os
+import shutil
 
 def uploadDataset(request):
     if request.method == 'POST':
@@ -22,10 +23,10 @@ def uploadDataset(request):
         j.save()
         j.result_directory = f'api/aequitas/result_{j.id}'
         j.save()
-        os.mkdir(j.result_directory)
-        with open(j.result_directory + "/" + filename, 'w') as destination:
-          for line in dataset.readlines():
-            destination.write(line)
+        shutil.copytree("api/aequitas/result", j.result_directory) # for now just copy entire sample directory over
+        # with open(j.result_directory + "/" + filename, 'w') as destination:
+        #   for line in dataset.readlines():
+        #     destination.write(line)
 
       response = JsonResponse(
           {'status': 'Success', 'jobId': j.id, 'filename': filename})
