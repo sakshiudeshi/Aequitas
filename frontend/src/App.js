@@ -34,11 +34,11 @@ function App() {
             element={<ConfigScreen></ConfigScreen>}
           ></Route>
           <Route
-            path="/email/:filename"
+            path="/email/:jobId"
             element={<EmailScreen></EmailScreen>}
           ></Route>
           <Route
-            path="/result/:filename"
+            path="/result/:jobId"
             element={<ResultScreen></ResultScreen>}
           ></Route>
         </Routes>

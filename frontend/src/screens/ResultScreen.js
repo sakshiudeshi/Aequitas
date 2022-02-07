@@ -11,7 +11,7 @@ import Header from "../components/Header";
 import OurNavbar from "../components/OurNavbar";
 
 export default function ResultScreen() {
-  const { filename } = useParams();
+  const { jobId } = useParams();
   const result = useSelector((state) => state.aequitasRunResult);
   const { aequitasRunResult, loading, error } = result;
 
@@ -28,7 +28,7 @@ export default function ResultScreen() {
   return (
     <div>
       <OurNavbar></OurNavbar>
-      <Header>Aequitas Results for {filename}</Header>
+      <Header>Aequitas Results for {aequitasRunResult.datasetName} JobId: {jobId}</Header>
       <div className="container-md">
         <div className="row">
           <div className="col">

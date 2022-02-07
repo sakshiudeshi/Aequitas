@@ -5,7 +5,7 @@ import OurNavbar from "../components/OurNavbar";
 import { runAequitas } from "../actions/runActions";
 import LoadingBox from "../components/LoadingBox";
 import Header from "../components/Header";
-import { updateUserConfig } from "../actions/submitActions";
+import { createUserConfig } from "../actions/submitActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from "../components/Footer";
 
@@ -19,10 +19,12 @@ export default function ConfigScreen() {
   const columnNames = submitResult.columnNames;
 
   const {
-    configUpdateResult,
+    configCreateResult,
     loading: configUpdateLoading,
     error: configUpdateError,
-  } = useSelector((state) => state.configUpdate);
+  } = useSelector((state) => state.configCreate);
+
+  var jobId = configCreateResult ? configCreateResult.id : null;
 
   const modelTypes = ["DecisionTree", "RandomForest", "SVM"];
   const aequitasModes = ["Random", "SemiDirected", "FullyDirected"];
@@ -41,6 +43,9 @@ export default function ConfigScreen() {
     setModelType(document.getElementById("modelTypeSelect").value);
     setAequitasMode(document.getElementById("aequitasModeSelect").value);
     setThreshold(document.getElementById("inputThreshold").value);
+    if (configCreateResult) {
+      jobId = configCreateResult.id;
+    }
   }, [document]);
 
   const submitHandler = (e) => {
@@ -53,12 +58,12 @@ export default function ConfigScreen() {
     bodyFormData.append("modelType", modelType);
     bodyFormData.append("aequitasMode", aequitasMode);
     bodyFormData.append("threshold", threshold);
-    dispatch(updateUserConfig(bodyFormData));
+    dispatch(createUserConfig(bodyFormData));
   };
 
-  const clickHandler = (filename) => {
-    dispatch(runAequitas(filename));
-    navigate(`/email/${filename}`);
+  const clickHandler = () => {
+    dispatch(runAequitas(jobId));
+    navigate(`/email/${jobId}`);
   };
 
   return (
@@ -116,7 +121,7 @@ export default function ConfigScreen() {
               </div>
             </div>
             <div className="form-group">
-              <label for="inputThreshold" className="form-label">
+              <label htmlFor="inputThreshold" className="form-label">
                 What is the threshold for 'bias' (How different is 'different')? <br/>
                 (ex. for a binary classifier, threshold is 0 - any difference is difference)
               </label>
@@ -225,9 +230,9 @@ export default function ConfigScreen() {
             )}
             <div>
               {configUpdateLoading && <LoadingBox></LoadingBox>}
-              {configUpdateResult && (
+              {configCreateResult && (
                 <div className="alert alert-success" role="alert">
-                  {configUpdateResult.submittedFile} successfully configured!
+                  {configCreateResult.submittedFile} successfully configured!
                 </div>
               )}
               <button type="submit" className="btn btn-primary mb-2">
@@ -236,12 +241,12 @@ export default function ConfigScreen() {
             </div>
           </form>
         </div>
-        {configUpdateResult && (
+        {configCreateResult && (
           <div>
             <button
               type="button"
               className="btn btn-primary"
-              onClick={() => clickHandler(filename)}
+              onClick={clickHandler}
             >
               Run Aequitas
             </button>

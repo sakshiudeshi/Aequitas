@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { sendEmail } from "../actions/emailActions";
+import { updateUserConfig } from "../actions/submitActions";
 import Header from "../components/Header";
 import OurNavbar from "../components/OurNavbar";
 
 export default function EmailScreen() {
-  const { filename } = useParams();
+  const { jobId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,6 +16,12 @@ export default function EmailScreen() {
     loading: runAequitasLoading,
     error: runAequitasError,
   } = useSelector((state) => state.aequitasRunResult);
+
+  const {
+    configUpdateResult,
+    loading: configUpdateLoading,
+    error: configUpdateError,
+  } = useSelector((state) => state.configUpdate);
 
   useEffect(() => {
     // if (aequitasRunResult) {
@@ -25,6 +32,7 @@ export default function EmailScreen() {
     //   sendEmail(form);
     //   navigate(`/result/${filename}`);
     // }
+    setEmail(document.getElementById("inputEmail").value);
   }, [aequitasRunResult]);
 
   const [email, setEmail] = useState("");
@@ -33,13 +41,16 @@ export default function EmailScreen() {
   const submitHandler = (e) => {
     e.preventDefault();
     setEmail(document.getElementById("inputEmail").value);
+    const bodyFormData = new FormData();
+    bodyFormData.append("jobId", jobId);
+    bodyFormData.append("email", email);
+    dispatch(updateUserConfig(bodyFormData));
     if (aequitasRunResult) {
       const form = document.getElementById('emailForm')
-      form.message.value = "Aequitas successfully run!";
+      form.message.value = `Aequitas successfully run! This is the jobId ${jobId}`;
       form.to_name.value = "User";
-      console.log(form);
-      sendEmail(form);
-      navigate(`/result/${filename}`);
+      //sendEmail(form);
+      navigate(`/result/${jobId}`);
     }
   };
 
@@ -62,6 +73,7 @@ export default function EmailScreen() {
               className="form-control"
               id="inputEmail"
               aria-describedby="emailHelp"
+              onChange={(e) => setEmail(e.target.value)}
             />
             <div id="emailHelp" className="form-text">
               We'll never share your email with anyone else.

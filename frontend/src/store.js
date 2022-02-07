@@ -1,8 +1,8 @@
 import { createStore, compose, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { downloadDatasetReducer, downloadModelReducer } from "./reducers/downloadReducers";
-import { aequitasRunReducer, improvementGraphReducer } from "./reducers/runReducers";
-import { configUpdateReducer, fileSubmitReducer } from "./reducers/submitReducers";
+import { aequitasRunReducer } from "./reducers/runReducers";
+import { configCreateReducer, configUpdateReducer, fileSubmitReducer } from "./reducers/submitReducers";
 
 const initialState = {
 };
@@ -12,6 +12,7 @@ const reducer = combineReducers({
   aequitasRunResult: aequitasRunReducer,
   downloadDataset: downloadDatasetReducer,
   downloadModel: downloadModelReducer,
+  configCreate: configCreateReducer,
   configUpdate: configUpdateReducer,
 })
 

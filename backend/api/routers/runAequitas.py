@@ -1,6 +1,5 @@
-from django.core.files import File
-from django.http import HttpResponse, FileResponse, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
+from api.models import AequitasJob
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -14,38 +13,37 @@ import sys
 
 def runAequitas(request):
     if request.method == 'GET':
-      datasetName = request.GET['filename']
-
-      with open('api/aequitas/config.json') as json_file:
-        metaData = json.load(json_file)
-
-      num_params = metaData['num_params']
-      sensitive_param_idx = metaData['sensitive_param_idx']
-      sensitive_param_name = metaData['sensitive_param_name']
-      col_to_be_predicted = metaData['col_to_be_predicted']
-      dataset_dir = metaData['dataset_dir']
+      jobId = request.GET['jobId']
+      job = AequitasJob.objects.get(id=jobId)
+      dataset_name = job.dataset_name
+      num_params = job.num_params
+      sensitive_param_idx = job.sensitive_param_idx
+      sensitive_param = job.sensitive_param
+      col_to_be_predicted = job.col_to_be_predicted
+      dataset_dir = job.dataset_dir
 
       # possibly refactor to just pass in the json file?
       dataset = Dataset(num_params, sensitive_param_idx,
-                        sensitive_param_name, col_to_be_predicted, dataset_dir)
+                        sensitive_param, col_to_be_predicted, dataset_dir)
 
-      pkl_dir = metaData['pkl_dir']
-      retraining_inputs = metaData['retraining_inputs']
-      improved_pkl_dir = metaData['improved_pkl_dir']
+      pkl_dir = job.pkl_dir
+      retraining_inputs = job.retraining_inputs
+      improved_pkl_dir = job.improved_pkl_dir
 
-      threshold = metaData['threshold']
-      perturbation_unit = metaData['perturbation_unit']
+      threshold = job.threshold
+      perturbation_unit = job.perturbation_unit
+      
       # needs to be at least 1000 to be effective
-      global_iteration_limit = metaData['global_iteration_limit']
-      local_iteration_limit = metaData['local_iteration_limit']
+      global_iteration_limit = job.global_iteration_limit
+      local_iteration_limit = job.local_iteration_limit
 
-      num_trials = metaData['num_trials']
-      samples = metaData['sample']
+      num_trials = job.num_trials
+      samples = job.sample
 
       fairnessEstimation = None  # can we make this its own function
-      aequitasMode = metaData['aequitasMode']
+      aequitasMode = job.aequitas_mode
 
-      improvement_graph = metaData['improvement_graph']
+      improvement_graph = job.improvement_graph
       improvement_graph_name = improvement_graph.split('/')[-1]
 
       # if aequitasMode == "Random":
@@ -64,7 +62,7 @@ def runAequitas(request):
 
       response = JsonResponse({
                               'status': 'Success',
-                              'datasetName': datasetName,
+                              'datasetName': dataset_name,
                               'aequitasMode': aequitasMode,
                               'fairnessEstimation': fairnessEstimation,
                               'retrainFilename': retraining_inputs,
@@ -138,14 +136,8 @@ def uploadImage(filename, filepath):
     fileId = file.get('id')
 
     print('File ID: %s' % fileId)
-    # if 'aequitas' not in os.getcwd():
-    #   os.chdir('aequitas')
-    #   sys.path.append(os.getcwd())
     return file.get('id')
 
   except HttpError as error:
-    # if 'aequitas' not in os.getcwd():
-    #   os.chdir('aequitas')
-    #   sys.path.append(os.getcwd())
     # TODO(developer) - Handle errors from drive API.
     print(f'An error occurred: {error}')

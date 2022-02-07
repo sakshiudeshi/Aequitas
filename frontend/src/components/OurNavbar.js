@@ -3,7 +3,7 @@ import React from "react";
 export default function OurNavbar() {
   return (
     <nav className="navbar fixed-top navbar-expand-sm navbar-light bg-light">
-      <div class="container-fluid">
+      <div className="container-fluid">
         <a className="navbar-brand" href="/">
           Aequitas Web
         </a>
