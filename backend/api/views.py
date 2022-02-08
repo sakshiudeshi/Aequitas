@@ -4,6 +4,7 @@ import api.routers.uploadDataset as uploadDatasetRouter
 import api.routers.configureAequitas as configureAequitasRouter
 import api.routers.runAequitas as runAequitasRouter
 import api.routers.downloadFile as downloadFileRouter
+import api.routers.getResult as getResultRouter
 
 # Create your views here.
 def index(request):
@@ -19,6 +20,9 @@ def configureAequitas(request):
 
 def runAequitas(request):
   return runAequitasRouter.runAequitas(request)
+
+def getResult(request):
+  return getResultRouter.getResult(request)
 
 def downloadFile(request):
   return downloadFileRouter.downloadFile(request)

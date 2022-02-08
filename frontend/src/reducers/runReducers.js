@@ -1,4 +1,4 @@
-import { GET_IMPROVEMENT_GRAPH_FAIL, GET_IMPROVEMENT_GRAPH_REQUEST, GET_IMPROVEMENT_GRAPH_SUCCESS, RUN_AEQUITAS_FAIL, RUN_AEQUITAS_REQUEST, RUN_AEQUITAS_RESET, RUN_AEQUITAS_SUCCESS } from "../constants/runConstants";
+import { GET_AEQUITAS_RESULT_FAIL, GET_AEQUITAS_RESULT_REQUEST, GET_AEQUITAS_RESULT_SUCCESS, GET_IMPROVEMENT_GRAPH_FAIL, GET_IMPROVEMENT_GRAPH_REQUEST, GET_IMPROVEMENT_GRAPH_SUCCESS, RUN_AEQUITAS_FAIL, RUN_AEQUITAS_REQUEST, RUN_AEQUITAS_RESET, RUN_AEQUITAS_SUCCESS } from "../constants/runConstants";
 
 export const aequitasRunReducer = (state = {}, action) => {
   switch (action.type) {
@@ -10,6 +10,19 @@ export const aequitasRunReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case RUN_AEQUITAS_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const getAequitasResultReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_AEQUITAS_RESULT_REQUEST:
+      return { loading: true };
+    case GET_AEQUITAS_RESULT_SUCCESS:
+      return { loading: false, aequitasRunResult: action.payload };
+    case GET_AEQUITAS_RESULT_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

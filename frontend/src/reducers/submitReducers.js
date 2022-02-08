@@ -31,7 +31,7 @@ export const configUpdateReducer = (state = {}, action) => {
     case UPDATE_CONFIG_REQUEST:
       return { loading: true };
     case UPDATE_CONFIG_SUCCESS:
-      return { loading: false, configUpdateResult: action.payload };
+      return { loading: false, success: true, configUpdateResult: action.payload };
     case UPDATE_CONFIG_FAIL:
       return { loading: false, error: action.payload};
     default:

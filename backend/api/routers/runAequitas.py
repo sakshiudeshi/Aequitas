@@ -61,6 +61,9 @@ def runAequitas(request):
       imageId = uploadImage(improvement_graph_name, improvement_graph, jobId)
       # https://dev.to/imamcu07/embed-or-display-image-to-html-page-from-google-drive-3ign
       sharingLink = f'https://drive.google.com/uc?id={imageId}'
+      job.improvement_graph = sharingLink
+      job.fairness_estimation = fairnessEstimation
+      job.save()
 
       response = JsonResponse({
                               'status': 'Success',

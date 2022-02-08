@@ -19,6 +19,7 @@ export default function EmailScreen() {
 
   const {
     configUpdateResult,
+    success: configUpdateSuccess,
     loading: configUpdateLoading,
     error: configUpdateError,
   } = useSelector((state) => state.configUpdate);
@@ -31,15 +32,14 @@ export default function EmailScreen() {
   } = sendEmailResult;
 
   useEffect(() => {
-    // if (aequitasRunResult) {
-    //   e.preventDefault();
-    //   const form = useRef();
-    //   form.to_name = "User";
-    //   form.message = "Aequitas successfully run!";
-    //   sendEmail(form);
-    //   navigate(`/result/${filename}`);
-    // }
-    // setEmail(document.getElementById("inputEmail").value);
+    if (configUpdateSuccess && aequitasRunResult) {
+      const form = document.getElementById("emailForm");
+      form.message.value = `Aequitas successfully run! This is the jobId ${jobId}`;
+      form.to_name.value = "User";
+      form.link.value = `localhost:3000/result/${jobId}`;
+      dispatch(sendEmail(form));
+      //navigate(`/result/${jobId}`);
+    }
   }, [aequitasRunResult]);
 
   const [email, setEmail] = useState("");
@@ -52,51 +52,45 @@ export default function EmailScreen() {
     bodyFormData.append("jobId", jobId);
     bodyFormData.append("email", email);
     dispatch(updateUserConfig(bodyFormData));
-    if (aequitasRunResult) {
-      const form = document.getElementById("emailForm");
-      form.message.value = `Aequitas successfully run! This is the jobId ${jobId}`;
-      form.to_name.value = "User";
-      dispatch(sendEmail(form));
-      //navigate(`/result/${jobId}`);
-    }
   };
 
   return (
     <div>
       <OurNavbar></OurNavbar>
       <Header>Email</Header>
-      <div className="container">
-        {!sendEmailSuccess ? (
-          <form id="emailForm" onSubmit={(e) => submitHandler(e)}>
-            <div className="mb-3">
-              <input type="hidden" name="message"></input>
-              <input type="hidden" name="to_name"></input>
-              <label htmlFor="inputEmail" className="form-label">
-                Please enter the email address you would like to receive the
-                improved dataset to.
-              </label>
-              <input
-                name="user_email"
-                type="email"
-                className="form-control"
-                id="inputEmail"
-                aria-describedby="emailHelp"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <div id="emailHelp" className="form-text">
-                We'll never share your email with anyone else.
-              </div>
+      {configUpdateSuccess && (
+        <div className="alert alert-success" role="alert">
+          Email will be sent to you shortly (~appx 15 minutes) with the summary
+          and improved dataset. Thank you!
+        </div>
+      )}
+
+      <div className="container" style={{"display": configUpdateSuccess ? "hidden" : "block"}}>
+        <form id="emailForm" onSubmit={(e) => submitHandler(e)}>
+          <div className="mb-3">
+            <input type="hidden" name="message"></input>
+            <input type="hidden" name="to_name"></input>
+            <input type="hidden" name="link"></input>
+            <label htmlFor="inputEmail" className="form-label">
+              Please enter the email address you would like to receive the
+              improved dataset to.
+            </label>
+            <input
+              name="user_email"
+              type="email"
+              className="form-control"
+              id="inputEmail"
+              aria-describedby="emailHelp"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <div id="emailHelp" className="form-text">
+              We'll never share your email with anyone else.
             </div>
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        ) : (
-          <div className="alert alert-success" role="alert">
-            Email will be sent to you shortly (~appx 15 minutes) with the summary
-            and improved dataset. Thank you!
           </div>
-        )}
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>
       </div>
     </div>
   );

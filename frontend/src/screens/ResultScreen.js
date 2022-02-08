@@ -6,17 +6,28 @@ import {
   downloadRetrainDataset,
   downloadRetrainModel,
 } from "../actions/downloadActions";
+import { getAequitasResult } from "../actions/runActions";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import LoadingBox from "../components/LoadingBox";
 import OurNavbar from "../components/OurNavbar";
 
 export default function ResultScreen() {
   const { jobId } = useParams();
-  const result = useSelector((state) => state.aequitasRunResult);
-  const { aequitasRunResult, loading, error } = result;
 
   const dispatch = useDispatch();
+  const result = useSelector((state) => state.getAequitasResult);
+  const { aequitasRunResult, loading, error } = result;
 
+  const [resultReady, setResultReady] = useState(false);
+  useEffect(() => {
+    if (!aequitasRunResult) {
+      dispatch(getAequitasResult(jobId));
+    } else {
+      setResultReady(true);
+    }
+  }, [aequitasRunResult]);
+  
   const downloadDatasetHandler = () => {
     dispatch(downloadRetrainDataset(aequitasRunResult.retrainFilename, jobId));
   };
@@ -25,10 +36,12 @@ export default function ResultScreen() {
     dispatch(downloadRetrainModel(aequitasRunResult.retrainModelName, jobId));
   };
 
-  return (
+  return resultReady ? (
     <div>
       <OurNavbar></OurNavbar>
-      <Header>Aequitas Results for {aequitasRunResult.datasetName} JobId: {jobId}</Header>
+      <Header>
+        Aequitas Results for {aequitasRunResult.datasetName} JobId: {jobId}
+      </Header>
       <div className="container-md">
         <div className="row">
           <div className="col">
@@ -43,7 +56,7 @@ export default function ResultScreen() {
             <h4>
               <div className="badge bg-light text-dark">
                 <strong>Initial Fairness Estimation is:</strong> {"  "}
-                {aequitasRunResult.fairnessEstimation}
+                {aeqitasRunResult.fairnessEstimation}
               </div>
             </h4>
           </div>
@@ -63,8 +76,8 @@ export default function ResultScreen() {
           </div>
           <div className="row">
             <div className="col">
-              <div class="card" style={{ width: "18rem" }}>
-                <div class="card-body">
+              <div className="card" style={{ width: "18rem" }}>
+                <div className="card-body">
                   <h5 className="card-title">Improved Dataset</h5>
                   <p className="card-text">
                     This is the dataset containing the discriminatory inputs
@@ -85,8 +98,8 @@ export default function ResultScreen() {
               </div>
             </div>
             <div className="col">
-              <div class="card" style={{ width: "18rem" }}>
-                <div class="card-body">
+              <div className="card" style={{ width: "18rem" }}>
+                <div className="card-body">
                   <h5 className="card-title">Improved Dataset</h5>
                   <p className="card-text">
                     This is the model that has been improved fairness by
@@ -110,5 +123,5 @@ export default function ResultScreen() {
       </div>
       <Footer></Footer>
     </div>
-  );
+  ): "";
 }
