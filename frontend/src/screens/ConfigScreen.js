@@ -68,10 +68,36 @@ export default function ConfigScreen() {
       <OurNavbar></OurNavbar>
       <Header>Aequitas Configuration for {filename}</Header>
       <div className="container">
-        <div>
+        {configCreateResult && (
+          <a
+            class="btn btn-secondary"
+            data-toggle="collapse"
+            href="#configForm"
+            role="button"
+            aria-expanded="true"
+            aria-controls="configForm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrows-expand"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10z"
+              />
+            </svg>
+            {" "} Configure Again
+          </a>
+        )}
+        <div class={!configCreateResult ? "collapse show" : "collapse"} id="configForm">
           <form onSubmit={submitHandler}>
             <div className="form-group">
               <label htmlFor="sensitiveParamSelect">
+                <br/>
                 What is the sensitive parameter you would like to check the
                 biasedness of?
               </label>
@@ -150,8 +176,8 @@ export default function ConfigScreen() {
                     >
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                       <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
-                    </svg>
-                    {" "} info
+                    </svg>{" "}
+                    info
                   </a>
                 </div>
               </label>
@@ -243,7 +269,14 @@ export default function ConfigScreen() {
                   {configCreateResult.submittedFile} successfully configured!
                 </div>
               )}
-              <button type="submit" className="btn btn-primary mb-2">
+              <button
+                type="submit"
+                className={
+                  !configCreateResult
+                    ? "btn btn-primary mb-2"
+                    : "btn btn-secondary"
+                }
+              >
                 Configure
               </button>
             </div>
@@ -258,9 +291,10 @@ export default function ConfigScreen() {
             >
               Run Aequitas
             </button>
-            {/* {runAequitasLoading && <LoadingBox></LoadingBox>} */}
+
           </div>
         )}
+        <br/><br/>
       </div>
       <Footer></Footer>
     </div>

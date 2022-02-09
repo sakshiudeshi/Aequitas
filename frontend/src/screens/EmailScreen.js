@@ -37,10 +37,10 @@ export default function EmailScreen() {
       form.message.value = `Aequitas successfully run! This is the jobId ${jobId}`;
       form.to_name.value = "User";
       form.link.value = `localhost:3000/result/${jobId}`;
-      dispatch(sendEmail(form));
+      //dispatch(sendEmail(form));
       //navigate(`/result/${jobId}`);
     }
-  }, [aequitasRunResult]);
+  }, [configUpdateSuccess, aequitasRunResult]);
 
   const [email, setEmail] = useState("");
 
@@ -54,42 +54,61 @@ export default function EmailScreen() {
     dispatch(updateUserConfig(bodyFormData));
   };
 
+  const tryAnotherRound = () => {
+    navigate('/');
+  }
+
   return (
     <div>
       <OurNavbar></OurNavbar>
       <Header>Email</Header>
       {configUpdateSuccess && (
-        <div className="alert alert-success" role="alert">
-          Email will be sent to you shortly (~appx 15 minutes) with the summary
-          and improved dataset. Thank you!
+        <div className="container">
+          <div className="alert alert-success" role="alert">
+            Email will be sent to you shortly (~appx 15 minutes) with the
+            summary and improved dataset. You may navigate off the site. Thank you!
+          </div>
+
+          <button className="btn btn-secondary" onClick={tryAnotherRound}>
+            Submit another file!
+          </button>
         </div>
       )}
 
-      <div className="container" style={{"display": configUpdateSuccess ? "hidden" : "block"}}>
+      <div className="container">
         <form id="emailForm" onSubmit={(e) => submitHandler(e)}>
           <div className="mb-3">
             <input type="hidden" name="message"></input>
             <input type="hidden" name="to_name"></input>
             <input type="hidden" name="link"></input>
-            <label htmlFor="inputEmail" className="form-label">
-              Please enter the email address you would like to receive the
-              improved dataset to.
-            </label>
+            {!configUpdateResult ? (
+              <label htmlFor="inputEmail" className="form-label">
+                Please enter the email address you would like to receive the
+                improved dataset to.
+              </label>
+            ) : (
+              ""
+            )}
+
             <input
               name="user_email"
-              type="email"
+              type={!configUpdateSuccess ? "email" : "hidden"}
               className="form-control"
               id="inputEmail"
               aria-describedby="emailHelp"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <div id="emailHelp" className="form-text">
-              We'll never share your email with anyone else.
-            </div>
+            {!configUpdateSuccess && (
+              <div id="emailHelp" className="form-text">
+                We'll never share your email with anyone else.
+              </div>
+            )}
           </div>
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
+          {!configUpdateSuccess && (
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          )}
         </form>
       </div>
     </div>

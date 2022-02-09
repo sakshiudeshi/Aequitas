@@ -72,10 +72,9 @@ img {
 }
 
 .footer {
-  position:relative;
+  position:fixed;
   justify-content: center;
   align-items: center;
-  vertical-align: middle;
   left: 0;
   bottom: 0;
   width: 100%;

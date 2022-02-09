@@ -56,7 +56,7 @@ export default function ResultScreen() {
             <h4>
               <div className="badge bg-light text-dark">
                 <strong>Initial Fairness Estimation is:</strong> {"  "}
-                {aeqitasRunResult.fairnessEstimation}
+                {aequitasRunResult.fairnessEstimation}
               </div>
             </h4>
           </div>
@@ -120,6 +120,7 @@ export default function ResultScreen() {
             </div>
           </div>
         </div>
+        <br/><br/>
       </div>
       <Footer></Footer>
     </div>
