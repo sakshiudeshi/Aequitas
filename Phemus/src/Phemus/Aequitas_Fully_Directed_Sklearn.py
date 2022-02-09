@@ -60,8 +60,6 @@ class Fully_Direct:
 
         self.model = joblib.load(input_pkl_dir)
 
-        self.f = open(retrain_csv_dir, 'w')
-        self.f.write(",".join(column_names) + "\n") # write the column names on top first
 
     def normalise_probability(self):
         probability_sum = 0.0
@@ -229,13 +227,14 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
                                                     + len(fully_direct.local_disc_inputs_list)) / float(len(fully_direct.tot_inputs))*100))
     print()
     print("Starting Local Search")
-    for inp in fully_direct.global_disc_inputs_list:
-        basinhopping(fully_direct.evaluate_local, initial_input, stepsize=1.0, take_step=fully_direct.local_perturbation, minimizer_kwargs=minimizer,
-                niter=local_iteration_limit)
-        print("Percentage discriminatory inputs - " + str(float(len(fully_direct.global_disc_inputs_list) + len(fully_direct.local_disc_inputs_list))
-                                                      / float(len(fully_direct.tot_inputs))*100))
-    # fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
 
+    # for inp in fully_direct.global_disc_inputs_list:
+    #     basinhopping(fully_direct.evaluate_local, initial_input, stepsize=1.0, take_step=fully_direct.local_perturbation, minimizer_kwargs=minimizer,
+    #             niter=local_iteration_limit)
+    #     print("Percentage discriminatory inputs - " + str(float(len(fully_direct.global_disc_inputs_list) + len(fully_direct.local_disc_inputs_list))
+    #                                                   / float(len(fully_direct.tot_inputs))*100))
+
+    fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
     # save the discriminatory inputs to file
     column_names = dataset.column_names
     f = open(retrain_csv_dir, 'w')

@@ -106,6 +106,7 @@ class Random_Select:
                     if (abs(out0 - out1) > self.threshold and tuple(map(tuple, inp0)) not in self.global_disc_inputs):
                         self.global_disc_inputs.add(tuple(map(tuple, inp0)))
                         self.global_disc_inputs_list.append(inp0.tolist()[0])
+                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                         return abs(out1 + out0)
 
         return 0
@@ -142,7 +143,7 @@ class Random_Select:
                         and (tuple(map(tuple, inp0)) not in self.local_disc_inputs)):
                         self.local_disc_inputs.add(tuple(map(tuple, inp0)))
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
-                        
+                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                         return abs(out0 + out1)
         return 0
 
@@ -165,12 +166,15 @@ def aequitas_random_sklearn(dataset: Dataset, perturbation_unit, threshold, glob
     print()
     print("Starting Local Search")
 
-    for inp in random_select.global_disc_inputs_list:
-        random_select = mp_basinhopping(random_select, minimizer, local_iteration_limit)
-    
-        print("Percentage discriminatory inputs - " 
-                + str(float(len(random_select.global_disc_inputs_list) 
-                + len(random_select.local_disc_inputs_list)) / float(len(random_select.tot_inputs))*100))
+
+    for inp in dataset.global_disc_inputs_list:
+        basinhopping(dataset.evaluate_local, inp, stepsize=1.0, take_step=dataset.local_perturbation, minimizer_kwargs=minimizer,
+                    niter=local_iteration_limit)
+        print("Percentage discriminatory inputs - " + str(float(len(dataset.global_disc_inputs_list) + len(dataset.local_disc_inputs_list))
+                                                        / float(len(dataset.tot_inputs))*100))
+
+
+    dataset.f.close()
 
     print()
     print("Local Search Finished")

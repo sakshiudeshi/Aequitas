@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.1.14' 
+VERSION = '0.1.15' 
 DESCRIPTION = 'A Python library aims to determine the Fairness of machine learning datasets'
 with open("README.md", "r", encoding="utf-8") as fh:
     LONG_DESCRIPTION = fh.read()

@@ -44,17 +44,13 @@ def extract_inputs(dataset: Dataset, input_csv_dir):
 
     return X, Y
 
-def extract_original(dataset: Dataset):
-    X, Y = extract_inputs(dataset, dataset.dataset_dir)
-    X_original = np.array(X)
-    Y_original = np.array(Y)
-    return X, Y, X_original, Y_original
-
+    
 def retrain(model, X_original, Y_original, X_additional, Y_additional):
     X = np.concatenate((X_original, X_additional), axis = 0)
     Y = np.concatenate((Y_original, Y_additional), axis = 0)
 
     model.fit(X, Y)
+    print("Retrained model:", model)
     return model
 
 def get_random_input(dataset: Dataset):
@@ -126,9 +122,13 @@ def retrain_search(model, dataset: Dataset, retrain_csv_dir, num_trials, samples
     fairness = [] 
     fairness.append(current_estimate)
     
-    X, Y, X_original, Y_original = extract_original(dataset)
+    print("This is a change")
+    X, Y = extract_inputs(dataset, dataset.dataset_dir)
+    X_original = np.array(X)
+    Y_original = np.array(Y)
     X_retrain, Y_retrain = extract_inputs(dataset, retrain_csv_dir)
     retrain_len = len(X_retrain)
+
     for i in range(7):
         X_additional = []
         Y_additional = []
