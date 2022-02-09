@@ -39,8 +39,6 @@ def runAequitas(request):
 
       num_trials = job.num_trials
       samples = job.sample
-
-      fairnessEstimation = None  # can we make this its own function
       aequitasMode = job.aequitas_mode
 
       improvement_graph = job.improvement_graph
@@ -48,16 +46,17 @@ def runAequitas(request):
       retrainFilename = retraining_inputs.split('/')[-1]
       retrainModelName = improved_pkl_dir.split('/')[-1]
 
-      # if aequitasMode == "Random":
-      #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
-      #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
-      # # elif aequitasMode == "SemiDirected":
-      # #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
-      # #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
-      # # elif aequitasMode == "FullyDirected":
-      # #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
-      # #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
-
+    #   if aequitasMode == "Random":
+    #     run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
+    #                               global_iteration_limit, local_iteration_limit, num_trials, samples)
+    #   # elif aequitasMode == "SemiDirected":
+    #   #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
+    #   #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
+    #   # elif aequitasMode == "FullyDirected":
+    #   #   run_aequitas_fully_direct(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, threshold,
+    #   #                             global_iteration_limit, local_iteration_limit, num_trials, samples)
+    
+      fairnessEstimation = get_fairness_estimation(dataset, pkl_dir, num_trials, samples)  # can we make this its own function
       imageId = uploadImage(improvement_graph_name, improvement_graph, jobId)
       # https://dev.to/imamcu07/embed-or-display-image-to-html-page-from-google-drive-3ign
       sharingLink = f'https://drive.google.com/uc?id={imageId}'
