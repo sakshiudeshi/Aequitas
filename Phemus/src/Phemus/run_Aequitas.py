@@ -7,8 +7,8 @@ from .utils import get_idx_of_col_to_be_predicted
 
 from .Dataset import Dataset
 
-def run_aequitas_fully_direct(dataset: Dataset, perturbation_unit, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, \
+def run_aequitas_fully_direct(dataset: Dataset, perturbation_unit, cleaned_csv_dir, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, \
         threshold = 0, global_iteration_limit = 1000, local_iteration_limit = 100, num_trials = 100, samples = 100):
-    generate_sklearn_classifier(dataset, pkl_dir)
+    generate_sklearn_classifier(dataset, cleaned_csv_dir, pkl_dir)
     aequitas_fully_directed_sklearn(dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, pkl_dir, retrain_csv_dir)
     retrain_sklearn(dataset, pkl_dir, improved_pkl_dir, plot_dir, num_trials, samples)
