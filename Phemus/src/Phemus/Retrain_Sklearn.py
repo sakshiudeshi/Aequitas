@@ -18,7 +18,6 @@ import warnings
 warnings.warn = warn
 
 def extract_inputs(dataset: Dataset):
-
     input_csv_dir = dataset.dataset_dir
     col_to_be_predicted_idx = dataset.col_to_be_predicted_idx
 
@@ -159,9 +158,7 @@ def retrain_search(model, dataset: Dataset, num_trials, samples):
             del retrained_model
     return current_model, fairness
 
-def retrain_sklearn(dataset: Dataset, input_pkl_dir, improved_pkl_dir, num_trials, samples):
-    input_csv_dir = dataset.dataset_dir
-
+def retrain_sklearn(dataset: Dataset, input_pkl_dir, improved_pkl_dir, plot_dir, num_trials, samples):
     original_model = joblib.load(input_pkl_dir)
     improved_model, fairness= retrain_search(original_model, dataset, num_trials, samples)
     # file_to_save_model = config.improved_classfier_name
@@ -173,6 +170,5 @@ def retrain_sklearn(dataset: Dataset, input_pkl_dir, improved_pkl_dir, num_trial
     plt.xticks(np.arange(0, len(fairness), 1.0))
     plt.xlabel("Number of Iterations")
     plt.ylabel("Percentage of Biased Outputs")
-    plot_dir = os.path.splitext(input_csv_dir)[0].lower() + "_fairness_improvement.png"
     plt.savefig(plot_dir)
 

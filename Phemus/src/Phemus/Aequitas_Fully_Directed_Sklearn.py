@@ -22,7 +22,8 @@ from .Dataset import Dataset
 warnings.warn = warn
 
 class Fully_Direct:
-    def __init__(self, dataset: Dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir):
+    def __init__(self, dataset: Dataset, perturbation_unit, threshold, global_iteration_limit, \
+                        local_iteration_limit, input_pkl_dir, retrain_csv_dir):
         random.seed(time.time())
         self.start_time = time.time()
 
@@ -59,9 +60,7 @@ class Fully_Direct:
         self.model = joblib.load(input_pkl_dir)
 
         # save the discriminatory inputs to file
-        original_dataset_name = input_csv_dir.split(".")[0]
-        retraining_example_filename = original_dataset_name + "_Retraining_Dataset.csv"
-        self.f = open(retraining_example_filename, 'w')
+        self.f = open(retrain_csv_dir, 'w')
         self.f.write(",".join(column_names) + "\n") # write the column names on top first
 
     def normalise_probability(self):
@@ -74,9 +73,9 @@ class Fully_Direct:
 
 
     def evaluate_input(self, inp):
-        for i in self.input_bounds[self.sensitive_param_idx]:
-            for j in self.input_bounds[self.sensitive_param_idx]:
-                if i != j: 
+        for i in range(self.input_bounds[self.sensitive_param_idx][1] + 1):
+            for j in range(self.input_bounds[self.sensitive_param_idx][1] + 1):
+                if i < j: 
                     inp0 = [int(k) for k in inp]
                     inp1 = [int(k) for k in inp]
 
@@ -94,9 +93,6 @@ class Fully_Direct:
                 
                     if abs(out1 + out0):
                         return abs(out1 + out0)
-        # return (abs(out0 - out1) > threshold)
-        # for binary classification, we have found that the
-        # following optimization function gives better results
         return 0
 
     def evaluate_global(self, inp):
@@ -109,8 +105,8 @@ class Fully_Direct:
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
 
-        for i in self.input_bounds[self.sensitive_param_idx]:
-            for j in self.input_bounds[self.sensitive_param_idx]:
+        for i in range(self.input_bounds[self.sensitive_param_idx][1] + 1):
+            for j in range(self.input_bounds[self.sensitive_param_idx][1] + 1):
                 if i < j: 
                     inp0 = [int(k) for k in inp]
                     inp1 = [int(k) for k in inp]
@@ -133,9 +129,6 @@ class Fully_Direct:
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n")
                         return abs(out1 + out0)
 
-        # return not abs(out0 - out1) > threshold
-        # for binary classification, we have found that the
-        # following optimization function gives better results
         return 0
         
     def evaluate_local(self,  inp):
@@ -148,8 +141,8 @@ class Fully_Direct:
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
         
-        for i in self.input_bounds[self.sensitive_param_idx]:
-            for j in self.input_bounds[self.sensitive_param_idx]:
+        for i in range(self.input_bounds[self.sensitive_param_idx][1] + 1):
+            for j in range(self.input_bounds[self.sensitive_param_idx][1] + 1):
                 if i < j: 
                     inp0 = [int(k) for k in inp]
                     inp1 = [int(k) for k in inp]
@@ -224,12 +217,14 @@ class Fully_Direct:
 
         return x
 
-def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir):
+def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit,\
+         local_iteration_limit, input_pkl_dir, retrain_csv_dir):
     # initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
     initial_input = [random.randint(low,high) for [low, high] in dataset.input_bounds]
     minimizer = {"method": "L-BFGS-B"}
 
-    fully_direct = Fully_Direct(dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, input_pkl_dir)
+    fully_direct = Fully_Direct(dataset, perturbation_unit, threshold, global_iteration_limit, \
+            local_iteration_limit, input_pkl_dir, retrain_csv_dir)
 
 
     basinhopping(fully_direct.evaluate_global, initial_input, stepsize=1.0, take_step=fully_direct.global_discovery, minimizer_kwargs=minimizer,

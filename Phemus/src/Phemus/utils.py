@@ -636,6 +636,7 @@ def get_input_bounds(input_file, sensitive_col_name):
             continue
         numUniqueVals = df[col].nunique()
         input_bounds.append([0, numUniqueVals - 1]) # bound is inclusive
+    
     return input_bounds
 
 def get_column_names(input_file):

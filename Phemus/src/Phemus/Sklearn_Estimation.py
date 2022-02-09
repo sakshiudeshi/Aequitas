@@ -36,8 +36,8 @@ def evaluate_input(inp, input_pkl_name, dataset: Dataset):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    for i in dataset.input_bounds[sensitive_param_idx]:
-        for j in dataset.input_bounds[sensitive_param_idx]:
+    for i in range(dataset.input_bounds[sensitive_param_idx][1] + 1):
+        for j in range(dataset.input_bounds[sensitive_param_idx][1] + 1):
             if i != j: 
                 inp0 = [int(k) for k in inp]
                 inp1 = [int(k) for k in inp]

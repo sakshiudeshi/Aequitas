@@ -17,7 +17,6 @@ from .Dataset import Dataset
 def generate_sklearn_classifier(dataset: Dataset, output_pkl_dir):
     # did exactly as the original authors had processed the data
     input_csv_dir = dataset.dataset_dir
-    sensitive_param_name = dataset.sensitive_param_name
     col_to_be_predicted = dataset.col_to_be_predicted
     
     df=pd.read_csv(input_csv_dir)
