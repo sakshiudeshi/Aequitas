@@ -1,5 +1,5 @@
 import multiprocessing as mp
-import numpy as np
+# import numpy as np
 from scipy.optimize import basinhopping
 import errno
 

@@ -10,9 +10,10 @@ import warnings
 
 from .mpFully_Direct import mp_basinhopping
 from .Dataset import Dataset
-from .mpFully_Direct import mp_basinhopping
 
-# from scipy.optimize import basinhopping
+from scipy.optimize import basinhopping
+
+
 # import math
 # import os
 # from collections import defaultdict
@@ -28,7 +29,6 @@ class Fully_Direct:
         random.seed(time.time())
         self.start_time = time.time()
 
-        input_csv_dir = dataset.dataset_dir
         column_names = dataset.column_names
 
         self.num_params = dataset.num_param
@@ -221,7 +221,7 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
             local_iteration_limit, input_pkl_dir, retrain_csv_dir)
 
 
-    mp_basinhopping(fully_direct.evaluate_global, initial_input, stepsize=1.0, take_step=fully_direct.global_discovery, minimizer_kwargs=minimizer,
+    basinhopping(fully_direct.evaluate_global, initial_input, stepsize=1.0, take_step=fully_direct.global_discovery, minimizer_kwargs=minimizer,
                 niter=global_iteration_limit)
 
     print("Finished Global Search")
