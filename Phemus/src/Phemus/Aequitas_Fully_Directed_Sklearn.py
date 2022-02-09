@@ -4,6 +4,7 @@ import numpy as np
 import random
 import time
 from scipy.optimize import basinhopping
+from .mpFully_Direct import mp_basinhopping
 import joblib
 def warn(*args, **kwargs):
     pass
@@ -226,7 +227,7 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
             local_iteration_limit, input_pkl_dir, retrain_csv_dir)
 
 
-    basinhopping(fully_direct.evaluate_global, initial_input, stepsize=1.0, take_step=fully_direct.global_discovery, minimizer_kwargs=minimizer,
+    mp_basinhopping(fully_direct.evaluate_global, initial_input, stepsize=1.0, take_step=fully_direct.global_discovery, minimizer_kwargs=minimizer,
                 niter=global_iteration_limit)
 
     print("Finished Global Search")
