@@ -3,24 +3,23 @@ import random
 import numpy as np
 import random
 import time
-from scipy.optimize import basinhopping
-from .mpFully_Direct import mp_basinhopping
 import joblib
 def warn(*args, **kwargs):
     pass
 import warnings
 
+from .mpFully_Direct import mp_basinhopping
+from .Dataset import Dataset
+from .mpFully_Direct import mp_basinhopping
+
+# from scipy.optimize import basinhopping
 # import math
 # import os
 # from collections import defaultdict
 # from sklearn import svm
 # import os,sys
 # import urllib2
-# sys.path.insert(0, './fair_classification/') # the code for fair classification is in this directory
 # from random import seed, shuffle
-
-from .Dataset import Dataset
-from .mpFully_Direct import mp_basinhopping
 warnings.warn = warn
 
 class Fully_Direct:
@@ -61,7 +60,6 @@ class Fully_Direct:
 
         self.model = joblib.load(input_pkl_dir)
 
-        # save the discriminatory inputs to file
         self.f = open(retrain_csv_dir, 'w')
         self.f.write(",".join(column_names) + "\n") # write the column names on top first
 
@@ -166,9 +164,6 @@ class Fully_Direct:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         
                         return abs(out0 + out1)
-        # return (abs(out0 - out1) > threshold)
-        # for binary classification, we have found that the
-        # following optimization function gives better results
         return 0
 
     def global_discovery(self, x, stepsize = 1):
@@ -178,7 +173,6 @@ class Fully_Direct:
             x[i] = random.randint(self.input_bounds[i][0], self.input_bounds[i][1])
 
         x[self.sensitive_param_idx] = 0
-        # print(x)
         return x
 
     def local_perturbation(self, x, stepsize = 1):
@@ -219,7 +213,7 @@ class Fully_Direct:
 
 def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit,\
          local_iteration_limit, input_pkl_dir, retrain_csv_dir):
-    # initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+
     initial_input = [random.randint(low,high) for [low, high] in dataset.input_bounds]
     minimizer = {"method": "L-BFGS-B"}
 
@@ -239,11 +233,8 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
     fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
 
     # save the discriminatory inputs to file
-    input_csv_dir = dataset.dataset_dir
     column_names = dataset.column_names
-    original_dataset_name = input_csv_dir.split(".")[0]
-    retraining_example_filename = original_dataset_name + "_Retraining_Dataset.csv"
-    f = open(retraining_example_filename, 'w')
+    f = open(retrain_csv_dir, 'w')
     f.write(",".join(column_names) + "\n") # write the column names on top first
 
     for inp in fully_direct.global_disc_inputs_list:
