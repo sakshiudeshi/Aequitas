@@ -19,6 +19,7 @@ import warnings
 # from random import seed, shuffle
 
 from .Dataset import Dataset
+from .mpFully_Direct import mp_basinhopping
 warnings.warn = warn
 
 class Fully_Direct:
@@ -126,7 +127,6 @@ class Fully_Direct:
                     if (abs(out0 - out1) > self.threshold and tuple(map(tuple, inp0)) not in self.global_disc_inputs):
                         self.global_disc_inputs.add(tuple(map(tuple, inp0)))
                         self.global_disc_inputs_list.append(inp0.tolist()[0])
-                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n")
                         return abs(out1 + out0)
 
         return 0
@@ -163,7 +163,6 @@ class Fully_Direct:
                         and (tuple(map(tuple, inp0)) not in self.local_disc_inputs)):
                         self.local_disc_inputs.add(tuple(map(tuple, inp0)))
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
-                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n")
                         
                         return abs(out0 + out1)
         # return (abs(out0 - out1) > threshold)
@@ -236,11 +235,23 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
     print()
     print("Starting Local Search")
 
+    fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
+
+    # save the discriminatory inputs to file
+    input_csv_dir = dataset.dataset_dir
+    column_names = dataset.column_names
+    original_dataset_name = input_csv_dir.split(".")[0]
+    retraining_example_filename = original_dataset_name + "_Retraining_Dataset.csv"
+    f = open(retraining_example_filename, 'w')
+    f.write(",".join(column_names) + "\n") # write the column names on top first
+
     for inp in fully_direct.global_disc_inputs_list:
-        basinhopping(fully_direct.evaluate_local, inp, stepsize=1.0, take_step=fully_direct.local_perturbation, 
-                        minimizer_kwargs=minimizer, niter=local_iteration_limit)
-        print("Percentage discriminatory inputs - " + str(float(len(fully_direct.global_disc_inputs_list) 
-                                        + len(fully_direct.local_disc_inputs_list)) / float(len(fully_direct.tot_inputs))*100))
+        f.write(",".join(list(map(lambda x: str(x), inp))) + "\n")
+    
+    for inp in fully_direct.local_disc_inputs_list:
+        f.write(",".join(list(map(lambda x: str(x), inp))) + "\n")
+
+    f.close()
 
     print()
     print("Local Search Finished")
