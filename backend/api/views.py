@@ -5,6 +5,7 @@ import api.routers.configureAequitas as configureAequitasRouter
 import api.routers.runAequitas as runAequitasRouter
 import api.routers.downloadFile as downloadFileRouter
 import api.routers.getResult as getResultRouter
+import api.routers.deleteResult as deleteResultRouter
 
 # Create your views here.
 def index(request):
@@ -26,5 +27,8 @@ def getResult(request):
 
 def downloadFile(request):
   return downloadFileRouter.downloadFile(request)
+
+def deleteResult(request):
+  return deleteResultRouter.deleteResult(request)
 
   

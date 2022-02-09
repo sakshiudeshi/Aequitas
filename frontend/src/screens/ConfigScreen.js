@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import OurNavbar from "../components/OurNavbar";
-import { runAequitas } from "../actions/runActions";
+import { runAequitas } from "../actions/aequitasActions";
 import LoadingBox from "../components/LoadingBox";
 import Header from "../components/Header";
 import { createUserConfig } from "../actions/submitActions";

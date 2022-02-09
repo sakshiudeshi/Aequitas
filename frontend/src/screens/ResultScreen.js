@@ -6,11 +6,12 @@ import {
   downloadRetrainDataset,
   downloadRetrainModel,
 } from "../actions/downloadActions";
-import { getAequitasResult } from "../actions/runActions";
+import { deleteAequitasResult, getAequitasResult } from "../actions/aequitasActions";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import LoadingBox from "../components/LoadingBox";
 import OurNavbar from "../components/OurNavbar";
+import { DELETE_AEQUITAS_RESULT_RESET } from "../constants/aequitasConstants";
 
 export default function ResultScreen() {
   const { jobId } = useParams();
@@ -18,6 +19,12 @@ export default function ResultScreen() {
   const dispatch = useDispatch();
   const result = useSelector((state) => state.getAequitasResult);
   const { aequitasRunResult, loading, error } = result;
+  const deleteResult = useSelector((state) => state.deleteAequitasResult);
+  const {
+    loading: deleteResultLoading,
+    success: deleteResultSuccess,
+    message: deleteResultMessage,
+  } = deleteResult;
 
   const [resultReady, setResultReady] = useState(false);
   useEffect(() => {
@@ -35,6 +42,12 @@ export default function ResultScreen() {
   const downloadRetrainedModelHandler = () => {
     dispatch(downloadRetrainModel(aequitasRunResult.retrainModelName, jobId));
   };
+
+  window.addEventListener("beforeunload", function (e) {
+    e.preventDefault();
+    e.returnValue = "";
+    dispatch(deleteAequitasResult(jobId));
+  });
 
   return resultReady ? (
     <div>

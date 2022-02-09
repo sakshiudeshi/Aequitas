@@ -8,5 +8,6 @@ urlpatterns = [
     path('config', views.configureAequitas, name='config'),
     path('run', views.runAequitas, name='run'),
     path('getresult', views.getResult, name='getresult'),
-    path('download', views.downloadFile, name='download')
+    path('download', views.downloadFile, name='download'),
+    path('deleteresult', views.deleteResult, name='deleteresult'),
 ]
