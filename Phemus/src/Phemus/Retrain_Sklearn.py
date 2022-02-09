@@ -17,8 +17,7 @@ def warn(*args, **kwargs):
 import warnings
 warnings.warn = warn
 
-def extract_inputs(dataset: Dataset):
-    input_csv_dir = dataset.dataset_dir
+def extract_inputs(dataset: Dataset, input_csv_dir):
     col_to_be_predicted_idx = dataset.col_to_be_predicted_idx
 
     df = open(input_csv_dir).readlines()
@@ -45,8 +44,8 @@ def extract_inputs(dataset: Dataset):
 
     return X, Y
 
-def extract_array(dataset: Dataset):
-    X, Y = extract_inputs(dataset)
+def extract_original(dataset: Dataset):
+    X, Y = extract_inputs(dataset, dataset.dataset_dir)
     X_original = np.array(X)
     Y_original = np.array(Y)
     return X, Y, X_original, Y_original
@@ -77,8 +76,8 @@ def evaluate_input(inp, model, dataset: Dataset):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    for i in dataset.input_bounds[sensitive_param_idx]:
-        for j in dataset.input_bounds[sensitive_param_idx]:
+    for i in range(dataset.input_bounds[sensitive_param_idx][1] + 1):
+        for j in range(dataset.input_bounds[sensitive_param_idx][1] + 1):
             if i < j: 
                 inp0 = [int(k) for k in inp]
                 inp1 = [int(k) for k in inp]
@@ -121,14 +120,14 @@ def get_estimate(model, dataset: Dataset, num_trials, samples):
     return np.average(estimate_array)
 
 
-def retrain_search(model, dataset: Dataset, num_trials, samples):
+def retrain_search(model, dataset: Dataset, retrain_csv_dir, num_trials, samples):
     current_model = model
     current_estimate = get_estimate(model, dataset, num_trials, samples)
     fairness = [] 
     fairness.append(current_estimate)
     
-    X, Y, X_original, Y_original = extract_array(dataset)
-    X_retrain, Y_retrain = extract_inputs(dataset)
+    X, Y, X_original, Y_original = extract_original(dataset)
+    X_retrain, Y_retrain = extract_inputs(dataset, retrain_csv_dir)
     retrain_len = len(X_retrain)
     for i in range(7):
         X_additional = []
@@ -147,7 +146,7 @@ def retrain_search(model, dataset: Dataset, num_trials, samples):
             X_additional.append(X_retrain[i])
             Y_additional.append(Y_retrain[i])
         retrained_model = retrain(current_model, X_original, Y_original, np.array(X_additional), np.array(Y_additional))
-        retrained_estimate = get_estimate(current_model, dataset, num_trials, samples)
+        retrained_estimate = get_estimate(retrained_model, dataset, num_trials, samples)
         fairness.append(retrained_estimate)
         if (retrained_estimate > current_estimate):
             return current_model
@@ -158,9 +157,9 @@ def retrain_search(model, dataset: Dataset, num_trials, samples):
             del retrained_model
     return current_model, fairness
 
-def retrain_sklearn(dataset: Dataset, input_pkl_dir, improved_pkl_dir, plot_dir, num_trials, samples):
+def retrain_sklearn(dataset: Dataset, input_pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples):
     original_model = joblib.load(input_pkl_dir)
-    improved_model, fairness= retrain_search(original_model, dataset, num_trials, samples)
+    improved_model, fairness= retrain_search(original_model, dataset, retrain_csv_dir, num_trials, samples)
     # file_to_save_model = config.improved_classfier_name
 
     joblib.dump(improved_model, improved_pkl_dir)

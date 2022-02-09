@@ -23,7 +23,7 @@ def main():
     local_iteration_limit = 100 
 
     num_trials = 100
-    samples = 100
+    samples = 500
 
     run_aequitas_fully_direct(dataset, perturbation_unit, cleaned_csv_dir, pkl_dir, \
                     improved_pkl_dir, retrain_csv_dir, plot_dir, threshold,  \
