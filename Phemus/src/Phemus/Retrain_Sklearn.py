@@ -49,7 +49,7 @@ def retrain(model, X_original, Y_original, X_additional, Y_additional):
     Y = np.concatenate((Y_original, Y_additional), axis = 0)
 
     model.fit(X, Y)
-    print("Retrained model:", model)
+    #print("Retrained model:", model)
     return model
 
 def get_random_input(dataset: Dataset):
@@ -154,7 +154,7 @@ def retrain_search(model, dataset: Dataset, retrain_csv_dir, num_trials, samples
         retrained_estimate = get_estimate(retrained_model, dataset, num_trials, samples)
         fairness.append(retrained_estimate)
         if (retrained_estimate > current_estimate):
-            return current_model
+            return current_model, fairness
         else:
             current_model = retrained_model
             current_estimate = retrained_estimate

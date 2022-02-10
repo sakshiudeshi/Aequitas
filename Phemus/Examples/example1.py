@@ -30,11 +30,9 @@ def main():
     num_trials = 100
     samples = 100
 
-    # run_aequitas_once(dataset, perturbation_unit, cleaned_csv_dir, pkl_dir, \
-    #                 improved_pkl_dir, retrain_csv_dir, plot_dir, "Random", threshold,  \
-    #                 global_iteration_limit, local_iteration_limit, num_trials, samples)
-
-    run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Fully")
+    retrain_csv_dir = 'Employee_Retraining_Dataset_modified.csv'
+    #run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Fully")
+    retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples)
     
 if __name__ == "__main__":
     main() 
