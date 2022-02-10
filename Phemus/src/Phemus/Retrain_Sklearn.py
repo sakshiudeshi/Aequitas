@@ -35,7 +35,7 @@ def extract_inputs(dataset: Dataset, input_csv_dir):
         line = line.strip().split(",")
         L = list(map(int, line[:col_to_be_predicted_idx] + line[col_to_be_predicted_idx + 1:])) # exclude col to be predicted 
         X.append(L)
-        if (int(line[-1]) == -1):
+        if (int(line[col_to_be_predicted_idx]) == -1): # this is where the y column needs to exist
             Y.append(-1)
             neg_count = neg_count + 1
         else:
@@ -44,7 +44,6 @@ def extract_inputs(dataset: Dataset, input_csv_dir):
 
     return X, Y
 
-    
 def retrain(model, X_original, Y_original, X_additional, Y_additional):
     X = np.concatenate((X_original, X_additional), axis = 0)
     Y = np.concatenate((Y_original, Y_additional), axis = 0)
@@ -54,12 +53,12 @@ def retrain(model, X_original, Y_original, X_additional, Y_additional):
     return model
 
 def get_random_input(dataset: Dataset):
-    num_params = dataset.num_param
+    num_params = dataset.num_params
     input_bounds = dataset.input_bounds
     sensitive_param_idx = dataset.sensitive_param_idx
 
     x = []
-    for i in range(num_params):
+    for i in range(len(input_bounds)):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
@@ -87,9 +86,15 @@ def evaluate_input(inp, model, dataset: Dataset):
                 inp1 = np.asarray(inp1)
                 inp1 = np.reshape(inp1, (1, -1))
 
-                out0 = model.predict(inp0)
-                out1 = model.predict(inp1)
-            
+                # drop y column here 
+                inp0delY = np.delete(inp0, [dataset.col_to_be_predicted_idx])
+                inp1delY = np.delete(inp1, [dataset.col_to_be_predicted_idx])
+                inp0delY = np.reshape(inp0delY, (1, -1))
+                inp1delY = np.reshape(inp1delY, (1, -1))
+
+                out0 = model.predict(inp0delY)
+                out1 = model.predict(inp1delY)
+                
                 if abs(out1 + out0) == 0:
                     return abs(out1 + out0) == 0
     # return (abs(out0 - out1) > threshold)

@@ -3,8 +3,6 @@ import multiprocessing as mp
 from scipy.optimize import basinhopping
 import errno
 
-
-
 def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]

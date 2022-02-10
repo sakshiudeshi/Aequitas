@@ -6,8 +6,7 @@ from .Generate_Sklearn_Classifier import generate_sklearn_classifier
 
 from .Dataset import Dataset
 
-def run_aequitas_once(dataset: Dataset, perturbation_unit, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, \
-        mode = "Random", threshold = 0, global_iteration_limit = 1000, local_iteration_limit = 100, num_trials = 100, samples = 100):
+def run_aequitas_once(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, mode = "Random", threshold = 0, global_iteration_limit = 1000, local_iteration_limit = 100, num_trials = 100, samples = 100):
     if mode == "Random":
         aequitas_random_sklearn(dataset, perturbation_unit, threshold, global_iteration_limit, local_iteration_limit, pkl_dir, retrain_csv_dir)
     elif mode == "Semi":

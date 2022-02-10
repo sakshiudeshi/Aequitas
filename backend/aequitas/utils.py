@@ -626,13 +626,11 @@ def get_line_coordinates(w, x1, x2):
     y2 = (-w[0] - (w[1] * x2)) / w[2]    
     return y1,y2
 
-def get_input_bounds(input_file, sensitive_col_name):
+def get_input_bounds(input_file):
     input_bounds = []
     df=pd.read_csv(f'TrainingInputs/{input_file}')
     for col in df:
         # exclude the column you're trying to predict
-        if col == sensitive_col_name:
-            continue
         numUniqueVals = df[col].nunique()
         input_bounds.append([0, numUniqueVals - 1]) # bound is inclusive
     return input_bounds

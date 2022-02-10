@@ -18,7 +18,7 @@ original_inputs = "Employee.csv"
 
 column_names = utils.get_column_names(original_inputs)
 
-input_bounds = utils.get_input_bounds(original_inputs, col_to_be_predicted)
+input_bounds = utils.get_input_bounds(original_inputs)
 
 col_to_be_predicted_idx = utils.get_idx_of_col_to_be_predicted(original_inputs, col_to_be_predicted)
 
