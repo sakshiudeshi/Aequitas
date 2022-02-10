@@ -100,7 +100,7 @@ class Fully_Direct:
                     
                     if abs(out1 + out0):
                         return abs(out1 + out0)
-        return 0
+        return False
 
     def evaluate_global(self, inp):
         inp0 = [int(i) for i in inp]
@@ -109,7 +109,7 @@ class Fully_Direct:
         try:
             inp0[self.sensitive_param_idx] = 0
         except:
-            return 0
+            return False
         
         inp0np = np.asarray(inp0)
         inp0np = np.reshape(inp0, (1, -1))
@@ -144,14 +144,11 @@ class Fully_Direct:
                         self.global_disc_inputs_list.append(inp0.tolist()[0])
                         return abs(out1 + out0)
 
-        return 0
+        return False
         
     def evaluate_local(self,  inp):
         inp0 = [int(i) for i in inp]
-        inp1 = [int(i) for i in inp]
-
         inp0[self.sensitive_param_idx] = 0
-        
         inp0np = np.asarray(inp0)
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
@@ -186,16 +183,15 @@ class Fully_Direct:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         
                         return abs(out0 + out1)
-        return 0
+        return False
 
     def global_discovery(self, x, stepsize = 1):
         s = stepsize
         try:
-            for i in range(len(self.input_bounds)):
-                random.seed(time.time())
-                x[i] = random.randint(self.input_bounds[i][0], self.input_bounds[i][1])
-
-            x[self.sensitive_param_idx] = 0
+            sensitive_param_idx = self.sensitive_param_idx
+            random.seed(time.time())
+            x = [random.randint(low,high) for [low, high] in self.input_bounds]
+            x[sensitive_param_idx] = 0
             return x
         except: # unknown error
             return x

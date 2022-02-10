@@ -5,6 +5,8 @@ from src.Phemus import *
 #from Phemus import * <-- use this if loading Phemus from module
 
 def main():
+    
+    # test with original config/files from saksudeshi
     num_params = 13
     sensitive_param_idx = 9 # Starts at O
     sensitive_param_name = "Gender"
@@ -25,14 +27,17 @@ def main():
     threshold = 0
     perturbation_unit = 1
     global_iteration_limit = 1000 # needs to be at least 1000 to be effective
-    local_iteration_limit = 100 
+    local_iteration_limit = 100
 
     num_trials = 100
     samples = 100
 
     #retrain_csv_dir = 'Employee_Retraining_Dataset_modified.csv'
+    #run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Random")
+    run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Semi")
     #run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Fully")
-    retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples)
+    #retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples)
+    #get_fairness_estimation(dataset, pkl_dir, num_trials, samples)
     
 if __name__ == "__main__":
     main() 

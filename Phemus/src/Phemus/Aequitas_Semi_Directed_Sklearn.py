@@ -80,11 +80,10 @@ class Semi_Direct:
         return x
     
     def global_discovery(self, x):
-        for i in range(len(self.input_bounds)):
-            random.seed(time.time())
-            x[i] = random.randint(self.input_bounds[i][0], self.input_bounds[i][1])
-
-        x[self.sensitive_param_idx] = 0
+        sensitive_param_idx = self.sensitive_param_idx
+        random.seed(time.time())
+        x = [random.randint(low,high) for [low, high] in self.input_bounds]
+        x[sensitive_param_idx] = 0
         return x
 
     def evaluate_input(self, inp):
@@ -108,21 +107,17 @@ class Semi_Direct:
                     inp1delY = np.delete(inp1, [self.col_to_be_predicted_idx])
                     inp0delY = np.reshape(inp0delY, (1, -1))
                     inp1delY = np.reshape(inp1delY, (1, -1))
-                    
 
                     out0 = self.model.predict(inp0delY)
                     out1 = self.model.predict(inp1delY)
                 
                     if abs(out1 + out0):
                         return abs(out1 + out0)
-        return 0
+        return False
 
     def evaluate_global(self, inp):
         inp0 = [int(i) for i in inp]
-        inp1 = [int(i) for i in inp]
-        
         inp0[self.sensitive_param_idx] = 0
-        
         inp0np = np.asarray(inp0)
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
@@ -157,14 +152,11 @@ class Semi_Direct:
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") # write inputs as they are generated
                         return abs(out1 + out0)
 
-        return 0
+        return False
         
     def evaluate_local(self,  inp):
         inp0 = [int(i) for i in inp]
-        inp1 = [int(i) for i in inp]
-
-        inp0[self.sensitive_param_idx] = 0
-        
+        inp0[self.sensitive_param_idx] = 0  
         inp0np = np.asarray(inp0)
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
@@ -199,7 +191,7 @@ class Semi_Direct:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") # write inputs as they are generated
                         return abs(out0 + out1)
-        return 0
+        return False
 
 def aequitas_semi_directed_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit,\
          local_iteration_limit, input_pkl_dir, retrain_csv_dir):
