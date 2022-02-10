@@ -621,10 +621,6 @@ def plot_cov_thresh_vs_acc_pos_ratio(x_all, y_all, x_control_all, num_folds, los
     plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.5)
     plt.show()
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 91df895b7ae4ebd28207ae3f030c7197b3882995
 def get_line_coordinates(w, x1, x2):
     y1 = (-w[0] - (w[1] * x1)) / w[2]
     y2 = (-w[0] - (w[1] * x2)) / w[2]    
