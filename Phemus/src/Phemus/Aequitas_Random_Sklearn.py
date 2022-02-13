@@ -114,7 +114,7 @@ class Random_Select:
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                         return abs(out1 + out0)
 
-        return False
+        return 0
 
     def evaluate_local(self, inp):
         inp0 = [int(i) for i in inp]
@@ -153,7 +153,7 @@ class Random_Select:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                         return abs(out0 + out1)
-        return False
+        return 0
 
 
 def aequitas_random_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit,\

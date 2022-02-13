@@ -152,7 +152,7 @@ class Semi_Direct:
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") # write inputs as they are generated
                         return abs(out1 + out0)
 
-        return False
+        return 0
         
     def evaluate_local(self,  inp):
         inp0 = [int(i) for i in inp]
@@ -191,7 +191,7 @@ class Semi_Direct:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") # write inputs as they are generated
                         return abs(out0 + out1)
-        return False
+        return 0
 
 def aequitas_semi_directed_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit,\
          local_iteration_limit, input_pkl_dir, retrain_csv_dir):

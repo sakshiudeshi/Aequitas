@@ -144,7 +144,7 @@ class Fully_Direct:
                         self.global_disc_inputs_list.append(inp0.tolist()[0])
                         return abs(out1 + out0)
 
-        return False
+        return 0
         
     def evaluate_local(self,  inp):
         inp0 = [int(i) for i in inp]
@@ -183,7 +183,7 @@ class Fully_Direct:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         
                         return abs(out0 + out1)
-        return False
+        return 0
 
     def global_discovery(self, x, stepsize = 1):
         s = stepsize
