@@ -257,7 +257,9 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
         print("Percentage discriminatory inputs - " + str(float(len(fully_direct.global_disc_inputs_list) + len(fully_direct.local_disc_inputs_list))
                                                       / float(len(fully_direct.tot_inputs))*100))
 
-    #fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
+    # Multiprocessing temporility disabled
+    
+    # fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
     # save the discriminatory inputs to file
     column_names = dataset.column_names
     f = open(retrain_csv_dir, 'w')

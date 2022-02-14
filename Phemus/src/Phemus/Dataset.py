@@ -1,7 +1,8 @@
 from .utils import *
 
 class Dataset:
-    def __init__(self, num_params, sensitive_param_idx, model_type, sensitive_param_name, col_to_be_predicted, dataset_dir, sensitive_param_idx_list = [], sensitive_param_name_list = []):
+    def __init__(self, num_params, sensitive_param_idx, model_type, sensitive_param_name,
+            col_to_be_predicted, dataset_dir, sensitive_param_idx_list = [], sensitive_param_name_list = []):
         
         self.sensitive_param_idx_list = sensitive_param_idx_list
         self.sensitive_param_name_list = sensitive_param_name_list

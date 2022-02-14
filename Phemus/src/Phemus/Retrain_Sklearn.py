@@ -114,7 +114,7 @@ def retrain_search(model, dataset: Dataset, retrain_csv_dir, num_trials, samples
     fairness = [] 
     fairness.append(current_estimate)
     
-    print("This is a change")
+    # print("This is a change")
     X, Y = extract_inputs(dataset, dataset.dataset_dir)
     X_original = np.array(X)
     Y_original = np.array(Y)
