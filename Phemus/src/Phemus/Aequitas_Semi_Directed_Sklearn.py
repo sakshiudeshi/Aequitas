@@ -211,11 +211,14 @@ def aequitas_semi_directed_sklearn(dataset: Dataset, perturbation_unit, threshol
     print()
     print("Starting Local Search")
 
-    for inp in semi_direct.global_disc_inputs_list:
-        basinhopping(semi_direct.evaluate_local, inp, stepsize=1.0, take_step=semi_direct.local_perturbation, minimizer_kwargs=minimizer,
-                    niter=semi_direct.local_iteration_limit)
-        print("Percentage discriminatory inputs - " + str(float(len(semi_direct.global_disc_inputs_list) + len(semi_direct.local_disc_inputs_list))
-                                                        / float(len(semi_direct.tot_inputs))*100))
+    # for inp in semi_direct.global_disc_inputs_list:
+    #     basinhopping(semi_direct.evaluate_local, inp, stepsize=1.0, take_step=semi_direct.local_perturbation, minimizer_kwargs=minimizer,
+    #                 niter=semi_direct.local_iteration_limit)
+    #     print("Percentage discriminatory inputs - " + str(float(len(semi_direct.global_disc_inputs_list) + len(semi_direct.local_disc_inputs_list))
+                                                        # / float(len(semi_direct.tot_inputs))*100))
+
+    semi_direct = mp_basinhopping(semi_direct, minimizer, local_iteration_limit)
+                                         
     column_names = dataset.column_names
     f = open(retrain_csv_dir, 'w')
     f.write(",".join(column_names) + "\n") # write the column names on top first

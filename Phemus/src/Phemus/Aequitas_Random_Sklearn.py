@@ -175,11 +175,12 @@ def aequitas_random_sklearn(dataset: Dataset, perturbation_unit, threshold, glob
     print("Starting Local Search")
 
 
-    for inp in random_select.global_disc_inputs_list:
-        basinhopping(random_select.evaluate_local, inp, stepsize=1.0, take_step=random_select.local_perturbation, minimizer_kwargs=minimizer,
-                    niter=local_iteration_limit)
-        print("Percentage discriminatory inputs - " + str(float(len(random_select.global_disc_inputs_list) + len(random_select.local_disc_inputs_list))
-                                                        / float(len(random_select.tot_inputs))*100))
+    # for inp in random_select.global_disc_inputs_list:
+    #     basinhopping(random_select.evaluate_local, inp, stepsize=1.0, take_step=random_select.local_perturbation, minimizer_kwargs=minimizer,
+    #                 niter=local_iteration_limit)
+    #     print("Percentage discriminatory inputs - " + str(float(len(random_select.global_disc_inputs_list) + len(random_select.local_disc_inputs_list))
+    #                                                     / float(len(random_select.tot_inputs))*100))
+    random_select = mp_basinhopping(random_select, minimizer, local_iteration_limit)
 
     column_names = dataset.column_names
     f = open(retrain_csv_dir, 'w')

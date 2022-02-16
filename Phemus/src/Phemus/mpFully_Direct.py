@@ -19,9 +19,10 @@ def worker(fully_direct, local_inputs, minimizer, local_iteration_limit, out_q):
     for inp in local_inputs:
         basinhopping(fully_direct.evaluate_local, inp, stepsize=1.0, take_step=fully_direct.local_perturbation, 
                         minimizer_kwargs=minimizer, niter=local_iteration_limit)
-    out_q.put([[fully_direct.local_disc_inputs, fully_direct.local_disc_inputs_list]])
+    out_q.put([[fully_direct.local_disc_inputs, fully_direct.local_disc_inputs_list, fully_direct.tot_inputs]])
     
 def mp_basinhopping(fully_direct, minimizer, local_iteration_limit):
+
     out_q = mp.Queue()
 
     divided_lists = chunks(fully_direct.global_disc_inputs_list, 4)
@@ -47,19 +48,25 @@ def mp_basinhopping(fully_direct, minimizer, local_iteration_limit):
 
     local_inputs = set()
     local_inputs_list  = []
+    tot_inputs_out = set()
 
     for pair in res:
         set_inputs = pair[0]
         list_inputs = pair[1]
+        tot_inputs = pair[2]
         for item in set_inputs:
             if item not in local_inputs:
                 local_inputs.add(item)
         for item in list_inputs:
             if item not in local_inputs_list:
                 local_inputs_list.append(item)
+        for item in tot_inputs:
+            if item not in tot_inputs_out:
+                tot_inputs_out.add(item)
     
     fully_direct.local_disc_inputs = local_inputs
     fully_direct.local_disc_inputs_list = local_inputs_list
+    fully_direct.tot_inputs = tot_inputs_out
 
     return fully_direct
 
