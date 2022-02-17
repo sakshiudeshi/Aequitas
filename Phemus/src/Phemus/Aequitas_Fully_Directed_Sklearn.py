@@ -144,7 +144,7 @@ class Fully_Direct:
                         self.global_disc_inputs_list.append(inp0.tolist()[0])
                         return abs(out1 + out0)
 
-        return False
+        return 0
         
     def evaluate_local(self,  inp):
         inp0 = [int(i) for i in inp]
@@ -183,7 +183,7 @@ class Fully_Direct:
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
                         
                         return abs(out0 + out1)
-        return False
+        return 0
 
     def global_discovery(self, x, stepsize = 1):
         s = stepsize
@@ -251,13 +251,15 @@ def aequitas_fully_directed_sklearn(dataset: Dataset, perturbation_unit, thresho
     print()
     print("Starting Local Search")
 
-    for inp in fully_direct.global_disc_inputs_list:
-        basinhopping(fully_direct.evaluate_local, initial_input, stepsize=1.0, take_step=fully_direct.local_perturbation, minimizer_kwargs=minimizer,
-                niter=local_iteration_limit)
-        print("Percentage discriminatory inputs - " + str(float(len(fully_direct.global_disc_inputs_list) + len(fully_direct.local_disc_inputs_list))
-                                                      / float(len(fully_direct.tot_inputs))*100))
+    # for inp in fully_direct.global_disc_inputs_list:
+    #     basinhopping(fully_direct.evaluate_local, initial_input, stepsize=1.0, take_step=fully_direct.local_perturbation, minimizer_kwargs=minimizer,
+    #             niter=local_iteration_limit)
+    #     print("Percentage discriminatory inputs - " + str(float(len(fully_direct.global_disc_inputs_list) + len(fully_direct.local_disc_inputs_list))
+    #                                                   / float(len(fully_direct.tot_inputs))*100))
 
-    #fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
+    # Multiprocessing temporility disabled
+    
+    fully_direct = mp_basinhopping(fully_direct, minimizer, local_iteration_limit)
     # save the discriminatory inputs to file
     column_names = dataset.column_names
     f = open(retrain_csv_dir, 'w')

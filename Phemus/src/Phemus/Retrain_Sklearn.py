@@ -33,7 +33,7 @@ def extract_inputs(dataset: Dataset, input_csv_dir):
         line = line.strip().split(",")
         L = list(map(int, line[:col_to_be_predicted_idx] + line[col_to_be_predicted_idx + 1:])) # exclude col to be predicted 
         X.append(L)
-        if (int(line[col_to_be_predicted_idx]) == -1): # this is where the y column needs to exist
+        if (int(line[col_to_be_predicted_idx]) == 0): # this is where the y column needs to exist
             Y.append(-1)
             neg_count = neg_count + 1
         else:
@@ -114,7 +114,7 @@ def retrain_search(model, dataset: Dataset, retrain_csv_dir, num_trials, samples
     fairness = [] 
     fairness.append(current_estimate)
     
-    print("This is a change")
+    # print("This is a change")
     X, Y = extract_inputs(dataset, dataset.dataset_dir)
     X_original = np.array(X)
     Y_original = np.array(Y)
