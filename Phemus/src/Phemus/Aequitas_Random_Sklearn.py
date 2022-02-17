@@ -55,8 +55,8 @@ class Random_Select:
         self.tot_inputs = set()
         self.model = joblib.load(input_pkl_dir)
         
-        self.f = open(retrain_csv_dir, 'w')
-        self.f.write(",".join(self.column_names) + "\n") # write the column names on top first
+        # self.f = open(retrain_csv_dir, 'w')
+        # self.f.write(",".join(self.column_names) + "\n")
 
     def local_perturbation(self, x):
         idxes_of_non_y_columns = [i for i in range(len(self.input_bounds))] # we're only perturbing non-y columns right?
@@ -71,19 +71,15 @@ class Random_Select:
         return x
 
     def global_discovery(self, x):
-        for i in range(len(self.input_bounds)):
-            random.seed(time.time())
-            x[i] = random.randint(self.input_bounds[i][0], self.input_bounds[i][1])
-
-        x[self.sensitive_param_idx] = 0
+        sensitive_param_idx = self.sensitive_param_idx
+        random.seed(time.time())
+        x = [random.randint(low,high) for [low, high] in self.input_bounds]
+        x[sensitive_param_idx] = 0
         return x
         
     def evaluate_global(self, inp):
         inp0 = [int(i) for i in inp]
-        inp1 = [int(i) for i in inp]
-        
         inp0[self.sensitive_param_idx] = 0
-        
         inp0np = np.asarray(inp0)
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
@@ -115,17 +111,14 @@ class Random_Select:
                     if (abs(out0 - out1) > self.threshold and tuple(map(tuple, inp0)) not in self.global_disc_inputs):
                         self.global_disc_inputs.add(tuple(map(tuple, inp0)))
                         self.global_disc_inputs_list.append(inp0.tolist()[0])
-                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
+                        # self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                         return abs(out1 + out0)
 
         return 0
 
     def evaluate_local(self, inp):
         inp0 = [int(i) for i in inp]
-        inp1 = [int(i) for i in inp]
-
         inp0[self.sensitive_param_idx] = 0
-        
         inp0np = np.asarray(inp0)
         inp0np = np.reshape(inp0, (1, -1))
         self.tot_inputs.add(tuple(map(tuple, inp0np)))
@@ -158,7 +151,7 @@ class Random_Select:
                         and (tuple(map(tuple, inp0)) not in self.local_disc_inputs)):
                         self.local_disc_inputs.add(tuple(map(tuple, inp0)))
                         self.local_disc_inputs_list.append(inp0.tolist()[0])
-                        self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
+                        # self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                         return abs(out0 + out1)
         return 0
 
@@ -182,13 +175,26 @@ def aequitas_random_sklearn(dataset: Dataset, perturbation_unit, threshold, glob
     print("Starting Local Search")
 
 
-    for inp in random_select.global_disc_inputs_list:
-        basinhopping(random_select.evaluate_local, inp, stepsize=1.0, take_step=random_select.local_perturbation, minimizer_kwargs=minimizer,
-                    niter=local_iteration_limit)
-        print("Percentage discriminatory inputs - " + str(float(len(random_select.global_disc_inputs_list) + len(random_select.local_disc_inputs_list))
-                                                        / float(len(random_select.tot_inputs))*100))
+    # for inp in random_select.global_disc_inputs_list:
+    #     basinhopping(random_select.evaluate_local, inp, stepsize=1.0, take_step=random_select.local_perturbation, minimizer_kwargs=minimizer,
+    #                 niter=local_iteration_limit)
+    #     print("Percentage discriminatory inputs - " + str(float(len(random_select.global_disc_inputs_list) + len(random_select.local_disc_inputs_list))
+    #                                                     / float(len(random_select.tot_inputs))*100))
+    random_select = mp_basinhopping(random_select, minimizer, local_iteration_limit)
 
-    random_select.f.close()
+    column_names = dataset.column_names
+    f = open(retrain_csv_dir, 'w')
+    f.write(",".join(column_names) + "\n")
+
+    for inp in random_select.global_disc_inputs_list:
+        f.write(",".join(list(map(lambda x: str(x), inp))) + "\n")
+    
+    for inp in random_select.local_disc_inputs_list:
+        f.write(",".join(list(map(lambda x: str(x), inp))) + "\n")
+
+    f.close()
+
+
 
     print()
     print("Local Search Finished")
