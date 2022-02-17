@@ -37,7 +37,7 @@ export default function EmailScreen() {
       form.message.value = `Aequitas successfully run! This is the jobId ${jobId}`;
       form.to_name.value = "User";
       form.link.value = `localhost:3000/result/${jobId}`;
-      //dispatch(sendEmail(form));
+      dispatch(sendEmail(form));
       //navigate(`/result/${jobId}`);
     }
   }, [configUpdateSuccess, aequitasRunResult]);
@@ -65,16 +65,14 @@ export default function EmailScreen() {
       {configUpdateSuccess && (
         <div className="container">
           <div className="alert alert-success" role="alert">
-            Email will be sent to you shortly (~appx 15 minutes) with the
-            summary and improved dataset. You may navigate off the site. Thank you!
+            Email will be sent to you shortly (~appx 5 minutes) with a link to the result
+            summary and improved dataset. You may navigate off the site at this time. Thank you!
           </div>
-
           <button className="btn btn-secondary" onClick={tryAnotherRound}>
             Submit another file!
           </button>
         </div>
       )}
-
       <div className="container">
         <form id="emailForm" onSubmit={(e) => submitHandler(e)}>
           <div className="mb-3">
