@@ -24,12 +24,12 @@ def run_aequitas_once(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, ret
 
     retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples)
 
-def run_aequitas(dataset: Dataset, perturbation_unit, cleaned_csv_dir, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, \
+def run_aequitas(dataset: Dataset, perturbation_unit, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, \
         mode = "Random", threshold = 0, global_iteration_limit = 1000, local_iteration_limit = 100, num_trials = 100, samples = 100):
 
     num_of_sens_param = len(dataset.sensitive_param_idx_list)
 
-    generate_sklearn_classifier(dataset, cleaned_csv_dir, pkl_dir)
+    generate_sklearn_classifier(dataset, pkl_dir)
 
     # print(num_of_sens_param)
     for i in range(num_of_sens_param):

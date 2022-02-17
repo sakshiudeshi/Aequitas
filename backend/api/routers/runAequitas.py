@@ -48,15 +48,15 @@ def runAequitas(request):
       retrainModelName = improved_pkl_dir.split('/')[-1]
 
       if aequitasMode == "Random":
-        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, cleaned_csv_dir = dataset_dir, 
+        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit,
                     pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
                         retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Random")
       elif aequitasMode == "SemiDirected":
-        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, cleaned_csv_dir = dataset_dir, 
+        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit,
                     pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
                         retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Semi")
       elif aequitasMode == "FullyDirected":
-        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, cleaned_csv_dir = dataset_dir, 
+        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, 
                     pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
                         retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Fully")
     

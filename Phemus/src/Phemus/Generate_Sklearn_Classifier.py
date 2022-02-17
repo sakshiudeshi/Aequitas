@@ -13,7 +13,7 @@ from sklearn.neural_network import MLPClassifier
 
 from .Dataset import Dataset
 
-def generate_sklearn_classifier(dataset: Dataset, cleaned_csv_dir, output_pkl_dir):
+def generate_sklearn_classifier(dataset: Dataset, output_pkl_dir):
     input_csv_dir = dataset.dataset_dir
     col_to_be_predicted = dataset.col_to_be_predicted
     model_type = dataset.model_type
@@ -27,7 +27,7 @@ def generate_sklearn_classifier(dataset: Dataset, cleaned_csv_dir, output_pkl_di
     X=df.drop([col_to_be_predicted],axis=1)
     y=df[col_to_be_predicted]
 
-    df.to_csv(path_or_buf=cleaned_csv_dir, index=False)
+    # df.to_csv(path_or_buf=cleaned_csv_dir, index=False)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=12)
     
