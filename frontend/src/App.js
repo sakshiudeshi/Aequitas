@@ -7,6 +7,7 @@ import AboutAequitasScreen from "./screens/AboutAequitasScreen";
 import AequitasDocumentationScreen from "./screens/AequitasDocumentationScreen";
 import AboutUsScreen from "./screens/AboutUsScreen";
 import ConfigScreen from "./screens/ConfigScreen";
+import EmailScreen from "./screens/EmailScreen";
 
 function App() {
   return (
@@ -29,11 +30,15 @@ function App() {
             element={<AboutUsScreen></AboutUsScreen>}
           ></Route>
           <Route
-            path="/config/:filename"
+            path="/config/:jobId"
             element={<ConfigScreen></ConfigScreen>}
           ></Route>
           <Route
-            path="/result/:filename"
+            path="/email/:jobId"
+            element={<EmailScreen></EmailScreen>}
+          ></Route>
+          <Route
+            path="/result/:jobId"
             element={<ResultScreen></ResultScreen>}
           ></Route>
         </Routes>
