@@ -141,7 +141,7 @@ def retrain_search(model, dataset: Dataset, retrain_csv_dir, num_trials, samples
         retrained_estimate = get_estimate(retrained_model, dataset, num_trials, samples)
         fairness.append(retrained_estimate)
         if (retrained_estimate > current_estimate):
-            return current_model, fairness
+            return current_model, fairness[:-1] # exclude the last "increased bias"
         else:
             current_model = retrained_model
             current_estimate = retrained_estimate
