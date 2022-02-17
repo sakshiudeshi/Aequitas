@@ -18,7 +18,7 @@ class AequitasJob(models.Model):
   improved_pkl_dir = models.CharField(max_length=200, null=True)
   retraining_inputs = models.CharField(max_length=200, null=True)
   improvement_graph = models.CharField(max_length=200, null=True)
-  fairness_estimation = models.DecimalField(decimal_places=2, max_digits=2, null=True)
+  fairness_estimation = models.DecimalField(decimal_places=2, max_digits=10, null=True)
   perturbation_unit = models.IntegerField(null=True)
   sample = models.IntegerField(null=True)
   num_trials = models.IntegerField(null=True)

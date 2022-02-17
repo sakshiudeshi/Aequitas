@@ -17,6 +17,7 @@ def uploadDataset(request):
           for chunk in dataset.chunks():
             destination.write(chunk)
       else:
+        print(os.getcwd())
         dataset = open("api/aequitas/result/Employee.csv", "r")
         filename = "Employee.csv"
         j = AequitasJob(dataset_name=filename)
