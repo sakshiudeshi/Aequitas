@@ -48,19 +48,19 @@ def runAequitas(request):
       retrainModelName = improved_pkl_dir.split('/')[-1]
 
       if aequitasMode == "Random":
-        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, cleaned_csv_dir = dataset_dir, 
+        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, 
                     pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
-                        retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Random")
+                        retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Random", threshold=threshold)
       elif aequitasMode == "SemiDirected":
-        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, cleaned_csv_dir = dataset_dir, 
+        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, 
                     pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
-                        retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Semi")
+                        retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Semi", threshold=threshold)
       elif aequitasMode == "FullyDirected":
-        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, cleaned_csv_dir = dataset_dir, 
+        run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, 
                     pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
-                        retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Fully")
+                        retrain_csv_dir=retraining_inputs, plot_dir=improvement_graph, mode="Fully", threshold=threshold)
     
-      fairnessEstimation = get_fairness_estimation(dataset, pkl_dir, num_trials, samples)  # can we make this its own function
+      fairnessEstimation = get_fairness_estimation(dataset, pkl_dir, threshold, num_trials, samples)  # can we make this its own function
       imageId = uploadImage(improvement_graph_name, improvement_graph, jobId)
       # https://dev.to/imamcu07/embed-or-display-image-to-html-page-from-google-drive-3ign
       sharingLink = f'https://drive.google.com/uc?id={imageId}'
