@@ -27,8 +27,6 @@ def generate_sklearn_classifier(dataset: Dataset, output_pkl_dir):
     X=df.drop([col_to_be_predicted],axis=1)
     y=df[col_to_be_predicted]
 
-    # df.to_csv(path_or_buf=cleaned_csv_dir, index=False)
-
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=12)
     
     if model_type == "DecisionTree":

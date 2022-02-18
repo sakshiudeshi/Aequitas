@@ -22,7 +22,7 @@ def run_aequitas_once(dataset, perturbation_unit, pkl_dir, improved_pkl_dir, ret
     else:
         raise ValueError("Mode of Aequitas selected is not valid. Possible modes are Random, Semi and Fully")
 
-    retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples)
+    retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, threshold, num_trials, samples)
 
 def run_aequitas(dataset: Dataset, perturbation_unit, pkl_dir, improved_pkl_dir, retrain_csv_dir, plot_dir, \
         mode = "Random", threshold = 0, global_iteration_limit = 1000, local_iteration_limit = 100, num_trials = 100, samples = 100):

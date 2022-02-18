@@ -5,9 +5,6 @@ from .Aequitas_Fully_Directed_Sklearn import aequitas_fully_directed_sklearn
 from .Aequitas_Random_Sklearn import aequitas_random_sklearn
 from .Aequitas_Semi_Directed_Sklearn import aequitas_semi_directed_sklearn
 
-# from .Run_Aequitas import run_aequitas_fully_direct
-# from .Run_Aequitas import run_aequitas_semi_direct
-# from .Run_Aequitas import run_aequitas_random
 from .Run_Aequitas import run_aequitas_once
 from .Run_Aequitas import run_aequitas
 
