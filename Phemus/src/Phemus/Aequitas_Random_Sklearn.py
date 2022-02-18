@@ -102,7 +102,6 @@ class Random_Select:
                 if (abs(out0 - out1) > self.threshold):
                     self.global_disc_inputs.add(tuple(map(tuple, inp0)))
                     self.global_disc_inputs_list.append(inp0.tolist()[0])
-                    self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                     return abs(out0 - out1)
         return 0
 
@@ -141,13 +140,14 @@ class Random_Select:
                 if (abs(out0 - out1) > self.threshold):
                     self.local_disc_inputs.add(tuple(map(tuple, inp0)))
                     self.local_disc_inputs_list.append(inp0.tolist()[0])
-                    self.f.write(",".join(list(map(lambda x: str(x), inp0.tolist()[0]))) + "\n") 
                     return abs(out0 - out1)
         return 0
 
 
 def aequitas_random_sklearn(dataset: Dataset, perturbation_unit, threshold, global_iteration_limit,\
          local_iteration_limit, input_pkl_dir, retrain_csv_dir):
+
+    print("Aequitas Random Started...\n")
     initial_input = [random.randint(low,high) for [low, high] in dataset.input_bounds]
     minimizer = {"method": "L-BFGS-B"}
 
@@ -182,8 +182,6 @@ def aequitas_random_sklearn(dataset: Dataset, perturbation_unit, threshold, glob
         f.write(",".join(list(map(lambda x: str(x), inp))) + "\n")
 
     f.close()
-
-
 
     print()
     print("Local Search Finished")

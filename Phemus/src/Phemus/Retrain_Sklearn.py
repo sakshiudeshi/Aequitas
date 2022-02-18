@@ -139,8 +139,9 @@ def retrain_search(model, dataset: Dataset, retrain_csv_dir, threshold, num_tria
     return current_model, fairness
 
 def retrain_sklearn(dataset: Dataset, input_pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, threshold, num_trials, samples):
+    print("\nRetrain Started...\n")
     original_model = joblib.load(input_pkl_dir)
-    improved_model, fairness= retrain_search(original_model, dataset, threshold, retrain_csv_dir, num_trials, samples)
+    improved_model, fairness= retrain_search(original_model, dataset, retrain_csv_dir, threshold, num_trials, samples)
     joblib.dump(improved_model, improved_pkl_dir)
 
     # display fairness improvement 

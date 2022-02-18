@@ -39,11 +39,11 @@ def evaluate_input(inp, model, dataset: Dataset, threshold):
 
             out1 = model.predict(inp1delY)
             if abs(out1 - out0) > threshold: # different results came out, therefore it is biased
-                return True
+                return abs(out1 - out0)
     # return (abs(out0 - out1) > threshold)
     # for binary classification, we have found that the
     # following optimization function gives better results
-    return False
+    return 0
 
 def get_estimate_array(dataset: Dataset, model, threshold, num_trials, samples):
     estimate_array = []

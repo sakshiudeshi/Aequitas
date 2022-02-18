@@ -31,15 +31,15 @@ def main():
     local_iteration_limit = 100 
     threshold = 0
 
-    retrain_csv_dir = 'Employee_Retraining_Dataset_modified.csv'
-    run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, \
-                    pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, \
-                        retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Random")
+    retrain_csv_dir = 'Employee_Retraining_Dataset.csv'
+    # run_aequitas(dataset=dataset, perturbation_unit=perturbation_unit, 
+    #                 pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, 
+    #                     retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Fully")
     
     #run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Fully")
     #run_aequitas_once(dataset=dataset, perturbation_unit=perturbation_unit, pkl_dir=pkl_dir, improved_pkl_dir=improved_pkl_dir, retrain_csv_dir=retrain_csv_dir, plot_dir=plot_dir, mode="Fully")
     #retrain_sklearn(dataset, pkl_dir, retrain_csv_dir, improved_pkl_dir, plot_dir, num_trials, samples)
-    #get_fairness_estimation(dataset, pkl_dir, num_trials, samples)
+    get_fairness_estimation(dataset, pkl_dir, threshold, num_trials, samples)
     
 if __name__ == "__main__":
     main() 
