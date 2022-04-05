@@ -2,16 +2,19 @@
 
 We present Aequitas, a directed fairness testing framework machine learning models. See the paper [Automated Directed Fairness Testing](https://arxiv.org/abs/1807.00468) for more details.
 
-
-
 ## Prerequisites
 
-* Python 2.7.15
-* numpy 1.14.5
-* scipy 1.1.0
-* scikit-learn 1.19.0
+1. Creat a new virtual environment.
 
-The authors used Pycharm CE 2017.2.3 as the development IDE.
+* `python3 -m venv <name of environment>`
+
+* `source <name of environment>/bin/activate`
+
+2. Download all the necessary modules straight from the requirements.txt.
+
+* `pip install -r requirements.txt`
+
+* replace the file `_numdiff.py` in the directory `<environment_name>/lib/scipy/optimize` with the file `_numdiff.py` that is in this root directory
 
 ## Background
 There are 3 test generation strategies in our suite, namely Aequitas Random, Aequitas Semi-Directed and Aequitas Fully Directed. There are files to evaluate [Fair SVM](https://github.com/mbilalzafar/fair-classification) and Scikit-Learn classifiers trained on the same [dataset](http://archive.ics.uci.edu/ml/datasets/Adult).
