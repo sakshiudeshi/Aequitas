@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#DS_STORE
+.DS_STORE
+
 # C extensions
 *.so
 
@@ -89,6 +92,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+token.json
+credentials.json
 
 # Spyder project settings
 .spyderproject
