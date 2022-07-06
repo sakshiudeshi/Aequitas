@@ -1,4 +1,4 @@
-from sklearn.externals import joblib
+import joblib
 import config
 import time
 import random
@@ -10,12 +10,12 @@ import loss_funcs as lf
 
 sensitive = {}
 sens = []
-name = 'sex'
+sensitive_param_name = config.sensitive_param_idx_name
 cov = 0
 
 input_bounds = config.input_bounds
-params = config.params
-sensitive_param = config.sensitive_param
+num_params = config.num_params
+sensitive_param_idx = config.sensitive_param_idx_idx
 
 num_trials = 100
 samples = 100
@@ -33,8 +33,8 @@ def extractor(filename):
             if (i == 0):
                 i += 1
                 continue
-            L = map(int, line1[:-1])
-            sens.append(L[sensitive_param - 1])
+            L = list(map(int, line1[:-1]))
+            sens.append(L[sensitive_param_idx])
             # L[sens_arg-1]=-1
             X.append(L)
 
@@ -57,8 +57,8 @@ def extractor_retrain(filename, num_additional):
             if (i == 0):
                 i += 1
                 continue
-            L = map(int, line1[:-1])
-            sens.append(L[sensitive_param - 1])
+            L = list(map(int, line1[:-1]))
+            sens.append(L[sensitive_param_idx])
             # L[sens_arg-1]=-1
             X.append(L)
 
@@ -93,11 +93,11 @@ def train():
 
     X = np.array(X, dtype=float)
     Y = np.array(Y, dtype=float)
-    sensitive[name] = np.array(sens, dtype=float)
+    sensitive[sensitive_param_name] = np.array(sens, dtype=float)
     loss_function = lf._logistic_loss
     sep_constraint = 0
-    sensitive_attrs = [name]
-    sensitive_attrs_to_cov_thresh = {name: cov}
+    sensitive_attrs = [sensitive_param_name]
+    sensitive_attrs_to_cov_thresh = {sensitive_param_name: cov}
 
     gamma = None
 
@@ -123,11 +123,11 @@ def retrain(num_additional):
 
     X = np.array(X, dtype=float)
     Y = np.array(Y, dtype=float)
-    sensitive[name] = np.array(sens, dtype=float)
+    sensitive[sensitive_param_name] = np.array(sens, dtype=float)
     loss_function = lf._logistic_loss
     sep_constraint = 0
-    sensitive_attrs = [name]
-    sensitive_attrs_to_cov_thresh = {name: cov}
+    sensitive_attrs = [sensitive_param_name]
+    sensitive_attrs_to_cov_thresh = {sensitive_param_name: cov}
 
     gamma = None
 
@@ -138,19 +138,19 @@ def retrain(num_additional):
 
 def get_random_input():
     x = []
-    for i in xrange(params):
+    for i in range(num_params):
         random.seed(time.time())
         x.append(random.randint(input_bounds[i][0], input_bounds[i][1]))
 
-    x[sensitive_param - 1] = 0
+    x[sensitive_param_idx] = 0
     return x
 
 def evaluate_input(inp, model):
     inp0 = [int(i) for i in inp]
     inp1 = [int(i) for i in inp]
 
-    inp0[sensitive_param - 1] = 0
-    inp1[sensitive_param - 1] = 1
+    inp0[sensitive_param_idx] = 0
+    inp1[sensitive_param_idx] = 1
     out0 = np.sign(np.dot(model, inp0))
     out1 = np.sign(np.dot(model, inp1))
 
@@ -160,10 +160,10 @@ def evaluate_input(inp, model):
 def get_estimate(model):
     estimate_array = []
     rolling_average = 0.0
-    for i in xrange(num_trials):
+    for i in range(num_trials):
         disc_count = 0
         total_count = 0
-        for j in xrange(samples):
+        for j in range(samples):
             total_count = total_count + 1
             if(evaluate_input(get_random_input(), model)):
                 disc_count = disc_count + 1
@@ -172,7 +172,7 @@ def get_estimate(model):
         rolling_average = ((rolling_average * i) + estimate)/(i + 1)
         estimate_array.append(estimate)
 
-        # print estimate, rolling_average
+        # print(estimate, rolling_average)
 
     return np.average(estimate_array)
 
@@ -183,7 +183,7 @@ def retrain_search():
     global current_estimate
     global current_model
     X, Y, sens = extractor("cleaned_train")
-    for i in xrange(7):
+    for i in range(7):
         additive_percentage = random.uniform(pow(2, i), pow(2, i + 1))
         num_inputs_for_retrain = int((additive_percentage * len(X))/100)
 

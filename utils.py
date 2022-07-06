@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from random import seed, shuffle
 import loss_funcs as lf # our implementation of loss funcs
 from scipy.optimize import minimize # for loss func minimization
@@ -12,12 +13,9 @@ SEED = 1122334455
 seed(SEED) # set the random seed so that the random permutations can be reproduced again
 np.random.seed(SEED)
 
-
-
-
 def train_model(x, y, x_control, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh, gamma=None):
 
-    print x[0],y[0],x_control, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh
+    print(x[0],y[0],x_control, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh)
 
     """
 
@@ -132,17 +130,14 @@ def train_model(x, y, x_control, loss_function, apply_fairness_constraints, appl
     try:
         assert(w.success == True)
     except:
-        print "Optimization problem did not converge.. Check the solution returned by the optimizer."
-        print "Returned solution is:"
-        print w
-
-
+        print("Optimization problem did not converge.. Check the solution returned by the optimizer.")
+        print("Returned solution is:")
+        print(w)
 
     return w.x
 
 
 def compute_cross_validation_error(x_all, y_all, x_control_all, num_folds, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs, sensitive_attrs_to_cov_thresh_arr, gamma=None):
-
 
     """
     Computes the cross validation error for the classifier subject to various fairness constraints
@@ -231,8 +226,6 @@ def compute_cross_validation_error(x_all, y_all, x_control_all, num_folds, loss_
     
     return test_acc_arr, train_acc_arr, correlation_dict_test_arr, correlation_dict_train_arr, cov_dict_test_arr, cov_dict_train_arr
 
-
-
 def print_classifier_fairness_stats(acc_arr, correlation_dict_arr, cov_dict_arr, s_attr_name):
     
     correlation_dict = get_avg_correlation_dict(correlation_dict_arr)
@@ -240,11 +233,11 @@ def print_classifier_fairness_stats(acc_arr, correlation_dict_arr, cov_dict_arr,
     prot_pos = correlation_dict[s_attr_name][0][1]
     p_rule = (prot_pos / non_prot_pos) * 100.0
     
-    print "Accuracy: %0.2f" % (np.mean(acc_arr))
-    print "Protected/non-protected in +ve class: %0.0f%% / %0.0f%%" % (prot_pos, non_prot_pos)
-    print "P-rule achieved: %0.0f%%" % (p_rule)
-    print "Covariance between sensitive feature and decision from distance boundary : %0.3f" % (np.mean([v[s_attr_name] for v in cov_dict_arr]))
-    print
+    print("Accuracy: %0.2f" % (np.mean(acc_arr)))
+    print("Protected/non-protected in +ve class: %0.0f%% / %0.0f%%" % (prot_pos, non_prot_pos))
+    print("P-rule achieved: %0.0f%%" % (p_rule))
+    print("Covariance between sensitive feature and decision from distance boundary : %0.3f" % (np.mean([v[s_attr_name] for v in cov_dict_arr])))
+    print()
     return p_rule
 
 def compute_p_rule(x_control, class_labels):
@@ -258,13 +251,13 @@ def compute_p_rule(x_control, class_labels):
     frac_non_prot_pos = float(non_prot_pos) / float(non_prot_all)
     frac_prot_pos = float(prot_pos) / float(prot_all)
     p_rule = (frac_prot_pos / frac_non_prot_pos) * 100.0
-    print
-    print "Total data points: %d" % (len(x_control))
-    print "# non-protected examples: %d" % (non_prot_all)
-    print "# protected examples: %d" % (prot_all)
-    print "Non-protected in positive class: %d (%0.0f%%)" % (non_prot_pos, non_prot_pos * 100.0 / non_prot_all)
-    print "Protected in positive class: %d (%0.0f%%)" % (prot_pos, prot_pos * 100.0 / prot_all)
-    print "P-rule is: %0.0f%%" % ( p_rule )
+    print()
+    print("Total data points: %d" % (len(x_control)))
+    print("# non-protected examples: %d" % (non_prot_all))
+    print("# protected examples: %d" % (prot_all))
+    print("Non-protected in positive class: %d (%0.0f%%)" % (non_prot_pos, non_prot_pos * 100.0 / non_prot_all))
+    print("Protected in positive class: %d (%0.0f%%)" % (prot_pos, prot_pos * 100.0 / prot_all))
+    print("P-rule is: %0.0f%%" % ( p_rule ))
     return p_rule
 
 
@@ -293,9 +286,9 @@ def get_one_hot_encoding(in_arr):
     """
 
     for k in in_arr:
-        if str(type(k)) != "<type 'numpy.float64'>" and type(k) != int and type(k) != np.int64:
-            print str(type(k))
-            print "************* ERROR: Input arr does not have integer types"
+        if str(type(k)) != "<class 'numpy.float64'>" and type(k) != int and type(k) != np.int64:
+            print(str(type(k)))
+            print("************* ERROR: Input arr does not have integer types")
             return None
         
     in_arr = np.array(in_arr, dtype=int)
@@ -330,7 +323,7 @@ def check_accuracy(model, x_train, y_train, x_test, y_test, y_train_predicted, y
     else we pass y_predicted
     """
     if model is not None and y_test_predicted is not None:
-        print "Either the model (w) or the predicted labels should be None"
+        print("Either the model (w) or the predicted labels should be None")
         raise Exception("Either the model (w) or the predicted labels should be None")
 
     if model is not None:
@@ -349,7 +342,6 @@ def check_accuracy(model, x_train, y_train, x_test, y_test, y_train_predicted, y
 
 def test_sensitive_attr_constraint_cov(model, x_arr, y_arr_dist_boundary, x_control, thresh, verbose):
 
-    
     """
     The covariance is computed b/w the sensitive attr val and the distance from the boundary
     If the model is None, we assume that the y_arr_dist_boundary contains the distace from the decision boundary
@@ -361,10 +353,6 @@ def test_sensitive_attr_constraint_cov(model, x_arr, y_arr_dist_boundary, x_cont
     otherwise it will reutrn +1
     if the return value is >=0, then the constraint is satisfied
     """
-
-    
-
-
     assert(x_arr.shape[0] == x_control.shape[0])
     if len(x_control.shape) > 1: # make sure we just have one column in the array
         assert(x_control.shape[1] == 1)
@@ -384,18 +372,16 @@ def test_sensitive_attr_constraint_cov(model, x_arr, y_arr_dist_boundary, x_cont
     ans = thresh - abs(cov) # will be <0 if the covariance is greater than thresh -- that is, the condition is not satisfied
     # ans = thresh - cov # will be <0 if the covariance is greater than thresh -- that is, the condition is not satisfied
     if verbose is True:
-        print "Covariance is", cov
-        print "Diff is:", ans
-        print
+        print("Covariance is", cov)
+        print("Diff is:", ans)
+        print()
     return ans
 
 def print_covariance_sensitive_attrs(model, x_arr, y_arr_dist_boundary, x_control, sensitive_attrs):
 
-
     """
     reutrns the covariance between sensitive features and distance from decision boundary
     """
-
     arr = []
     if model is None:
         arr = y_arr_dist_boundary # simplt the output labels
@@ -434,12 +420,10 @@ def print_covariance_sensitive_attrs(model, x_arr, y_arr_dist_boundary, x_contro
 
 
 def get_correlations(model, x_test, y_predicted, x_control_test, sensitive_attrs):
-    
 
     """
     returns the fraction in positive class for sensitive feature values
     """
-
     if model is not None:
         y_predicted = np.sign(np.dot(x_test, model))
         
@@ -490,9 +474,7 @@ def get_constraint_list_cov(x_train, y_train, x_control_train, sensitive_attrs, 
     """
     get the list of constraints to be fed to the minimizer
     """
-
     constraints = []
-
 
     for attr in sensitive_attrs:
 
@@ -509,7 +491,7 @@ def get_constraint_list_cov(x_train, y_train, x_control_train, sensitive_attrs, 
 
             for attr_val, ind in index_dict.items():
                 attr_name = attr_val
-                print attr, attr_name, sensitive_attrs_to_cov_thresh[attr]
+                print(attr, attr_name, sensitive_attrs_to_cov_thresh[attr])
                 thresh = sensitive_attrs_to_cov_thresh[attr][attr_name]
                 
                 t = attr_arr_transformed[:,ind]
@@ -518,8 +500,6 @@ def get_constraint_list_cov(x_train, y_train, x_control_train, sensitive_attrs, 
 
 
     return constraints
-
-
 
 def split_into_train_test(x_all, y_all, x_control_all, train_fold_size):
 
@@ -540,7 +520,7 @@ def split_into_train_test(x_all, y_all, x_control_all, train_fold_size):
 def get_avg_correlation_dict(correlation_dict_arr):
     # make the structure for the correlation dict
     correlation_dict_avg = {}
-    # print correlation_dict_arr
+    # print(correlation_dict_arr)
     for k,v in correlation_dict_arr[0].items():
         correlation_dict_avg[k] = {}
         for feature_val, feature_dict in v.items():
@@ -566,8 +546,6 @@ def get_avg_correlation_dict(correlation_dict_arr):
 
 
 def plot_cov_thresh_vs_acc_pos_ratio(x_all, y_all, x_control_all, num_folds, loss_function, apply_fairness_constraints, apply_accuracy_constraint, sep_constraint, sensitive_attrs):
-
-
     # very the covariance threshold using a range of decreasing multiplicative factors and see the tradeoffs between accuracy and fairness
     it = 0.05
     cov_range = np.arange(1.0, 0.0-it, -it).tolist()
@@ -588,7 +566,7 @@ def plot_cov_thresh_vs_acc_pos_ratio(x_all, y_all, x_control_all, num_folds, los
     test_acc_arr, train_acc_arr, correlation_dict_test_arr, correlation_dict_train_arr, cov_dict_test_arr, cov_dict_train_arr = compute_cross_validation_error(x_all, y_all, x_control_all, num_folds, loss_function, 0, apply_accuracy_constraint, sep_constraint, sensitive_attrs, [{} for i in range(0,num_folds)], 0)
 
     for c in cov_range:
-        print "LOG: testing for multiplicative factor: %0.2f" % c
+        print("LOG: testing for multiplicative factor: %0.2f" % c)
         sensitive_attrs_to_cov_original_arr_multiplied = []
         for sensitive_attrs_to_cov_original in cov_dict_train_arr:
             sensitive_attrs_to_cov_thresh = deepcopy(sensitive_attrs_to_cov_original)
@@ -648,3 +626,22 @@ def get_line_coordinates(w, x1, x2):
     y1 = (-w[0] - (w[1] * x1)) / w[2]
     y2 = (-w[0] - (w[1] * x2)) / w[2]    
     return y1,y2
+
+def get_input_bounds(input_file, sensitive_col_name):
+    input_bounds = []
+    df=pd.read_csv(input_file)
+    for col in df:
+        # exclude the column you're trying to predict
+        if col == sensitive_col_name:
+            continue
+        numUniqueVals = df[col].nunique()
+        input_bounds.append([0, numUniqueVals - 1]) # bound is inclusive
+    return input_bounds
+
+def get_column_names(input_file):
+    df=pd.read_csv(input_file)
+    return list(df.columns)
+
+def get_idx_of_col_to_be_predicted(original_inputs, col_to_be_predicted):
+    df=pd.read_csv(original_inputs)
+    return list(df.columns).index(col_to_be_predicted)
